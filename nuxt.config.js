@@ -22,6 +22,7 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -29,17 +30,47 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
   ],
   axios: {
     // extra config e.g
     // BaseURL: 'https://link-to-API'
+    baseURL: 'https://localhost:7011',
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  auth: {
+    strategies: {
+      local: {
+        user: {
+          property: 'user',
+          autoFetch: false
+        },
+        token: {
+          property: 'token',
+          global: true,
+          type: 'Bearer',
+        },   
+        endpoints: {
+          login: { url: '/api/Auth/login', method: 'post' },
+          user: { url: '/api/Auth/user', method: 'get' },
+        },
+        autoFetchUser: false,
+      }
+    },
+    redirect: {
+      login: '/',
+      logout: '/',
+      home: '/abc'
+    },
+    watchLoggedIn: true,
+    rewriteRedirects: true,
   }
 }

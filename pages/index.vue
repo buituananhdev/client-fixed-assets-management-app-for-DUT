@@ -31,6 +31,11 @@ export default {
                     },
                 });
                 this.$router.push('/home');
+                // if (this.$auth.loggedIn) {
+                //     this.$router.push('/home');
+                // } else {
+                //     this.$router.push('/');
+                // }
             } catch (error) {
                 console.error(error);
             }

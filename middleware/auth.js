@@ -1,7 +1,7 @@
-// export default function ({ store, redirect }) {
-//   // Kiểm tra xem người dùng đã đăng nhập hay chưa
-//   if (!store.state.auth.loggedIn) {
-//     // Chuyển hướng người dùng đến trang đăng nhập
-//     redirect('/')
-//   }
-// }
+export default function ({ app, redirect }) {
+    // Nếu người dùng chưa đăng nhập, redirect về trang đăng nhập
+    if (!app.$auth.loggedIn) {
+        return redirect('/');
+    }
+    else return redirect('/home')
+}

@@ -32,7 +32,7 @@
 <script>
 import TabLeft from '@/components/TabLeft.vue';
 import assetItem from '@/components/assetItem.vue';
-import auth from '~/middleware/auth';
+
 export default {
     //middleware: [auth],
     components: {
@@ -84,8 +84,7 @@ export default {
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
-.main-content{
-    
+.main-content {
     position: absolute;
     right: 0;
     padding: 24px;

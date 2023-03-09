@@ -1,6 +1,5 @@
 <template>
 <div class="main">
-
     <div style="width: 100%;" v-for="item in itemProp" :key="item.id">
         <p class="item-property">{{ item }}</p>
     </div>
@@ -23,6 +22,7 @@ export default {
     width: 100%;
     display: flex;
     gap: 20px;
+    background: red;
 }
 .item-property{
     width: 100%;

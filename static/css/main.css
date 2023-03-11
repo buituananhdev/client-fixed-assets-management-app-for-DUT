@@ -1,1 +1,49 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
+* {
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Mulish';
+    font-size: 14px;
+}
+
+.div-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.stt-col {
+    width: 50px;
+}
+.id-col{
+    width: 120px;
+}
+
+.device-id-col {
+    width: 150px;
+}
+
+.name-col{
+    width: 400px;
+}
+
+.year-used-col {
+    width: 120px;
+}
+
+.quantity-col{
+    width: 120px;
+}
+
+.cost-col{
+    width: 205px;
+}
+
+.status-col {
+    width: 205px;
+    height: 100%;
+}
+
+.show-action-col {
+    width: 120px;
+    height: 100%;
+}

@@ -30,17 +30,18 @@ export default {
     buildModules: [],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxtjs/axios', '@nuxtjs/auth'],
+    modules: ['@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/dotenv'],
     axios: {
         // extra config e.g
         // BaseURL: 'https://link-to-API'
-        baseURL: 'https://localhost:7011',
+        baseURL: process.env.BASE_URL_API,
     },
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {},
     // router: {
-    //   middleware: 'auth',
+    //     middleware: 'auth',
     // },
+
     auth: {
         strategies: {
             local: {
@@ -53,17 +54,31 @@ export default {
                     global: true,
                     type: 'Bearer',
                 },
-                endpoints: {
-                    login: { url: '/api/Auth/login', method: 'post' },
-                    user: { url: '/api/Auth/user', method: 'get' },
+                refreshToken: {
+                    property: 'refreshToken',
+                    data: 'refreshToken',
+                    maxAge: 60 * 60 * 24 * 30,
                 },
-                autoFetchUser: false,
+                endpoints: {
+                    login: {
+                        url: process.env.BASE_URL_API + '/auth/login',
+                        method: 'post',
+                    },
+                    logout: {
+                        url: process.env.BASE_URL_API + '/auth/logout',
+                        method: 'post',
+                    },
+                    user: {
+                        url: process.env.BASE_URL_API + '/auth/user',
+                        method: 'get',
+                    },
+                },
             },
         },
         redirect: {
             login: '/',
-            logout: '/',
-            home: '/abc',
+            logout: undefined,
+            home: '/home?page=1',
         },
         watchLoggedIn: true,
         rewriteRedirects: true,

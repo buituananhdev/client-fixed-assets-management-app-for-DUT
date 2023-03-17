@@ -16,7 +16,7 @@
                         <p class="div-center year-used-col">Năm sử dụng</p>
                         <p class="div-center quantity-col">Số lượng</p>
                         <p class="div-center cost-col">Thành tiền</p>
-                        <p class="div-center status-col">Trạng thái</p>
+                        <p class="div-center status-col">Ngày thanh lý</p>
                         <p class="div-center show-action-col">Action</p>
                     </span>
                     <div class="empty-icn div-center" v-show="!isHaveContent">
@@ -26,14 +26,13 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <assetItem
+                    <disposedItem
                         v-for="(item, index) in listAssets"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
-                        @refreshData="fetchData"
                         style="width: 100%"
-                    ></assetItem>
+                    ></disposedItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -92,12 +91,11 @@
 </template>
 
 <script>
-
-import assetItem from '@/components/Asset/assetItem.vue';
+import disposedItem from '@/components/Asset/disposedItem.vue';
 
 export default {
     components: {
-        assetItem,
+        disposedItem,
     },
     data() {
         return {
@@ -105,133 +103,8 @@ export default {
             meta: [],
             currentPage: 1,
             isHaveContent: false,
-            listAssetsFake: [
-                {
-                    assetID: 1,
-                    deviceID: 'D001',
-                    roomID: 'RM001',
-                    assetName: 'Máy tính để bàn',
-                    yearOfUse: 3,
-                    technicalSpecification: 'Intel Core i5, 8GB RAM',
-                    quantity: 5,
-                    cost: 15000000,
-                    status: 'Hoạt động tốt',
-                    notes: 'Không có ghi chú',
-                },
-                {
-                    assetID: 2,
-                    deviceID: 'D002',
-                    roomID: 'RM001',
-                    assetName: 'Máy chiếu',
-                    yearOfUse: 2,
-                    technicalSpecification:
-                        'Độ phân giải Full HD, độ sáng 3000 lumens',
-                    quantity: 1,
-                    cost: 5000000,
-                    status: 'Hỏng',
-                    notes: 'Cần sửa chữa',
-                },
-                {
-                    assetID: 3,
-                    deviceID: 'D003',
-                    roomID: 'RM001',
-                    assetName: 'Máy in',
-                    yearOfUse: 4,
-                    technicalSpecification:
-                        'In đen trắng, tốc độ 30 trang/phút',
-                    quantity: 2,
-                    cost: 8000000,
-                    status: 'Đang sử dụng',
-                    notes: 'Không có ghi chú',
-                },
-                {
-                    assetID: 7,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 12,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 13,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 14,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 15,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 20,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 21,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-            ],
         };
     },
-    
     computed: {
         pageParam() {
             return this.$route.query.page;
@@ -250,7 +123,7 @@ export default {
             this.currentPage = this.pageParam;
             try {
                 await this.$axios
-                    .get(`/asset?pageNumber=${this.currentPage}&pageSize=10`)
+                    .get(`/disposed_asset?pageNumber=${this.currentPage}&pageSize=10`)
                     .then((res) => {
                         this.listAssets = res['data']['data'];
                         this.meta = res['data']['meta'];

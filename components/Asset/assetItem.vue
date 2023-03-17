@@ -1,13 +1,48 @@
 <template>
-    <div class="main" :class="{ evenLine: itemIndex % 2 == 0 }" @click="$router.push(`/details_asset/${itemProp.assetID}`)">
+    <div class="main" :class="{ evenLine: itemIndex % 2 == 0 }">
         <div class="item div-center">
-            <p class="div-center stt-col">{{ itemIndex }}</p>
-            <p class="div-center id-col">{{ itemProp.assetID }}</p>
-            <p class="div-center device-id-col">{{ itemProp.deviceID }}</p>
-            <p class="div-center name-col">{{ itemProp.assetName }}</p>
-            <p class="div-center year-used-col">{{ itemProp.yearOfUse }}</p>
-            <p class="div-center quantity-col">{{ itemProp.quantity }}</p>
-            <p class="div-center cost-col">{{ itemProp.cost }}</p>
+            <p
+                class="div-center stt-col"
+                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+            >
+                {{ itemIndex }}
+            </p>
+            <p
+                class="div-center id-col"
+                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+            >
+                {{ itemProp.assetID }}
+            </p>
+            <p
+                class="div-center device-id-col"
+                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+            >
+                {{ itemProp.deviceID }}
+            </p>
+            <p
+                class="div-center name-col"
+                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+            >
+                {{ itemProp.assetName }}
+            </p>
+            <p
+                class="div-center year-used-col"
+                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+            >
+                {{ itemProp.yearOfUse }}
+            </p>
+            <p
+                class="div-center quantity-col"
+                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+            >
+                {{ itemProp.quantity }}
+            </p>
+            <p
+                class="div-center cost-col"
+                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+            >
+                {{ itemProp.cost }}
+            </p>
             <div class="div-center status-col" @click.stop="toggleSelect">
                 <div class="custom-select-wrapper div-center">
                     <select
@@ -41,10 +76,28 @@
                     </div>
                 </div>
             </div>
-            <span class="div-center show-action-col" style="cursor: pointer"
-                ><img src="../static/icons/three-dots-vertical.svg" alt=""
-            /></span>
+            <span
+                class="div-center show-action-col"
+                @mouseover="showAction()"
+                @mouseleave="hideAction()"
+            >
+                <img src="../../static/icons/three-dots-vertical.svg" alt="" />
+                <Tooltip
+                    class="tooltip"
+                    :class="'tooltip' + itemIndex"
+                    @mouseover="showAction()"
+                    @delete="openPopup()"
+                ></Tooltip>
+            </span>
         </div>
+        <PopUp
+            class="popup"
+            v-show="isShowPopup"
+            @closePopup="closePopup()"
+            @submitForm="submitForm"
+            :title="'Delete ?'"
+            :content="'Bạn có chắc muốn xóa tài sản này'"
+        ></PopUp>
     </div>
 </template>
 
@@ -54,12 +107,46 @@ export default {
     data() {
         return {
             isOpen: false,
+            isShowPopup: false,
             selectedOption: null,
             hoverIndex: -1,
             options: ['Hư hỏng, cần sửa chữa', 'Hoạt động tốt'],
         };
     },
+    computed: {
+        pageParam() {
+            return this.$route.query.page;
+        },
+    },
     methods: {
+        async deleteAsset() {
+            try {
+                await this.$axios.delete(`/asset/${this.itemProp.assetID}`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        submitForm() {
+            this.deleteAsset();
+            this.$emit('refreshData');
+        },
+        openPopup() {
+            this.isShowPopup = true;
+        },
+        closePopup() {
+            this.isShowPopup = false;
+            console.log(this.isShowPopup);
+        },
+        showAction() {
+            document
+                .querySelector('.tooltip' + this.itemIndex)
+                .classList.add('display-block');
+        },
+        hideAction() {
+            document
+                .querySelector('.tooltip' + this.itemIndex)
+                .classList.remove('display-block');
+        },
         toggleSelect() {
             this.isOpen = !this.isOpen;
             console.log(this.isOpen);
@@ -114,6 +201,16 @@ export default {
 </script>
 
 <style scoped>
+.popup {
+    height: 120vh;
+    top: -80px;
+    left: -255px;
+    right: 0;
+    bottom: 0;
+}
+.display-block {
+    display: block !important;
+}
 .main {
     width: 100%;
     height: 60px;
@@ -128,11 +225,11 @@ export default {
 .item p {
     font-size: 15px;
 }
-.item:hover p{
+.item:hover p {
     color: #008cde;
     text-decoration: underline;
 }
-.item:hover .custom-select-trigger{
+.item:hover .custom-select-trigger {
     color: #008cde;
 }
 .evenLine {
@@ -236,9 +333,9 @@ export default {
     color: #008cde;
     background: #dfe0eb;
 }
-.show-action-col::after{
+.show-action-col::after {
     display: none;
-    content: "";
+    content: '';
     width: 100px;
     height: 100px;
 }

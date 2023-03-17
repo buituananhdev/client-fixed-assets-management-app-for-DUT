@@ -1,7 +1,8 @@
 <style scoped>
 .page-login {
     width: 100%;
-    height: 99.6vh;
+    height: 100%;
+    background: #dfe0eb;
 }
 .background-img {
     width: 100%;
@@ -44,7 +45,7 @@ input {
     border-radius: 4px;
 }
 input:focus {
-    outline-color: #008cde;
+    outline-color: #363740;
 }
 .user-name-container,
 .password-container {
@@ -66,8 +67,8 @@ input:focus {
 .logo-img {
     width: 70px;
     height: auto;
-    box-shadow: rgba(255, 230, 0, 0.1) 0px 6px 24px 0px,
-        rgba(255, 251, 0, 0.1) 0px 0px 0px 3px;
+    box-shadow: #3c3d470d 0px 6px 24px 0px,
+    #3c3d4709 0px 0px 0px 3px;
     transition: all 0.2s ease;
 }
 .input-describe {
@@ -81,23 +82,23 @@ input:focus {
     padding: 0.5rem 0.75rem;
     color: #ffff;
     font-weight: 600;
-    background: #008cde;
-    border: solid 1px #0085d1;
+    background: #363740;
+    border: solid 1px #363740;
     border-radius: 4px;
     cursor: pointer;
 }
 .submit-btn:hover {
-    background: #0085d1;
+    background: #3c3d47;
 }
 </style>
 
 <template>
     <div class="page-login">
-        <img
+        <!-- <img
             class="background-img"
             src="../static/images/login-bg.jpg"
             alt=""
-        />
+        /> -->
         <div class="container div-center">
             <div class="logo-container">
                 <img
@@ -127,11 +128,9 @@ input:focus {
 </template>
 
 <script>
-import Footer from '@/components/Footer.vue';
+
 export default {
-    components: {
-        Footer,
-    },
+
     data() {
         return {
             username: '',
@@ -146,8 +145,10 @@ export default {
                         username: this.username,
                         password: this.password,
                     },
+                }).then(res => {
+                    localStorage.setItem("currentRole", res['data']['role']);
+                    this.$router.push('/home?page=1');
                 })
-                this.$router.push(`/home?page=1`);
             } catch (error) {
                 console.error(error);
             }

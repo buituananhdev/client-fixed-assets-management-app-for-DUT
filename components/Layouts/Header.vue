@@ -4,7 +4,7 @@
             
             <div class="user-box">
                 <p>ADMIN</p>
-                <img class="user-avt" src="../static/images/user.png" alt="" />
+                <img class="user-avt" src="../../static/images/user.png" alt="" />
             </div>
         </div>
     </div>
@@ -21,6 +21,7 @@ export default {};
     justify-content: center;
     align-items: center;
     position: absolute;
+    z-index: -1;
     top: 0;
     right: 0;
 }

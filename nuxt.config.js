@@ -21,7 +21,7 @@ export default {
     css: ['@/static/css/main.css'],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: [],
+    plugins: ['@plugins/core_components.js', { src: '~/plugins/api.js' }],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -30,7 +30,12 @@ export default {
     buildModules: [],
 
     // Modules: https://go.nuxtjs.dev/config-modules
-    modules: ['@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/dotenv'],
+    modules: [
+        '@nuxtjs/axios',
+        '@nuxtjs/auth',
+        '@nuxtjs/dotenv',
+        'cookie-universal-nuxt',
+    ],
     axios: {
         // extra config e.g
         // BaseURL: 'https://link-to-API'
@@ -38,9 +43,9 @@ export default {
     },
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {},
-    // router: {
-    //     middleware: 'auth',
-    // },
+    router: {
+        //middleware: ['auth'],
+    },
 
     auth: {
         strategies: {
@@ -78,7 +83,7 @@ export default {
         redirect: {
             login: '/',
             logout: undefined,
-            home: '/home?page=1',
+            home: '/aaa',
         },
         watchLoggedIn: true,
         rewriteRedirects: true,

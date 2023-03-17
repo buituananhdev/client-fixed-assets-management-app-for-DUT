@@ -1,4 +1,10 @@
 <style scoped>
+.popup {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
 .page-left {
     width: 255px;
     height: 100%;
@@ -70,13 +76,22 @@
 .isActive {
     background: #4c4e5a;
     border-left: solid 4px #dde2ff;
+    animation: active 0.2s ease-in-out;
 }
-
+@keyframes active {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 .feature-name {
     cursor: pointer;
     /* Regular/16px */
     font-style: normal;
     font-weight: 400;
+    font-size: 15px;
     line-height: 22px;
     /* identical to box height */
     letter-spacing: 0.2px;
@@ -145,7 +160,7 @@
             <div class="logo-container">
                 <img
                     class="logo-img"
-                    src="../static/images/logo-dut.jpg"
+                    src="../../static/images/logo-dut.jpg"
                     alt=""
                     @click="$router.push('/home?page=1')"
                 />
@@ -154,45 +169,69 @@
                 HỆ THỐNG QUẢN LÝ TÀI SẢN CỐ ĐỊNH TẠI TRƯỜNG ĐẠI HỌC BÁCH KHOA
             </h1>
             <ul class="list-features">
-                <li class="isActive">
+                <li
+                    :class="{ isActive: pageParam == '/home' }"
+                    @click="$router.push('/home?page=1')"
+                >
                     <img
                         class="feature-icn"
-                        src="../static/icons/cart-plus.svg"
+                        src="../../static/icons/light.svg"
                         alt=""
                     />
                     <p class="feature-name">Tài sản</p>
                 </li>
-                <li>
+                <li
+                    :class="{ isActive: pageParam == '/disposed_assets' }"
+                    @click="$router.push('/disposed_assets?page=1')"
+                >
                     <img
                         class="feature-icn"
-                        src="../static/icons/cart-plus.svg"
+                        src="../../static/icons/light-off.svg"
                         alt=""
                     />
                     <p class="feature-name">Tài sản đã thanh lý</p>
                 </li>
-                <li>
+                <li
+                    :class="{ isActive: pageParam == '/add_asset' }"
+                    @click="$router.push('/add_asset')"
+                >
                     <img
                         class="feature-icn"
-                        src="../static/icons/cart-plus.svg"
+                        src="../../static/icons/cart-plus.svg"
                         alt=""
                     />
                     <p class="feature-name">Thêm tài sản</p>
                 </li>
-                <li>
+                <li
+                    :class="{ isActive: pageParam == '/statistics' }"
+                    @click="$router.push('/statistics')"
+                >
                     <img
                         class="feature-icn"
-                        src="../static/icons/pie-chart.svg"
+                        src="../../static/icons/pie-chart.svg"
                         alt=""
                     />
                     <p class="feature-name">Thống kê</p>
                 </li>
                 <li
-                    style="border-top: 0.5px solid #dfe0ebb7"
-                    @click="signOut()"
+                    :class="{ isActive: pageParam == '/users' }"
+                    @click="$router.push('/users')"
+                    v-show="currentRole == 'admin'"
                 >
                     <img
                         class="feature-icn"
-                        src="../static/icons/box-arrow-right.svg"
+                        src="../../static/icons/people-fill.svg"
+                        alt=""
+                    />
+                    <p class="feature-name">Users</p>
+                </li>
+                <li
+                    style="border-top: 0.5px solid #dfe0ebb7"
+                    @click="showPopup = true"
+                >
+                    <img
+                        class="feature-icn"
+                        src="../../static/icons/box-arrow-right.svg"
                         alt=""
                     />
                     <p class="feature-name">Đăng xuất</p>
@@ -202,7 +241,7 @@
                 <span class="to-left-side" @click="checkTab('close')">
                     <img
                         class="chevron-left"
-                        src="../static/icons/chevron-double-left.svg"
+                        src="../../static/icons/chevron-double-left.svg"
                         alt=""
                     />
                     <p>Collapse sidebar</p>
@@ -212,12 +251,20 @@
                     @click="checkTab('open')"
                 >
                     <img
-                        src="../static/icons/chevron-double-right.svg"
+                        src="../../static/icons/chevron-double-right.svg"
                         alt=""
                     />
                 </span>
             </div>
         </div>
+        <PopUp
+            class="popup"
+            v-show="showPopup"
+            @closePopup="closePopup"
+            @submitForm="submitForm"
+            :title="'Sign out ?'"
+            :content="'Bạn có chắc sẽ đăng xuất'"
+        ></PopUp>
     </div>
 </template>
 
@@ -226,9 +273,24 @@ export default {
     data() {
         return {
             isCloseTab: false,
+            showPopup: false,
+            currentRole: '',
         };
     },
+    mounted() {
+        this.currentRole = localStorage.getItem("currentRole");
+        console.log(this.currentRole);
+
+    },
+    computed: {
+        pageParam() {
+            return this.$route.path;
+        },
+    },
     methods: {
+        closePopup() {
+            this.showPopup = false;
+        },
         signOut() {
             try {
                 this.$auth.logout();
@@ -236,6 +298,9 @@ export default {
             } catch (error) {
                 console.log(error);
             }
+        },
+        submitForm() {
+            this.signOut();
         },
         checkTab(key) {
             const featureIcons = document.querySelectorAll('.feature-icn');

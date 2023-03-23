@@ -21,7 +21,11 @@ export default {
     css: ['@/static/css/main.css'],
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-    plugins: ['@plugins/core_components.js', { src: '~/plugins/api.js' }],
+    plugins: [
+        '@plugins/core_components.js',
+        { src: '~/plugins/api.js' },
+        '@plugins/handleErrorApi.js',
+    ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
     components: true,
@@ -83,7 +87,7 @@ export default {
         redirect: {
             login: '/',
             logout: undefined,
-            home: '/aaa',
+            home: '/home',
         },
         watchLoggedIn: true,
         rewriteRedirects: true,

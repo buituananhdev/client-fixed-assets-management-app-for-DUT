@@ -9,8 +9,7 @@ html, body {
     font-family: 'Mulish';
     font-size: 14px;
 }
-
-.div-center{
+.div-center {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,7 +43,6 @@ html, body {
 
 .status-col {
     width: 205px;
-    height: 100%;
 }
 
 .show-action-col {

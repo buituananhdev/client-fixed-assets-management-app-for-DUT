@@ -174,7 +174,7 @@
 
 <script>
 export default {
-    props: ['type', 'title', 'content'],
+    props: ['title', 'content'],
     methods: {
         submitForm() {
             this.$emit('submitForm');

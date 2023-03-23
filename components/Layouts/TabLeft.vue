@@ -191,7 +191,7 @@
                     />
                     <p class="feature-name">Tài sản đã thanh lý</p>
                 </li>
-                <li
+                <!-- <li
                     :class="{ isActive: pageParam == '/add_asset' }"
                     @click="$router.push('/add_asset')"
                 >
@@ -201,7 +201,7 @@
                         alt=""
                     />
                     <p class="feature-name">Thêm tài sản</p>
-                </li>
+                </li> -->
                 <li
                     :class="{ isActive: pageParam == '/statistics' }"
                     @click="$router.push('/statistics')"
@@ -280,7 +280,6 @@ export default {
     mounted() {
         this.currentRole = localStorage.getItem("currentRole");
         console.log(this.currentRole);
-
     },
     computed: {
         pageParam() {

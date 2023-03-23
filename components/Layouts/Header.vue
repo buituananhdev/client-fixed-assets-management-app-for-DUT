@@ -1,9 +1,8 @@
 <template>
     <div class="page-top">
         <div class="page-top-content">
-            
             <div class="user-box">
-                <p>ADMIN</p>
+                <p>{{ userName }}</p>
                 <img class="user-avt" src="../../static/images/user.png" alt="" />
             </div>
         </div>
@@ -11,7 +10,16 @@
 </template>
 
 <script>
-export default {};
+export default {
+    data (){
+        return{
+            userName: "",
+        }
+    },
+    mounted () {
+        this.userName = localStorage.getItem("currentUser");
+    },
+};
 </script>
 
 <style scoped>
@@ -39,6 +47,10 @@ export default {};
     align-items: center;
     padding-left: 32px;
     border-left: solid 2px #dfe0eb;
+}
+.user-box p {
+    font-weight: 400;
+    font-size: 18px;
 }
 .user-avt {
     width: 32px;

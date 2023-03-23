@@ -34,14 +34,16 @@
 }
 
 input {
+    display: flex;
+    align-items: center;
     width: 430px;
-    height: 36px;
+    height: 40px;
     padding: 0.5rem 0.75rem;
     line-height: 1rem;
     font-size: 16px;
     box-shadow: inset 0 0 0 1px #89888d;
     border-style: none;
-    border: solid 1px #dfe0eb;
+
     border-radius: 4px;
 }
 input:focus {
@@ -49,6 +51,7 @@ input:focus {
 }
 .user-name-container,
 .password-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -67,8 +70,7 @@ input:focus {
 .logo-img {
     width: 70px;
     height: auto;
-    box-shadow: #3c3d470d 0px 6px 24px 0px,
-    #3c3d4709 0px 0px 0px 3px;
+    box-shadow: #3c3d470d 0px 6px 24px 0px, #3c3d4709 0px 0px 0px 3px;
     transition: all 0.2s ease;
 }
 .input-describe {
@@ -77,8 +79,9 @@ input:focus {
 }
 .submit-btn {
     width: 430px;
-    height: 36px;
+    height: 40px;
     margin-top: 24px;
+    font-size: 16px;
     padding: 0.5rem 0.75rem;
     color: #ffff;
     font-weight: 600;
@@ -90,15 +93,22 @@ input:focus {
 .submit-btn:hover {
     background: #3c3d47;
 }
+.eye-icn {
+    width: 16px;
+    position: absolute;
+    right: 20px;
+    top: 37px;
+    cursor: pointer;
+}
+.err {
+    position: absolute;
+    bottom: 140px;
+    color: #FF4433;
+}
 </style>
 
 <template>
     <div class="page-login">
-        <!-- <img
-            class="background-img"
-            src="../static/images/login-bg.jpg"
-            alt=""
-        /> -->
         <div class="container div-center">
             <div class="logo-container">
                 <img
@@ -111,15 +121,49 @@ input:focus {
             <form class="login-form div-center" @submit.prevent="login">
                 <div class="user-name-container">
                     <label for="username" class="input-describe"
-                        >Username <small style="color: red;font-size: 16px;">*</small></label
+                        >Username
+                        <small style="color: red; font-size: 16px"
+                            >*</small
+                        ></label
                     >
                     <input type="text" id="username" v-model="username" />
                 </div>
                 <div class="password-container">
                     <label for="password" class="input-describe"
-                        >Password <small style="color: red;font-size: 16px;">*</small></label
+                        >Password
+                        <small style="color: red; font-size: 16px"
+                            >*</small
+                        ></label
                     >
-                    <input type="password" id="password" v-model="password" />
+                    <input
+                        type="password"
+                        id="password"
+                        v-show="!isShowPass"
+                        v-model="password"
+                    />
+                    <input
+                        type="text"
+                        id="password"
+                        v-show="isShowPass"
+                        v-model="password"
+                    />
+                    <img
+                        class="eye-icn"
+                        v-show="isShowPass"
+                        src="../static/icons/eye-slash.svg"
+                        alt=""
+                        @click="isShowPass = !isShowPass"
+                    />
+                    <img
+                        class="eye-icn"
+                        v-show="!isShowPass"
+                        src="../static/icons/eye.svg"
+                        alt=""
+                        @click="isShowPass = !isShowPass"
+                    />
+                </div>
+                <div class="err">
+                    {{ errContent }}
                 </div>
                 <button class="submit-btn" type="submit">Sign in</button>
             </form>
@@ -128,29 +172,50 @@ input:focus {
 </template>
 
 <script>
-
 export default {
-
     data() {
         return {
             username: '',
             password: '',
+            isShowPass: false,
+            errContent: '',
         };
+    },
+    watch: {
+        username(newVal) {
+            this.errContent = '';
+        },
+        password(newVal) {
+            this.errContent = '';
+        },
     },
     methods: {
         async login() {
             try {
-                await this.$auth.loginWith('local', {
-                    data: {
-                        username: this.username,
-                        password: this.password,
-                    },
-                }).then(res => {
-                    localStorage.setItem("currentRole", res['data']['role']);
-                    this.$router.push('/home?page=1');
-                })
+                await this.$auth
+                    .loginWith('local', {
+                        data: {
+                            username: this.username,
+                            password: this.password,
+                        },
+                    })
+                    .then((res) => {
+                        console.log(res);
+                        localStorage.setItem(
+                            'currentRole',
+                            res['data']['role']
+                        );
+                        localStorage.setItem(
+                            'currentUser',
+                            res['data']['username']
+                        );
+                        this.$router.push('/home?page=1');
+                    });
             } catch (error) {
-                console.error(error);
+                this.$handleErrorApi(error, (message) => {
+                    this.errContent = message;
+                });
+                console.error('LOG ----------> ' + this.errContent);
             }
         },
     },

@@ -11,8 +11,8 @@
             <p class="div-center name-col">{{ itemProp.assetName }}</p>
             <p class="div-center year-used-col">{{ itemProp.yearOfUse }}</p>
             <p class="div-center quantity-col">{{ itemProp.quantity }}</p>
-            <p class="div-center cost-col">{{ itemProp.cost }}</p>
-            <p class="div-center status-col">{{ formatted }}</p>
+            <p class="div-center cost-col">{{ moneyFormart }}</p>
+            <p class="div-center status-col">{{ timeFormat }}</p>
             <span class="div-center show-action-col" style="cursor: pointer">
                 <img src="../../static/icons/three-dots-vertical.svg" alt="" />
                 <!-- <Tooltip class="tooltip" v-show="isShowAction"></Tooltip> -->
@@ -27,22 +27,19 @@ export default {
     data() {
         return {
             isShowAction: true,
-            formatted: '',
+            timeFormat: '',
+            moneyFormart: null,
         };
     },
     mounted() {
         let date = new Date(this.itemProp.dateDisposed); // Tạo đối tượng Date từ chuỗi thời gian
-        this.formatted = date.toLocaleDateString("vi-VN");
+        this.timeFormat = date.toLocaleDateString("vi-VN");
+        this.moneyFormart = this.itemProp.cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     },
 };
 </script>
 
 <style scoped>
-.tooltip {
-    width: 100px !important;
-    height: 100px !important;
-    background: red;
-}
 .main {
     width: 100%;
     height: 60px;

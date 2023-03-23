@@ -31,7 +31,7 @@
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
-                        @refreshData="fetchData"
+                        @refreshData="fetchData()"
                         style="width: 100%"
                     ></assetItem>
                 </div>
@@ -92,9 +92,7 @@
 </template>
 
 <script>
-
 import assetItem from '@/components/Asset/assetItem.vue';
-
 export default {
     components: {
         assetItem,

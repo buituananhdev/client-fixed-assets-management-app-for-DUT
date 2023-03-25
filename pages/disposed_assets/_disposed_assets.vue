@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <Notification
+            :type="'success'"
             :content="'Xóa tài sản thành công'"
             v-if="showNoti"
         ></Notification>

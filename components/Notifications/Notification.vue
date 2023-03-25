@@ -1,16 +1,18 @@
 <template>
-    <div class="notification">
+    <div class="notification" :style="{'border-color': type === 'success' ? '#7CB969' : type === 'failure' ? '#C7422E' : '#FDC571'}">
         <div class="noti-container">
-            <img src="../../static/icons/success-noti.svg" alt="">
+            <img class="close-icn" src="../../static/icons/close.svg" alt="">
+            <img v-show="type == 'success'" src="../../static/icons/success-noti.svg" alt="">
+            <img v-show="type == 'failure'" src="../../static/icons/failure-noti.svg" alt="">
             <p class="content">{{ content }}</p>
         </div>
-        <div class="progress"></div>
+        <div class="progress" :style="{'background-color': type === 'success' ? '#7CB969' : type === 'failure' ? '#C7422E' : '#FDC571'}"></div>
     </div>
 </template>
 
 <script>
 export default {
-    props: ['title', 'content'],
+    props: ['type', 'title', 'content'],
 };
 </script>
 
@@ -28,7 +30,7 @@ export default {
     /* White */
     background: #ffffff;
     /* Light Green */
-    border: 1px solid #7cb969;
+    border: 1px solid;
     /* Resting Shadow */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
     border-radius: 4px;
@@ -48,6 +50,7 @@ export default {
     }
 }
 .noti-container {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -78,7 +81,7 @@ header {
     position: absolute;
     bottom: 0;
     left: 0;
-    background: #7CB969;
+
     width: 100%;
     height: 5px;
     animation: progress_bar 3s ease;
@@ -90,5 +93,15 @@ header {
     to {
         transform: translateX(0);
     }
+}
+.close-icn {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: .2s ease;
+}
+.close-icn:hover {
+    transform: rotate(90deg);
 }
 </style>

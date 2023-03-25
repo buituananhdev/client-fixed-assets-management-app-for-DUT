@@ -46,7 +46,9 @@
             <p class="div-center status-col" v-if="type == 'asset'">
                 {{ itemProp.status }}
             </p>
-            <p class="div-center status-col" v-if="type == 'disposed'">{{ timeFormat }}</p>
+            <p class="div-center status-col" v-if="type == 'disposed'">
+                {{ timeFormat }}
+            </p>
             <span
                 class="div-center show-action-col"
                 @mouseover="showAction()"
@@ -58,8 +60,15 @@
                     :class="'tooltip' + itemIndex"
                     :type="type"
                     @mouseover="showAction()"
-                    @delete="Delete"
-                    @dispose="Dispose"
+                    @delete="
+                        $emit('showPopup', 'popupDelete', itemProp.assetID)
+                    "
+                    @dispose="
+                        $emit('showPopup', 'popupDispose', itemProp.assetID)
+                    "
+                    @update="
+                        $emit('showPopup', 'popupCreate', itemProp.assetID)
+                    "
                 ></Tooltip>
             </span>
         </div>
@@ -68,17 +77,20 @@
 
 <script>
 export default {
-    props: ['type','itemProp', 'itemIndex'],
+    props: ['type', 'itemProp', 'itemIndex'],
     data() {
         return {
             timeFormat: '',
             moneyFormart: null,
         };
     },
-    mounted () {
+    mounted() {
         let date = new Date(this.itemProp.dateDisposed); // Tạo đối tượng Date từ chuỗi thời gian
-        this.timeFormat = date.toLocaleDateString("vi-VN");
-        this.moneyFormart = this.itemProp.cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        this.timeFormat = date.toLocaleDateString('vi-VN');
+        this.moneyFormart = this.itemProp.cost.toLocaleString('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        });
     },
     computed: {
         pageParam() {
@@ -96,14 +108,6 @@ export default {
                 .querySelector('.tooltip' + this.itemIndex)
                 .classList.remove('display-block');
         },
-        Delete() {
-            const str = 'popupDelete';
-            this.$emit('showPopup', str, this.itemProp.assetID);
-        },
-        Dispose() {
-            const str = 'popupDispose';
-            this.$emit('showPopup', str, this.itemProp.assetID);
-        }
     },
 };
 </script>

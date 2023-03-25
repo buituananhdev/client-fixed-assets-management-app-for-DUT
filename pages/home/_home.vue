@@ -1,10 +1,17 @@
 <template>
     <div class="container">
         <Notification
+            :type="'success'"
+            :content="'Đăng nhập thành công'"
+            v-if="showNotification == 'login'"
+        ></Notification>
+        <Notification
+            :type="'success'"
             :content="'Xóa tài sản thành công'"
             v-if="showNotification == 'delete'"
         ></Notification>
         <Notification
+            :type="'success'"
             :content="'Thanh lý tài sản thành công'"
             v-if="showNotification == 'dispose'"
         ></Notification>
@@ -24,6 +31,12 @@
             :title="'Liquidation ?'"
             :content="'Bạn có chắc muốn thanh lý tài sản này'"
         ></PopUp>
+        <CreateAsset
+            :type="'update'"
+            v-show="isShowPopup == 'popupCreate'"
+            @closePopup="closePopup()"
+        >
+        </CreateAsset>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
@@ -133,7 +146,6 @@ export default {
             showNotification: '',
         };
     },
-
     computed: {
         pageParam() {
             return this.$route.query.page;
@@ -146,14 +158,17 @@ export default {
         pageParam: async function () {
             this.fetchData();
         },
-        listAssets(newVal) {
-            if(newVal.length > 0) {
-                this.isHaveContent =  true;
-            }
-            else {
-                this.isHaveContent = false;
-            }
-        }
+        listAssets: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    this.isHaveContent = true;
+                } else {
+                    this.isHaveContent = false;
+                }
+            },
+        },
     },
     methods: {
         async fetchData() {
@@ -176,7 +191,7 @@ export default {
                 this.fetchData();
                 this.showNotification = 'delete';
                 setTimeout(() => {
-                    this.showNotification = "";
+                    this.showNotification = '';
                 }, 3000);
             } catch (error) {
                 console.log(error);
@@ -188,16 +203,16 @@ export default {
                 this.fetchData();
                 this.showNotification = 'dispose';
                 setTimeout(() => {
-                    this.showNotification = "";
+                    this.showNotification = '';
                 }, 3000);
             } catch (error) {
                 console.log(error);
             }
         },
         submitForm(type) {
-            if(type == 'delete'){
+            if (type == 'delete') {
                 this.deleteAsset();
-            }else if(type == 'dispose') {
+            } else if (type == 'dispose') {
                 this.disposeAsset();
             }
         },
@@ -223,7 +238,7 @@ export default {
                 .querySelector('.page-top')
                 .classList.remove('close-collapse');
         },
-        showPopup(type, id){
+        showPopup(type, id) {
             this.isShowPopup = type;
             this.assetID = id;
         },

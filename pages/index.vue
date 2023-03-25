@@ -1,9 +1,4 @@
 <style scoped>
-.page-login {
-    width: 100%;
-    height: 100%;
-    background: #dfe0eb;
-}
 .background-img {
     width: 100%;
     height: 100%;
@@ -101,14 +96,23 @@ input:focus {
     cursor: pointer;
 }
 .err {
+    width: 100%;
+    padding-left: 60px;
+    display: flex;
+    justify-content: flex-start;
     position: absolute;
     bottom: 140px;
-    color: #FF4433;
+    color: #ff4433;
 }
 </style>
 
 <template>
     <div class="page-login">
+        <Notification
+            :type="'failure'"
+            :content="'Đăng nhập thất bại!'"
+            v-if="showNoti"
+        ></Notification>
         <div class="container div-center">
             <div class="logo-container">
                 <img
@@ -126,7 +130,12 @@ input:focus {
                             >*</small
                         ></label
                     >
-                    <input type="text" id="username" v-model="username" />
+                    <input
+                        type="text"
+                        id="username"
+                        v-model="username"
+                        autocomplete="on"
+                    />
                 </div>
                 <div class="password-container">
                     <label for="password" class="input-describe"
@@ -140,12 +149,14 @@ input:focus {
                         id="password"
                         v-show="!isShowPass"
                         v-model="password"
+                        autocomplete="on"
                     />
                     <input
                         type="text"
                         id="password"
                         v-show="isShowPass"
                         v-model="password"
+                        autocomplete="on"
                     />
                     <img
                         class="eye-icn"
@@ -179,6 +190,7 @@ export default {
             password: '',
             isShowPass: false,
             errContent: '',
+            showNoti: false,
         };
     },
     watch: {
@@ -215,6 +227,10 @@ export default {
                 this.$handleErrorApi(error, (message) => {
                     this.errContent = message;
                 });
+                this.showNoti = true;
+                setTimeout(() => {
+                    this.showNoti = false;
+                }, 3000);
                 console.error('LOG ----------> ' + this.errContent);
             }
         },

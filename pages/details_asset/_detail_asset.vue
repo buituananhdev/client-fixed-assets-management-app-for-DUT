@@ -64,6 +64,20 @@ export default {
                 console.log(error);
             }
         },
+        async deleteAsset() {
+            try {
+                await this.$axios.delete(`/asset/${this.itemProp.assetID}`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async disposeAsset() {
+            try {
+                await this.$axios.post(`/asset/${this.itemProp.assetID}`);
+            } catch (error) {
+                console.log(error);
+            }
+        },
         closeTab() {
             document
                 .querySelector('.page-main')

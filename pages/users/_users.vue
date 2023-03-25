@@ -6,7 +6,7 @@
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách người dùng</h1>
                 <div class="table-assets">
-                    <span class="table-assets-title">
+                    <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
                         <p class="div-center id-col">Mã TS</p>
                         <p class="div-center device-id-col">Mã số TB</p>
@@ -26,13 +26,13 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <disposedItem
+                    <assetItem
                         v-for="(item, index) in listAssets"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
                         style="width: 100%"
-                    ></disposedItem>
+                    ></assetItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -91,11 +91,11 @@
 </template>
 
 <script>
-import disposedItem from '@/components/Asset/disposedItem.vue';
+import assetItem from '@/components/Asset/assetItem.vue';
 
 export default {
     components: {
-        disposedItem,
+        assetItem,
     },
     data() {
         return {

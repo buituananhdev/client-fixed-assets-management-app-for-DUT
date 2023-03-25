@@ -37,7 +37,7 @@ export default {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    width: 1440px;
+    width: calc(100% - 100px);
     height: 60px;
     
 }

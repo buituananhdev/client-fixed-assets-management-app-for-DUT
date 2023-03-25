@@ -1,7 +1,7 @@
 <template>
     <div class="tooltip-container div-center">
         <div class="tooltip-content div-center">
-            <div class="button dispose" @click="$emit('dispose')">
+            <div v-if="type == 'asset'" class="button dispose" @click="$emit('dispose')">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -30,7 +30,7 @@
                 </svg>
                 Xóa
             </div>
-            <div class="button update" @click="$emit('update')">
+            <div v-if="type == 'asset'" class="button update" @click="$emit('update')">
                 <svg
                     class="update-icn"
                     xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,9 @@
 </template>
 
 <script>
-export default {};
+export default {
+    props: ['type']
+};
 </script>
 
 <style scoped>

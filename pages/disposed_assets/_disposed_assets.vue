@@ -1,12 +1,24 @@
 <template>
     <div class="container">
+        <Notification
+            :content="'Xóa tài sản thành công'"
+            v-if="showNoti"
+        ></Notification>
+        <PopUp
+            class="popup"
+            v-show="isShowPopup == 'popupDelete'"
+            @closePopup="closePopup()"
+            @submitForm="submitForm('delete')"
+            :title="'Delete ?'"
+            :content="'Bạn có chắc muốn xóa tài sản này'"
+        ></PopUp>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách tài sản</h1>
                 <div class="table-assets">
-                    <span class="table-assets-title">
+                    <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
                         <p class="div-center id-col">Mã TS</p>
                         <p class="div-center device-id-col">Mã số TB</p>
@@ -26,13 +38,15 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <disposedItem
+                    <assetItem
                         v-for="(item, index) in listAssets"
+                        :type="'disposed'"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
+                        @showPopup="showPopup"
                         style="width: 100%"
-                    ></disposedItem>
+                    ></assetItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -91,18 +105,21 @@
 </template>
 
 <script>
-import disposedItem from '@/components/Asset/disposedItem.vue';
+import assetItem from '@/components/Asset/assetItem.vue';
 
 export default {
     components: {
-        disposedItem,
+        assetItem,
     },
     data() {
         return {
             listAssets: [],
             meta: [],
             currentPage: 1,
+            assetID: '',
             isHaveContent: false,
+            showNoti: false,
+            isShowPopup: '',
         };
     },
     computed: {
@@ -123,13 +140,27 @@ export default {
             this.currentPage = this.pageParam;
             try {
                 await this.$axios
-                    .get(`/disposed_asset?pageNumber=${this.currentPage}&pageSize=10`)
+                    .get(
+                        `/disposed_asset?pageNumber=${this.currentPage}&pageSize=10`
+                    )
                     .then((res) => {
                         this.listAssets = res['data']['data'];
                         this.meta = res['data']['meta'];
                         this.isHaveContent = true;
                         console.log(this.listAssets);
                     });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async deleteAsset() {
+            try {
+                await this.$axios.delete(`/disposed_asset/${this.assetID}`);
+                this.fetchData();
+                this.showNoti = true;
+                setTimeout(() => {
+                    this.showNoti = false;
+                }, 3000);
             } catch (error) {
                 console.log(error);
             }
@@ -156,6 +187,20 @@ export default {
                 .querySelector('.page-top')
                 .classList.remove('close-collapse');
         },
+        submitForm(type) {
+            if (type == 'delete') {
+                this.deleteAsset();
+            } else if (type == 'dispose') {
+                this.disposeAsset();
+            }
+        },
+        showPopup(type, id) {
+            this.isShowPopup = type;
+            this.assetID = id;
+        },
+        closePopup() {
+            this.isShowPopup = '';
+        },
         goToIndexPage() {
             this.$router.push({
                 query: { page: this.currentPage },
@@ -171,6 +216,4 @@ export default {
 };
 </script>
 
-<style scoped src="../../static/css/table_assets.css">
-
-</style>
+<style scoped src="../../static/css/table_assets.css"></style>

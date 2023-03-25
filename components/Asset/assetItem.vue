@@ -43,9 +43,10 @@
             >
                 {{ moneyFormart }}
             </p>
-            <p class="div-center status-col">
+            <p class="div-center status-col" v-if="type == 'asset'">
                 {{ itemProp.status }}
             </p>
+            <p class="div-center status-col" v-if="type == 'disposed'">{{ timeFormat }}</p>
             <span
                 class="div-center show-action-col"
                 @mouseover="showAction()"
@@ -55,41 +56,28 @@
                 <Tooltip
                     class="tooltip"
                     :class="'tooltip' + itemIndex"
+                    :type="type"
                     @mouseover="showAction()"
-                    @delete="isShowPopup = 'popupDelete'"
-                    @dispose="isShowPopup = 'popupDispose'"
+                    @delete="Delete"
+                    @dispose="Dispose"
                 ></Tooltip>
             </span>
         </div>
-        <PopUp
-            class="popup"
-            v-show="isShowPopup == 'popupDelete'"
-            @closePopup="closePopup()"
-            @submitForm="submitForm('delete')"
-            :title="'Delete ?'"
-            :content="'Bạn có chắc muốn xóa tài sản này'"
-        ></PopUp>
-        <PopUp
-            class="popup"
-            v-show="isShowPopup == 'popupDispose'"
-            @closePopup="closePopup()"
-            @submitForm="submitForm('dispose')"
-            :title="'Liquidation ?'"
-            :content="'Bạn có chắc muốn thanh lý tài sản này'"
-        ></PopUp>
     </div>
 </template>
 
 <script>
 export default {
-    props: ['itemProp', 'itemIndex'],
+    props: ['type','itemProp', 'itemIndex'],
     data() {
         return {
-            isShowPopup: "",
+            timeFormat: '',
             moneyFormart: null,
         };
     },
     mounted () {
+        let date = new Date(this.itemProp.dateDisposed); // Tạo đối tượng Date từ chuỗi thời gian
+        this.timeFormat = date.toLocaleDateString("vi-VN");
         this.moneyFormart = this.itemProp.cost.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
     },
     computed: {
@@ -98,36 +86,6 @@ export default {
         },
     },
     methods: {
-        async deleteAsset() {
-            try {
-                await this.$axios.delete(`/asset/${this.itemProp.assetID}`);
-                this.$emit('refreshData');
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        async disposeAsset() {
-            try {
-                await this.$axios.post(`/asset/${this.itemProp.assetID}`);
-                this.$emit('refreshData');
-            } catch (error) {
-                console.log(error);
-            }
-        },
-        submitForm(type) {
-            if(type == 'delete'){
-                this.deleteAsset();
-            }else {
-                this.disposeAsset();
-            }
-        },
-        openPopup() {
-            this.isShowPopup = true;
-        },
-        closePopup() {
-            this.isShowPopup = false;
-            console.log(this.isShowPopup);
-        },
         showAction() {
             document
                 .querySelector('.tooltip' + this.itemIndex)
@@ -138,6 +96,14 @@ export default {
                 .querySelector('.tooltip' + this.itemIndex)
                 .classList.remove('display-block');
         },
+        Delete() {
+            const str = 'popupDelete';
+            this.$emit('showPopup', str, this.itemProp.assetID);
+        },
+        Dispose() {
+            const str = 'popupDispose';
+            this.$emit('showPopup', str, this.itemProp.assetID);
+        }
     },
 };
 </script>

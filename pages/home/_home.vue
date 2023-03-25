@@ -1,12 +1,36 @@
 <template>
     <div class="container">
+        <Notification
+            :content="'Xóa tài sản thành công'"
+            v-if="showNotification == 'delete'"
+        ></Notification>
+        <Notification
+            :content="'Thanh lý tài sản thành công'"
+            v-if="showNotification == 'dispose'"
+        ></Notification>
+        <PopUp
+            class="popup"
+            v-show="isShowPopup == 'popupDelete'"
+            @closePopup="closePopup()"
+            @submitForm="submitForm('delete')"
+            :title="'Delete ?'"
+            :content="'Bạn có chắc muốn xóa tài sản này'"
+        ></PopUp>
+        <PopUp
+            class="popup"
+            v-show="isShowPopup == 'popupDispose'"
+            @closePopup="closePopup()"
+            @submitForm="submitForm('dispose')"
+            :title="'Liquidation ?'"
+            :content="'Bạn có chắc muốn thanh lý tài sản này'"
+        ></PopUp>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách tài sản</h1>
                 <div class="table-assets">
-                    <span class="table-assets-title">
+                    <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
                         <p class="div-center id-col">Mã TS</p>
                         <p class="div-center device-id-col">Mã số TB</p>
@@ -28,10 +52,11 @@
                     </div>
                     <assetItem
                         v-for="(item, index) in listAssets"
+                        :type="'asset'"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
-                        @refreshData="fetchData()"
+                        @showPopup="showPopup"
                         style="width: 100%"
                     ></assetItem>
                 </div>
@@ -102,134 +127,13 @@ export default {
             listAssets: [],
             meta: [],
             currentPage: 1,
+            assetID: '',
             isHaveContent: false,
-            listAssetsFake: [
-                {
-                    assetID: 1,
-                    deviceID: 'D001',
-                    roomID: 'RM001',
-                    assetName: 'Máy tính để bàn',
-                    yearOfUse: 3,
-                    technicalSpecification: 'Intel Core i5, 8GB RAM',
-                    quantity: 5,
-                    cost: 15000000,
-                    status: 'Hoạt động tốt',
-                    notes: 'Không có ghi chú',
-                },
-                {
-                    assetID: 2,
-                    deviceID: 'D002',
-                    roomID: 'RM001',
-                    assetName: 'Máy chiếu',
-                    yearOfUse: 2,
-                    technicalSpecification:
-                        'Độ phân giải Full HD, độ sáng 3000 lumens',
-                    quantity: 1,
-                    cost: 5000000,
-                    status: 'Hỏng',
-                    notes: 'Cần sửa chữa',
-                },
-                {
-                    assetID: 3,
-                    deviceID: 'D003',
-                    roomID: 'RM001',
-                    assetName: 'Máy in',
-                    yearOfUse: 4,
-                    technicalSpecification:
-                        'In đen trắng, tốc độ 30 trang/phút',
-                    quantity: 2,
-                    cost: 8000000,
-                    status: 'Đang sử dụng',
-                    notes: 'Không có ghi chú',
-                },
-                {
-                    assetID: 7,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 12,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 13,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 14,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 15,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 20,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-                {
-                    assetID: 21,
-                    deviceID: 'khong biet',
-                    roomID: 'RM001',
-                    assetName: 'Loa',
-                    yearOfUse: 2023,
-                    technicalSpecification: 'asdasdasda',
-                    quantity: 1,
-                    cost: 10000,
-                    status: 'good',
-                    notes: '',
-                },
-            ],
+            isShowPopup: '',
+            showNotification: '',
         };
     },
-    
+
     computed: {
         pageParam() {
             return this.$route.query.page;
@@ -242,6 +146,14 @@ export default {
         pageParam: async function () {
             this.fetchData();
         },
+        listAssets(newVal) {
+            if(newVal.length > 0) {
+                this.isHaveContent =  true;
+            }
+            else {
+                this.isHaveContent = false;
+            }
+        }
     },
     methods: {
         async fetchData() {
@@ -252,11 +164,41 @@ export default {
                     .then((res) => {
                         this.listAssets = res['data']['data'];
                         this.meta = res['data']['meta'];
-                        this.isHaveContent = true;
                         console.log(this.listAssets);
                     });
             } catch (error) {
                 console.log(error);
+            }
+        },
+        async deleteAsset() {
+            try {
+                await this.$axios.delete(`/asset/${this.assetID}`);
+                this.fetchData();
+                this.showNotification = 'delete';
+                setTimeout(() => {
+                    this.showNotification = "";
+                }, 3000);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async disposeAsset(id) {
+            try {
+                await this.$axios.post(`/asset/${this.assetID}`);
+                this.fetchData();
+                this.showNotification = 'dispose';
+                setTimeout(() => {
+                    this.showNotification = "";
+                }, 3000);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        submitForm(type) {
+            if(type == 'delete'){
+                this.deleteAsset();
+            }else if(type == 'dispose') {
+                this.disposeAsset();
             }
         },
         closeTab() {
@@ -281,6 +223,13 @@ export default {
                 .querySelector('.page-top')
                 .classList.remove('close-collapse');
         },
+        showPopup(type, id){
+            this.isShowPopup = type;
+            this.assetID = id;
+        },
+        closePopup() {
+            this.isShowPopup = '';
+        },
         goToIndexPage() {
             this.$router.push({
                 query: { page: this.currentPage },
@@ -296,6 +245,4 @@ export default {
 };
 </script>
 
-<style scoped src="../../static/css/table_assets.css">
-
-</style>
+<style scoped src="../../static/css/table_assets.css"></style>

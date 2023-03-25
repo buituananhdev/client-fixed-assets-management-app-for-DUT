@@ -1,5 +1,7 @@
 <style scoped>
 .popup {
+    width: 100vw !important;
+    height: 100vh !important;
     top: 0;
     left: 0;
     right: 0;
@@ -279,7 +281,6 @@ export default {
     },
     mounted() {
         this.currentRole = localStorage.getItem("currentRole");
-        console.log(this.currentRole);
     },
     computed: {
         pageParam() {

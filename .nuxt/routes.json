@@ -1,0 +1,44 @@
+[
+  {
+    "name": "details_asset-detail_asset",
+    "path": "/details_asset/:detail_asset?",
+    "component": "D:\\\\BachKhoa\\\\PBL3\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\details_asset\\\\_detail_asset.vue",
+    "chunkName": "pages/details_asset/_detail_asset",
+    "_name": "_d446c998"
+  },
+  {
+    "name": "disposed_assets-disposed_assets",
+    "path": "/disposed_assets/:disposed_assets?",
+    "component": "D:\\\\BachKhoa\\\\PBL3\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\disposed_assets\\\\_disposed_assets.vue",
+    "chunkName": "pages/disposed_assets/_disposed_assets",
+    "_name": "_06253e76"
+  },
+  {
+    "name": "home-home",
+    "path": "/home/:home?",
+    "component": "D:\\\\BachKhoa\\\\PBL3\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\home\\\\_home.vue",
+    "chunkName": "pages/home/_home",
+    "_name": "_cda119ee"
+  },
+  {
+    "name": "statistics-statistics",
+    "path": "/statistics/:statistics?",
+    "component": "D:\\\\BachKhoa\\\\PBL3\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\statistics\\\\_statistics.vue",
+    "chunkName": "pages/statistics/_statistics",
+    "_name": "_55fd22ee"
+  },
+  {
+    "name": "users-users",
+    "path": "/users/:users?",
+    "component": "D:\\\\BachKhoa\\\\PBL3\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\users\\\\_users.vue",
+    "chunkName": "pages/users/_users",
+    "_name": "_6edc18ca"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "D:\\\\BachKhoa\\\\PBL3\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_41167948"
+  }
+]

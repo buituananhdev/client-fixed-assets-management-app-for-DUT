@@ -88,3 +88,29 @@
     font-weight: 500;
     color: #9fa2b4;
 }
+.UpdateAsset {
+    background-color: #007bff;
+    position: absolute;
+    display: flex;
+    color: #fff;
+    border: none;
+    padding: 10px 19.5px;
+    top: 30px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    left: 85%;
+  }
+  .AddAsset {
+    background-color: #007bff;
+    position: absolute;
+    display: flex;
+    color: #fff;
+    border: none;
+    padding: 10px 19.5px;
+    top: 30px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    left: 75%;
+  }

@@ -24,6 +24,7 @@ export default {
     plugins: [
         '@plugins/core_components.js',
         { src: '~/plugins/api.js' },
+        '@plugins/chart.js',
         '@plugins/handleErrorApi.js',
     ],
 

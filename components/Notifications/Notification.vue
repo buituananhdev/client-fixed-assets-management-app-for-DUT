@@ -22,8 +22,8 @@ export default {
     /* statusmeldinger */
     position: absolute;
     z-index: 999;
-    width: 313px;
-    height: 65px;
+    width: 350px;
+    height: 70px;
     padding: 6px;
     right: 5px;
     top: 5px;

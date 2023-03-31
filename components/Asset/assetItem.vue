@@ -69,6 +69,7 @@
                     @update="
                         $emit('showPopup', 'popupCreate', itemProp.assetID)
                     "
+                    @cancel_dispose="$emit('showPopup', 'popupCancel', itemProp.assetID)"
                 ></Tooltip>
             </span>
         </div>

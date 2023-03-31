@@ -3,7 +3,12 @@
         <Notification
             :type="'success'"
             :content="'Xóa tài sản thành công'"
-            v-if="showNoti"
+            v-if="showNotification == 'delete'"
+        ></Notification>
+        <Notification
+            :type="'success'"
+            :content="'Hủy thanh lý tài sản thành công'"
+            v-if="showNotification == 'cancel'"
         ></Notification>
         <PopUp
             class="popup"
@@ -12,6 +17,14 @@
             @submitForm="submitForm('delete')"
             :title="'Delete ?'"
             :content="'Bạn có chắc muốn xóa tài sản này'"
+        ></PopUp>
+        <PopUp
+            class="popup"
+            v-show="isShowPopup == 'popupCancel'"
+            @closePopup="closePopup()"
+            @submitForm="cancelDispose()"
+            :title="'Cancel liquidation?'"
+            :content="'Bạn có chắc muốn hủy bỏ thanh lý tài sản này'"
         ></PopUp>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
@@ -119,7 +132,7 @@ export default {
             currentPage: 1,
             assetID: '',
             isHaveContent: false,
-            showNoti: false,
+            showNotification: '',
             isShowPopup: '',
         };
     },
@@ -158,9 +171,23 @@ export default {
             try {
                 await this.$axios.delete(`/disposed_asset/${this.assetID}`);
                 this.fetchData();
-                this.showNoti = true;
+                this.isShowPopup = '';
+                this.showNotification = 'delete';
                 setTimeout(() => {
-                    this.showNoti = false;
+                    this.showNotification = '';
+                }, 3000);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async cancelDispose() {
+            try {
+                await this.$axios.post(`/disposed_asset/${this.assetID}`);
+                this.fetchData();
+                this.isShowPopup = '';
+                this.showNotification = 'cancel';
+                setTimeout(() => {
+                    this.showNotification = '';
                 }, 3000);
             } catch (error) {
                 console.log(error);

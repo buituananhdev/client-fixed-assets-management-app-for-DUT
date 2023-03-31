@@ -1,7 +1,11 @@
 <template>
     <div class="tooltip-container div-center">
         <div class="tooltip-content div-center">
-            <div v-if="type == 'asset'" class="button dispose" @click="$emit('dispose')">
+            <div
+                v-if="type == 'asset'"
+                class="button dispose"
+                @click="$emit('dispose')"
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -17,6 +21,26 @@
                 </svg>
                 Thanh lý
             </div>
+            <div
+                v-if="type == 'disposed'"
+                class="button update"
+                @click="$emit('cancel_dispose')"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-bookmark-plus-fill update-icn"
+                    viewBox="0 0 16 16"
+                >
+                    <path
+                        fill-rule="evenodd"
+                        d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zm6.5-11a.5.5 0 0 0-1 0V6H6a.5.5 0 0 0 0 1h1.5v1.5a.5.5 0 0 0 1 0V7H10a.5.5 0 0 0 0-1H8.5V4.5z"
+                    />
+                </svg>
+                Hủy thanh lý
+            </div>
             <div class="button delete" @click="$emit('delete')">
                 <svg
                     class="delete-icn"
@@ -30,7 +54,11 @@
                 </svg>
                 Xóa
             </div>
-            <div v-if="type == 'asset'" class="button update" @click="$emit('update')">
+            <div
+                v-if="type == 'asset'"
+                class="button update"
+                @click="$emit('update')"
+            >
                 <svg
                     class="update-icn"
                     xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +77,7 @@
 
 <script>
 export default {
-    props: ['type']
+    props: ['type'],
 };
 </script>
 

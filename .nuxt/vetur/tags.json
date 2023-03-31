@@ -5,6 +5,15 @@
   "AssetCreateAsset": {
     "description": "Auto imported from components/Asset/CreateAsset.vue"
   },
+  "NotificationsNotification": {
+    "description": "Auto imported from components/Notifications/Notification.vue"
+  },
+  "NotificationsPopUp": {
+    "description": "Auto imported from components/Notifications/PopUp.vue"
+  },
+  "NotificationsTooltip": {
+    "description": "Auto imported from components/Notifications/Tooltip.vue"
+  },
   "LayoutsFooter": {
     "description": "Auto imported from components/Layouts/Footer.vue"
   },
@@ -19,14 +28,5 @@
   },
   "SelectBox": {
     "description": "Auto imported from components/SelectBox/SelectBox.vue"
-  },
-  "NotificationsNotification": {
-    "description": "Auto imported from components/Notifications/Notification.vue"
-  },
-  "NotificationsPopUp": {
-    "description": "Auto imported from components/Notifications/PopUp.vue"
-  },
-  "NotificationsTooltip": {
-    "description": "Auto imported from components/Notifications/Tooltip.vue"
   }
 }

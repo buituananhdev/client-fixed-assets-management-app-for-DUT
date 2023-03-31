@@ -90,6 +90,7 @@ export default {
 };
 </script>
 <style scoped src="../../static/css/popup.css"></style>
+<style scoped src="../../static/css/creatAssets.css"></style>
 <style scoped>
 .overlay {
   width: 100%;

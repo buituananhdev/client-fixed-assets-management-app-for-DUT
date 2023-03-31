@@ -1,0 +1,310 @@
+.Ma-tai-san {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 84px;
+  top: 92px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+
+#textMTS {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 9%;
+  right: 60%;
+  top: 24%;
+  bottom: 70%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}
+.Ma-lop {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 550px;
+  top: 92px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+#textML {
+  box-sizing: border-box;
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 62%;
+  right: 5%;
+  top: 24%;
+  bottom: 70%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}
+.Ten-tai-san {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 84px;
+  top: 200px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+#textTTS {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 9%;
+  right: 60%;
+  top: 42%;
+  bottom: 52%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}
+.So-luong {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 550px;
+  top: 199px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+
+#textSL {
+  box-sizing: border-box;
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 62%;
+  right: 5%;
+  top: 42%;
+  bottom: 52%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}
+.Nam-su-dung {
+  position: absolute;
+  width: 100px;
+  height: 20px;
+  left: 84px;
+  top: 307px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+#textNSD {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 9%;
+  right: 60%;
+  top: 60%;
+  bottom: 34%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}
+.Thanh-tien {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 550px;
+  top: 306px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+#textTT {
+  box-sizing: border-box;
+
+  /* Auto layout */
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 62%;
+  right: 5%;
+  top: 60%;
+  bottom: 34%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}
+.Thong-so-ki-thuat {
+  position: absolute;
+  width: 150px;
+  height: 20px;
+  left: 84px;
+  top: 415px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+#textTSKT {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 9%;
+  right: 5%;
+  top: 76%;
+  bottom: 17%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}
+.Ghi-chu {
+  position: absolute;
+  width: 91px;
+  height: 20px;
+  left: 84px;
+  top: 508px;
+
+  font-family: "Mulish";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 20px;
+  /* identical to box height */
+
+  letter-spacing: 0.2px;
+}
+#textGC {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+
+  position: absolute;
+  left: 9%;
+  right: 5%;
+  top: 91%;
+  bottom: -3%;
+
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  /* Shadow/xs */
+
+  box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+  border-radius: 8px;
+}

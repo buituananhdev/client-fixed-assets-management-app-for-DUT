@@ -1,0 +1,38 @@
+[
+  {
+    "name": "details_asset-detail_asset",
+    "path": "/details_asset/:detail_asset?",
+    "component": "G:\\\\BachKhoa\\\\PBL3ver2\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\details_asset\\\\_detail_asset.vue",
+    "chunkName": "pages/details_asset/_detail_asset"
+  },
+  {
+    "name": "disposed_assets-disposed_assets",
+    "path": "/disposed_assets/:disposed_assets?",
+    "component": "G:\\\\BachKhoa\\\\PBL3ver2\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\disposed_assets\\\\_disposed_assets.vue",
+    "chunkName": "pages/disposed_assets/_disposed_assets"
+  },
+  {
+    "name": "home-home",
+    "path": "/home/:home?",
+    "component": "G:\\\\BachKhoa\\\\PBL3ver2\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\home\\\\_home.vue",
+    "chunkName": "pages/home/_home"
+  },
+  {
+    "name": "statistics-statistics",
+    "path": "/statistics/:statistics?",
+    "component": "G:\\\\BachKhoa\\\\PBL3ver2\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\statistics\\\\_statistics.vue",
+    "chunkName": "pages/statistics/_statistics"
+  },
+  {
+    "name": "users-users",
+    "path": "/users/:users?",
+    "component": "G:\\\\BachKhoa\\\\PBL3ver2\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\users\\\\_users.vue",
+    "chunkName": "pages/users/_users"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "G:\\\\BachKhoa\\\\PBL3ver2\\\\PBL3_fixed_assets_management_app_for_DUT\\\\pages\\\\index.vue",
+    "chunkName": "pages/index"
+  }
+]

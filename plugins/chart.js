@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { Line } from 'vue-chartjs'
 import { Pie } from 'vue-chartjs'
 import { Doughnut } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs'
 
 Vue.component('line-chart', {
 	extends: Line,
@@ -21,6 +22,14 @@ Vue.component('pie-chart', {
 
 Vue.component('donut-chart', {
 	extends: Doughnut,
+	props: ['data', 'options'],
+	mounted () {
+		this.renderChart(this.data, this.options)
+	}
+})
+
+Vue.component('bar-chart', {
+	extends: Bar,
 	props: ['data', 'options'],
 	mounted () {
 		this.renderChart(this.data, this.options)

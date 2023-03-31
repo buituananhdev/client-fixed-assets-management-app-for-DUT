@@ -49,10 +49,22 @@
                 <div class="chart-container">
                     <client-only placeholder="Loading...">
                         <donut-chart
-                            :data="chartData"
+                            :data="donutChartData"
                             :options="chartOptions"
+                            :height="310"
+                            :width="1000"
                             class="pie-chart"
                         ></donut-chart>
+                    </client-only>
+                </div>
+                <div class="chart-container">
+                    <client-only placeholder="Loading...">
+                        <bar-chart
+                            :data="barChartData"
+                            :options="chartOptions"
+                            :height="310"
+                            class="bar-chart"
+                        ></bar-chart>
                     </client-only>
                 </div>
             </div>
@@ -67,14 +79,10 @@ export default {
     data() {
         return {
             count: [11074, 856, 126, 2346],
-            chartOptions: {
-                maintainAspectRatio: false,
-                spacing: 10,
-            },
         };
     },
     computed: {
-        chartData() {
+        donutChartData() {
             return {
                 labels: [
                     'Hoạt động tốt',
@@ -84,7 +92,7 @@ export default {
                 ],
                 datasets: [
                     {
-                        label: 'Visualization',
+                        label: '',
                         data: [11074, 856, 126, 2346],
                         backgroundColor: [
                             '#50C878',
@@ -92,10 +100,52 @@ export default {
                             '#c7422e',
                             '#008cde',
                         ],
-                        borderColor: '#fff',    
+                        borderColor: '#fff',
                         borderWidth: 1,
                     },
                 ],
+            };
+        },
+        barChartData() {
+            return {
+                labels: [
+                    'Tháng 1',
+                    'Tháng 2',
+                    'Tháng 3',
+                    'Tháng 4',
+                    'Tháng 5',
+                    'Tháng 6',
+                    'Tháng 7',
+                    'Tháng 8',
+                    'Tháng 9',
+                    'Tháng 10',
+                    'Tháng 11',
+                    'Tháng 12',
+                ],
+                datasets: [
+                    {
+                        borderRadius: 8,
+                        hoverBorderRadius: 8,
+                        label: '',
+                        data: [
+                            1074, 856, 1263, 2567, 3451, 5672, 3456, 1945, 1990, 1234, 3461, 1067
+                        ],
+                        backgroundColor: '#008cde',
+                    },
+                ],
+            };
+        },
+        chartOptions() {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                offset: 8,
+                radius: 160,
+                spacing: 4,
+                hoverOffset: 32,
+                hoverBorderWidth: 1,
+                weight: 0,
+                borderRadius: 8,
             };
         },
     },
@@ -145,13 +195,12 @@ export default {
 
 <style scoped src="../../static/css/table_assets.css"></style>
 <style scoped>
-.pie-chart {
-    width: 100%;
-    height: 310px;
+.bar-chart {
+    width: 80%;
 }
 .page-main {
     box-shadow: none;
-    gap: 24px;
+    gap: 19px;
 }
 .number {
     display: flex;

@@ -11,6 +11,10 @@
     height: calc(100% - 80px);
     display: flex;
     justify-content: center;
+    overflow: auto;
+}
+.main-content::-webkit-scrollbar {
+    display: none;
 }
 .page-main {
     display: flex;

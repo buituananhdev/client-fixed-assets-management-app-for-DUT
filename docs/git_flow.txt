@@ -1,7 +1,5 @@
 1. PULL CODE MỚI
-$ git checkout client
-$ git pull
-$ git merge client <tên nhánh của mình>
+$ git pull origin client
 
 2. ĐẨY CODE CỦA MÌNH LÊN 
 B1: PULL CODE MỚI

@@ -42,6 +42,22 @@
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách tài sản</h1>
+                <div class="action-container">
+                    <div class="search">
+                        <input
+                            type="text"
+                            class="inp-search"
+                            placeholder="Tìm kiếm..."
+                            v-model="searchValue"
+                            @input="onSearchInput"
+                        />
+                        <img
+                            class="icn-search"
+                            src="../../static/icons/search.svg"
+                            alt=""
+                        />
+                    </div>
+                </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
@@ -144,6 +160,8 @@ export default {
             isHaveContent: false,
             isShowPopup: '',
             showNotification: '',
+            searchValue: '',
+            timeoutId: null, // thêm biến timeoutId vào component
         };
     },
     computed: {
@@ -185,6 +203,29 @@ export default {
                 console.log(error);
             }
         },
+        async Search() {
+            this.currentPage = this.pageParam;
+            try {
+                await this.$axios
+                    .get(
+                        `/asset?pageNumber=${this.currentPage}&pageSize=10&searchQuery=${this.searchValue}`
+                    )
+                    .then((res) => {
+                        this.listAssets = res['data']['data'];
+                        this.meta = res['data']['meta'];
+                        console.log(this.listAssets);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        // debounce
+        onSearchInput() {
+            clearTimeout(this.timeoutId); // xóa bỏ setTimeout() trước đó (nếu có)
+            this.timeoutId = setTimeout(() => {
+                this.Search();
+            }, 700); // tạo mới setTimeout() với thời gian chờ là 700ms
+        },
         async deleteAsset() {
             try {
                 await this.$axios.delete(`/asset/${this.assetID}`);
@@ -197,7 +238,7 @@ export default {
                 console.log(error);
             }
         },
-        async disposeAsset(id) {
+        async disposeAsset() {
             try {
                 await this.$axios.post(`/asset/${this.assetID}`);
                 this.fetchData();

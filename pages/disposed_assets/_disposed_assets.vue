@@ -148,6 +148,17 @@ export default {
         pageParam: async function () {
             this.fetchData();
         },
+        listAssets: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    this.isHaveContent = true;
+                } else {
+                    this.isHaveContent = false;
+                }
+            },
+        },
     },
     methods: {
         async fetchData() {
@@ -160,7 +171,6 @@ export default {
                     .then((res) => {
                         this.listAssets = res['data']['data'];
                         this.meta = res['data']['meta'];
-                        this.isHaveContent = true;
                         console.log(this.listAssets);
                     });
             } catch (error) {

@@ -67,6 +67,16 @@
                         ></bar-chart>
                     </client-only>
                 </div>
+                <div class="chart-container">
+                    <client-only placeholder="Loading...">
+                        <line-chart
+                            :data="barChartData"
+                            :options="chartOptions"
+                            :height="310"
+                            class="bar-chart"
+                        ></line-chart>
+                    </client-only>
+                </div>
             </div>
         </div>
     </div>

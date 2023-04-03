@@ -31,6 +31,41 @@
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách tài sản</h1>
+                <div class="action-container">
+                    <div class="search">
+                        <input
+                            type="text"
+                            class="inp-search"
+                            placeholder="Tìm kiếm..."
+                            v-model="searchValue"
+                            @input="onSearchInput"
+                        />
+                        <img
+                            class="icn-search"
+                            src="../../static/icons/search.svg"
+                            alt=""
+                        />
+                    </div>
+                    <div class="date-search">
+                        <input
+                            type="date"
+                            class="inp-search"
+                            placeholder="Ngày bắt đầu"
+                            v-model="startDate"
+                        >
+                    </div>
+                    <div class="date-search">
+                        <input
+                            type="date"
+                            class="inp-search"
+                            placeholder="Ngày kết thúc"
+                            v-model="endDate"
+                        >
+                    </div>
+                    <button class="btn-search" @click="Search">
+                        Search
+                    </button>
+                </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
@@ -134,6 +169,9 @@ export default {
             isHaveContent: false,
             showNotification: '',
             isShowPopup: '',
+            searchValue: '',
+            startDate: null,
+            endDate: null,
         };
     },
     computed: {
@@ -177,6 +215,45 @@ export default {
                 console.log(error);
             }
         },
+        async searchDate() {
+            this.currentPage = this.pageParam;
+            try {
+                await this.$axios
+                    .get(
+                        `/disposed_asset?pageNumber=${this.currentPage}&pageSize=10&startDate=${this.startDate}&endDate=${this.endDate}`
+                    )
+                    .then((res) => {
+                        this.listAssets = res['data']['data'];
+                        this.meta = res['data']['meta'];
+                        console.log(this.listAssets);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async Search() {
+            this.currentPage = this.pageParam;
+            try {
+                await this.$axios
+                    .get(
+                        `/disposed_asset?pageNumber=${this.currentPage}&pageSize=10&searchQuery=${this.searchValue}&startDate=${this.startDate}&endDate=${this.endDate}`
+                    )
+                    .then((res) => {
+                        this.listAssets = res['data']['data'];
+                        this.meta = res['data']['meta'];
+                        console.log(this.listAssets);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        // debounce
+        onSearchInput() {
+            clearTimeout(this.timeoutId); // xóa bỏ setTimeout() trước đó (nếu có)
+            this.timeoutId = setTimeout(() => {
+                this.Search();
+            }, 700); // tạo mới setTimeout() với thời gian chờ là 700ms
+        },
         async deleteAsset() {
             try {
                 await this.$axios.delete(`/disposed_asset/${this.assetID}`);
@@ -205,10 +282,10 @@ export default {
         },
         closeTab() {
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.add('close-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.remove('open-collapse');
             document.querySelector('.page-top').classList.add('close-collapse');
             document
@@ -216,9 +293,9 @@ export default {
                 .classList.remove('open-collapse');
         },
         openTab() {
-            document.querySelector('.page-main').classList.add('open-collapse');
+            document.querySelector('.main-content').classList.add('open-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.remove('close-collapse');
             document.querySelector('.page-top').classList.add('open-collapse');
             document

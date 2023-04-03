@@ -14,7 +14,14 @@ export default {
             { hid: 'description', name: 'description', content: '' },
             { name: 'format-detection', content: 'telephone=no' },
         ],
-        link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+        script: [{ src: 'https://cdn.jsdelivr.net/npm/flatpickr' }],
+        link: [
+            { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+            {
+                rel: 'stylesheet',
+                href: 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css',
+            },
+        ],
     },
 
     // Global CSS: https://go.nuxtjs.dev/config-css
@@ -26,6 +33,7 @@ export default {
         { src: '~/plugins/api.js' },
         '@plugins/chart.js',
         '@plugins/handleErrorApi.js',
+        { src: '~/plugins/vue-datepicker', ssr: false },
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -39,7 +47,7 @@ export default {
         '@nuxtjs/axios',
         '@nuxtjs/auth',
         '@nuxtjs/dotenv',
-        'cookie-universal-nuxt',
+        'nuxt-vue-multiselect'
     ],
     axios: {
         // extra config e.g

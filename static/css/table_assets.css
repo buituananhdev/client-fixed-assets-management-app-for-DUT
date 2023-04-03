@@ -8,7 +8,7 @@
     bottom: 0;
     padding: 12px;
     width: calc(100% - 255px);
-    height: calc(100% - 80px);
+    height: calc(100% - 60px);
     display: flex;
     justify-content: center;
     overflow: auto;
@@ -113,22 +113,59 @@
 .action-container {
     width: 100%;
     padding: 0 42px;
+    display: flex;
+    gap: 8px;
 }
 .search {
-    width: 220px;
+    width: 200px;
     position: relative;
 }
 .inp-search {
     width: 100%;
-    padding: 5px 12px;
+    padding: 6px 12px;
+    padding-right: 32px;
     border: solid .5px #dfe0eb;
     border-radius: 16px;
+    cursor: pointer;
+}
+input[type='date'] {
+    padding-right: 12px;
 }
 .inp-search:focus {
     outline-width: 0;
 }
 .icn-search {
     position: absolute;
-    top: 6px;
+    top: 7px;
     right: 10px;
+}
+
+.btn-search {
+    /*text*/
+    padding: 0 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+    /* Gray/700 */
+    font-size: 12px;
+    background: #7f56d9;
+    color: #fff;
+    cursor: pointer;
+    /* _Button base */
+    box-sizing: border-box;
+    /* Auto layout */
+    text-align: center;
+    /* Gray/300 */
+    border: 1px solid #d0d5dd;
+    /* Shadow/xs */
+    box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
+    border-radius: 10px;
+}
+
+.date-search {
+    width: 140px;
+}
+.multiselect {
+    width: 235px;
 }

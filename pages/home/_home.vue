@@ -3,33 +3,39 @@
     <Notification
       :type="'success'"
       :content="'Đăng nhập thành công'"
-      v-if="showNotification == 'login'"></Notification>
+      v-if="showNotification == 'login'"
+    ></Notification>
     <Notification
       :type="'success'"
       :content="'Xóa tài sản thành công'"
-      v-if="showNotification == 'delete'"></Notification>
+      v-if="showNotification == 'delete'"
+    ></Notification>
     <Notification
       :type="'success'"
       :content="'Thanh lý tài sản thành công'"
-      v-if="showNotification == 'dispose'"></Notification>
+      v-if="showNotification == 'dispose'"
+    ></Notification>
     <PopUp
       class="popup"
       v-show="isShowPopup == 'popupDelete'"
       @closePopup="closePopup()"
       @submitForm="submitForm('delete')"
       :title="'Delete ?'"
-      :content="'Bạn có chắc muốn xóa tài sản này'"></PopUp>
+      :content="'Bạn có chắc muốn xóa tài sản này'"
+    ></PopUp>
     <PopUp
       class="popup"
       v-show="isShowPopup == 'popupDispose'"
       @closePopup="closePopup()"
       @submitForm="submitForm('dispose')"
       :title="'Liquidation ?'"
-      :content="'Bạn có chắc muốn thanh lý tài sản này'"></PopUp>
+      :content="'Bạn có chắc muốn thanh lý tài sản này'"
+    ></PopUp>
     <CreateAsset
       :type="'update'"
       v-show="isShowPopup == 'popupCreate'"
-      @closePopup="closePopup()">
+      @closePopup="closePopup()"
+    >
     </CreateAsset>
     <Header class="page-top"></Header>
     <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
@@ -40,6 +46,22 @@
           <button class="CreatAsset" @click="isShowPopup = 'popupCreate'">
             Thêm tài sản
           </button>
+        </div>
+        <div class="action-container">
+          <div class="search">
+            <input
+              type="text"
+              class="inp-search"
+              placeholder="Tìm kiếm..."
+              v-model="searchValue"
+              @input="onSearchInput"
+            />
+            <img
+              class="icn-search"
+              src="../../static/icons/search.svg"
+              alt=""
+            />
+          </div>
         </div>
         <div class="table-assets">
           <span class="table-assets-title div-center">
@@ -66,7 +88,8 @@
             :itemProp="item"
             :itemIndex="index + 1"
             @showPopup="showPopup"
-            style="width: 100%"></assetItem>
+            style="width: 100%"
+          ></assetItem>
         </div>
         <div class="pagination">
           <div class="pagination-content div-center" v-show="isHaveContent">
@@ -79,7 +102,8 @@
                 style="cursor: pointer"
                 src="../../static/icons/chevron-left.svg"
                 alt=""
-                @click="goToPrevPage()" />
+                @click="goToPrevPage()"
+              />
               <p v-show="meta.currentPage >= 3" style="cursor: context-menu">
                 ...
               </p>
@@ -92,7 +116,8 @@
               </p>
               <p
                 v-show="meta.currentPage + 1 < meta.totalPages"
-                style="cursor: context-menu">
+                style="cursor: context-menu"
+              >
                 ...
               </p>
               <img
@@ -100,7 +125,8 @@
                 style="cursor: pointer"
                 src="../../static/icons/chevron-right.svg"
                 alt=""
-                @click="goToNextPage()" />
+                @click="goToNextPage()"
+              />
             </span>
           </div>
         </div>
@@ -124,6 +150,8 @@ export default {
       isHaveContent: false,
       isShowPopup: "",
       showNotification: "",
+      searchValue: "",
+      timeoutId: null, // thêm biến timeoutId vào component
     };
   },
   computed: {
@@ -165,6 +193,29 @@ export default {
         console.log(error);
       }
     },
+    async Search() {
+      this.currentPage = this.pageParam;
+      try {
+        await this.$axios
+          .get(
+            `/asset?pageNumber=${this.currentPage}&pageSize=10&searchQuery=${this.searchValue}`
+          )
+          .then((res) => {
+            this.listAssets = res["data"]["data"];
+            this.meta = res["data"]["meta"];
+            console.log(this.listAssets);
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    // debounce
+    onSearchInput() {
+      clearTimeout(this.timeoutId); // xóa bỏ setTimeout() trước đó (nếu có)
+      this.timeoutId = setTimeout(() => {
+        this.Search();
+      }, 700); // tạo mới setTimeout() với thời gian chờ là 700ms
+    },
     async deleteAsset() {
       try {
         await this.$axios.delete(`/asset/${this.assetID}`);
@@ -177,7 +228,7 @@ export default {
         console.log(error);
       }
     },
-    async disposeAsset(id) {
+    async disposeAsset() {
       try {
         await this.$axios.post(`/asset/${this.assetID}`);
         this.fetchData();

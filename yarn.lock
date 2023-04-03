@@ -2603,7 +2603,7 @@ chardet@^0.7.0:
   resolved "https://registry.npmjs.org/chardet/-/chardet-0.7.0.tgz"
   integrity sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==
 
-chart.js@^2.1.4, chart.js@^2.3.0:
+chart.js@^2.1.4:
   version "2.9.4"
   resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.9.4.tgz#0827f9563faffb2dc5c06562f8eb10337d5b9684"
   integrity sha512-B07aAzxcrikjAPyV+01j7BmOpxtQETxTSlQ26BEYJ+3iUkbNKaOJ/nDbT6JjyqYxseM0ON12COHYdU2cTIjC7A==
@@ -4228,14 +4228,6 @@ hash.js@^1.0.0, hash.js@^1.0.3:
     inherits "^2.0.3"
     minimalistic-assert "^1.0.1"
 
-hchs-vue-charts@^1.2.8:
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/hchs-vue-charts/-/hchs-vue-charts-1.2.8.tgz#91fd09224ab38cfd3bac1d2427f0ce5cbd57664f"
-  integrity sha512-hfAaVQ2v65N+R6cmflUuBvs2Th2Nb14sFBcHrq/0snabCEm+Eu1kFjaT3uxJWYdTu8SlpXz4vhOfGaLyajpA6w==
-  dependencies:
-    chart.js "^2.3.0"
-    vue "^2.0.1"
-
 he@1.2.0, he@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/he/-/he-1.2.0.tgz"
@@ -4773,11 +4765,6 @@ js-cookie@^2.2.1:
   resolved "https://registry.npmjs.org/js-cookie/-/js-cookie-2.2.1.tgz"
   integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
 
-js-cookie@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
-  integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
-
 js-tokens@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz"
@@ -4843,7 +4830,7 @@ jsonfile@^6.0.1:
 
 jwt-decode@^3.1.2:
   version "3.1.2"
-  resolved "https://registry.npmjs.org/jwt-decode/-/jwt-decode-3.1.2.tgz"
+  resolved "https://registry.yarnpkg.com/jwt-decode/-/jwt-decode-3.1.2.tgz#3fb319f3675a2df0c2895c8f5e9fa4b67b04ed59"
   integrity sha512-UfpWE/VZn0iP50d8cz9NrZLM9lSWhcJ+0Gt/nm4by88UL+J1SiKN8/5dkjMmbEzwL2CAe+67GsegCbIKtbp75A==
 
 kind-of@^3.0.2, kind-of@^3.0.3, kind-of@^3.2.0:
@@ -7870,6 +7857,11 @@ vue-meta@^2.4.0:
   dependencies:
     deepmerge "^4.2.2"
 
+vue-multiselect@^2.1.7:
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/vue-multiselect/-/vue-multiselect-2.1.7.tgz#f27afe3d46482b94810382af7a4826219255c47d"
+  integrity sha512-KIegcN+Ntwg3cbkY/jhw2s/+XJUM0Lpi/LcKFYCS8PrZHcWBl2iKCVze7ZCnRj3w8H7/lUJ9v7rj9KQiNxApBw==
+
 vue-no-ssr@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/vue-no-ssr/-/vue-no-ssr-1.1.1.tgz"
@@ -7915,7 +7907,7 @@ vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.0.1, vue@^2.7.10:
+vue@^2.7.10:
   version "2.7.14"
   resolved "https://registry.npmjs.org/vue/-/vue-2.7.14.tgz"
   integrity sha512-b2qkFyOM0kwqWFuQmgd4o+uHGU7T+2z3T+WQp8UBjADfEv2n4FEMffzBmCKNP0IGzOEEfYjvtcC62xaSKeQDrQ==

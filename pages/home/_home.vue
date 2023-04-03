@@ -57,6 +57,13 @@
                             alt=""
                         />
                     </div>
+                    <multiselect
+                        class="multiselect"
+                        :options="options"
+                        v-model="selectedOption"
+                        placeholder="Trạng thái của tài sản"
+                        @input="Search"
+                    ></multiselect>
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
@@ -162,6 +169,13 @@ export default {
             showNotification: '',
             searchValue: '',
             timeoutId: null, // thêm biến timeoutId vào component
+            selectedOption: '',
+            options: [
+                'Hoạt động tốt',
+                'Hư hỏng, cần được sửa chữa',
+                'Đang bảo dưỡng',
+                'GOOD'
+            ],
         };
     },
     computed: {
@@ -205,16 +219,19 @@ export default {
         },
         async Search() {
             this.currentPage = this.pageParam;
+            let url = `/asset?pageNumber=${this.currentPage}&pageSize=10`;
+            if (this.selectedOption !== '') {
+                url += `&status=${this.selectedOption}`;
+            }
+            if (this.searchValue !== '') {
+                url += `&searchQuery=${this.searchValue}`;
+            }
             try {
-                await this.$axios
-                    .get(
-                        `/asset?pageNumber=${this.currentPage}&pageSize=10&searchQuery=${this.searchValue}`
-                    )
-                    .then((res) => {
-                        this.listAssets = res['data']['data'];
-                        this.meta = res['data']['meta'];
-                        console.log(this.listAssets);
-                    });
+                await this.$axios.get(url).then((res) => {
+                    this.listAssets = res['data']['data'];
+                    this.meta = res['data']['meta'];
+                    console.log(this.listAssets);
+                });
             } catch (error) {
                 console.log(error);
             }
@@ -259,10 +276,10 @@ export default {
         },
         closeTab() {
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.add('close-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.remove('open-collapse');
             document.querySelector('.page-top').classList.add('close-collapse');
             document
@@ -270,9 +287,11 @@ export default {
                 .classList.remove('open-collapse');
         },
         openTab() {
-            document.querySelector('.page-main').classList.add('open-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
+                .classList.add('open-collapse');
+            document
+                .querySelector('.main-content')
                 .classList.remove('close-collapse');
             document.querySelector('.page-top').classList.add('open-collapse');
             document

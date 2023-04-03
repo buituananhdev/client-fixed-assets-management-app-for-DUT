@@ -136,10 +136,10 @@ export default {
         },
         closeTab() {
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.add('close-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.remove('open-collapse');
             document.querySelector('.page-top').classList.add('close-collapse');
             document
@@ -147,9 +147,9 @@ export default {
                 .classList.remove('open-collapse');
         },
         openTab() {
-            document.querySelector('.page-main').classList.add('open-collapse');
+            document.querySelector('.main-content').classList.add('open-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.remove('close-collapse');
             document.querySelector('.page-top').classList.add('open-collapse');
             document

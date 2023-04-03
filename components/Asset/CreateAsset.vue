@@ -84,7 +84,6 @@ export default {
 };
 </script>
 <style scoped src="../../static/css/popup.css"></style>
-<style scoped src="../../static/css/creatAssets.css"></style>
 <style scoped>
 .overlay {
   width: 100%;
@@ -169,25 +168,6 @@ export default {
 .form-input.width {
   padding-right: 200px;
   flex: 1;
-}
-
-.form-right-child {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-}
-
-.form-right-child {
-  width: 378px;
-  margin-top: 33px;
-}
-
-.form-input.pass {
-  padding-right: 35px;
-}
-
-.form-input.passAssets {
-  padding-right: 0px;
 }
 
 .form-input.passClass{

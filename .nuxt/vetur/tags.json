@@ -1,4 +1,16 @@
 {
+  "LayoutsFooter": {
+    "description": "Auto imported from components/Layouts/Footer.vue"
+  },
+  "LayoutsHeader": {
+    "description": "Auto imported from components/Layouts/Header.vue"
+  },
+  "LayoutsNavigationBar": {
+    "description": "Auto imported from components/Layouts/NavigationBar.vue"
+  },
+  "LayoutsTabLeft": {
+    "description": "Auto imported from components/Layouts/TabLeft.vue"
+  },
   "AssetItem": {
     "description": "Auto imported from components/Asset/assetItem.vue"
   },
@@ -13,18 +25,6 @@
   },
   "NotificationsTooltip": {
     "description": "Auto imported from components/Notifications/Tooltip.vue"
-  },
-  "LayoutsFooter": {
-    "description": "Auto imported from components/Layouts/Footer.vue"
-  },
-  "LayoutsHeader": {
-    "description": "Auto imported from components/Layouts/Header.vue"
-  },
-  "LayoutsNavigationBar": {
-    "description": "Auto imported from components/Layouts/NavigationBar.vue"
-  },
-  "LayoutsTabLeft": {
-    "description": "Auto imported from components/Layouts/TabLeft.vue"
   },
   "SelectBox": {
     "description": "Auto imported from components/SelectBox/SelectBox.vue"

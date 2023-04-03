@@ -26,31 +26,25 @@
               <input class="form-input width" type="text" />
             </div>
             <div class="tile-input">
-              <div class="form-right-child">
-                <h1 class="form-tile">
-                  Mã lớp<small style="color: red; font-size: 16px">*</small>
-                </h1>
-                <select class="form-input pass"></select>
-                <h1 class="form-tile">
-                  Mã thiết bị<small style="color: red; font-size: 16px"
-                    >*</small
-                  >
-                </h1>
-                <input class="form-input passAssets" type="text" />
-              </div>
-              <div class="form-right-dad">
-                <h1 class="form-tile">
-                  Số lượng<small style="color: red; font-size: 16px">*</small>
-                </h1>
-                <input class="form-input width" type="text" />
-                <h1 class="form-tile">
-                  Thành tiền<small style="color: red; font-size: 16px">*</small>
-                </h1>
-                <input class="form-input width" type="text" />
-              </div>
+              <h1 class="form-tile">
+                Mã lớp<small style="color: red; font-size: 16px">*</small>
+              </h1>
+              <select class="form-input passClass"></select>
+              <h1 class="form-tile">
+                Mã thiết bị<small style="color: red; font-size: 16px">*</small>
+              </h1>
+              <input class="form-input width" type="text" />
+              <h1 class="form-tile">
+                Số lượng<small style="color: red; font-size: 16px">*</small>
+              </h1>
+              <input class="form-input width" type="text" />
             </div>
           </div>
           <div class="tile-input3">
+            <h1 class="form-tile">
+              Thành tiền<small style="color: red; font-size: 16px">*</small>
+            </h1>
+            <input class="form-input width" type="text" />
             <h1 class="form-tile">Thông số kỹ thuật</h1>
             <input class="form-input width1" type="text" />
             <h1 class="form-tile">Ghi chú</h1>
@@ -159,7 +153,7 @@ export default {
 
 .form-input.width1 {
   flex: 1;
-  padding-bottom: 60px;
+  padding-bottom: 25px;
 }
 
 .tile-input3 {
@@ -195,4 +189,9 @@ export default {
 .form-input.passAssets {
   padding-right: 0px;
 }
+
+.form-input.passClass{
+  padding-left: 347px;
+}
+
 </style>

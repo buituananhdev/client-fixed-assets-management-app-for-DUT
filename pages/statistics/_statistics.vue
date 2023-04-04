@@ -1,8 +1,11 @@
 <template>
     <div class="container">
-        <Header class="page-top"></Header>
+        <Header
+            class="page-top"
+            :class="{ navSticky: isHeaderActive }"
+        ></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
-        <div class="main-content">
+        <div class="main-content" :class="{ max_height: isHeaderActive }">
             <div class="page-main">
                 <div class="number">
                     <div class="number-box">
@@ -89,6 +92,7 @@ export default {
     data() {
         return {
             count: [11074, 856, 126, 2346],
+            isHeaderActive: false,
         };
     },
     computed: {
@@ -138,7 +142,8 @@ export default {
                         hoverBorderRadius: 8,
                         label: '',
                         data: [
-                            1074, 856, 1263, 2567, 3451, 5672, 3456, 1945, 1990, 1234, 3461, 1067
+                            1074, 856, 1263, 2567, 3451, 5672, 3456, 1945, 1990,
+                            1234, 3461, 1067,
                         ],
                         backgroundColor: '#008cde',
                     },
@@ -161,6 +166,8 @@ export default {
     },
     mounted() {
         //this.fetchData();
+        const pageMain = document.querySelector('.main-content')
+        pageMain.addEventListener('scroll', this.handleScroll.bind(this));
     },
     methods: {
         async fetchData() {
@@ -178,10 +185,10 @@ export default {
         },
         closeTab() {
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.add('close-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.remove('open-collapse');
             document.querySelector('.page-top').classList.add('close-collapse');
             document
@@ -189,17 +196,25 @@ export default {
                 .classList.remove('open-collapse');
         },
         openTab() {
-            document.querySelector('.page-main').classList.add('open-collapse');
+            document.querySelector('.main-content').classList.add('open-collapse');
             document
-                .querySelector('.page-main')
+                .querySelector('.main-content')
                 .classList.remove('close-collapse');
             document.querySelector('.page-top').classList.add('open-collapse');
             document
                 .querySelector('.page-top')
                 .classList.remove('close-collapse');
         },
+        handleScroll() {
+            const pageMain = document.querySelector('.main-content')
+            const scrollPosition = pageMain.scrollTop;
+            if (scrollPosition >= 200) {
+                this.isHeaderActive = true;
+            } else {
+                this.isHeaderActive = false;
+            }
+        },
     },
-    components: { Doughnut },
 };
 </script>
 
@@ -270,5 +285,13 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
+}
+.navSticky {
+    transition: .2s ease;
+    transform: translateY(-100%);
+}
+.max_height {
+    transition: .2s ease;
+    height: 100%;
 }
 </style>

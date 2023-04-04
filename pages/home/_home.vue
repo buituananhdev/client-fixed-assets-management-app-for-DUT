@@ -41,12 +41,7 @@
     <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
     <div class="main-content">
       <div class="page-main">
-        <div class="page-main-title-and-bttcreat">
-          <h1 class="page-main-title">Danh sách tài sản</h1>
-          <button class="CreatAsset" @click="isShowPopup = 'popupCreate'">
-            Thêm tài sản
-          </button>
-        </div>
+        <h1 class="page-main-title">Danh sách tài sản</h1>
         <div class="action-container">
           <div class="search">
             <input
@@ -62,6 +57,9 @@
               alt=""
             />
           </div>
+          <button class="CreatAsset" @click="isShowPopup = 'popupCreate'">
+            Thêm tài sản
+          </button>
         </div>
         <div class="table-assets">
           <span class="table-assets-title div-center">

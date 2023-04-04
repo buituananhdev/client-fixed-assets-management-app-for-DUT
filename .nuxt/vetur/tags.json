@@ -1,10 +1,4 @@
 {
-  "AssetItem": {
-    "description": "Auto imported from components/Asset/assetItem.vue"
-  },
-  "AssetCreateAsset": {
-    "description": "Auto imported from components/Asset/CreateAsset.vue"
-  },
   "LayoutsFooter": {
     "description": "Auto imported from components/Layouts/Footer.vue"
   },
@@ -17,8 +11,11 @@
   "LayoutsTabLeft": {
     "description": "Auto imported from components/Layouts/TabLeft.vue"
   },
-  "SelectBox": {
-    "description": "Auto imported from components/SelectBox/SelectBox.vue"
+  "AssetItem": {
+    "description": "Auto imported from components/Asset/assetItem.vue"
+  },
+  "AssetCreateAsset": {
+    "description": "Auto imported from components/Asset/CreateAsset.vue"
   },
   "NotificationsNotification": {
     "description": "Auto imported from components/Notifications/Notification.vue"
@@ -28,5 +25,8 @@
   },
   "NotificationsTooltip": {
     "description": "Auto imported from components/Notifications/Tooltip.vue"
+  },
+  "SelectBox": {
+    "description": "Auto imported from components/SelectBox/SelectBox.vue"
   }
 }

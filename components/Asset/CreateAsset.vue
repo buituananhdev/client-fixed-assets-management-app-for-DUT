@@ -17,11 +17,11 @@
               <h1 class="form-tile">
                 Mã tài sản <small style="color: red; font-size: 16px">*</small>
               </h1>
-              <input class="form-input width" type="text" />
+               <input class="form-input width" type="text" />
               <h1 class="form-tile">
                 Tên tài sản<small style="color: red; font-size: 16px">*</small>
               </h1>
-              <input class="form-input width" type="text" />
+              <input class="form-input width" type="text" required />
               <h1 class="form-tile">Năm sử dụng</h1>
               <input class="form-input width" type="text" />
             </div>
@@ -33,18 +33,18 @@
               <h1 class="form-tile">
                 Mã thiết bị<small style="color: red; font-size: 16px">*</small>
               </h1>
-              <input class="form-input width" type="text" />
+              <input class="form-input width" type="text" required />
               <h1 class="form-tile">
                 Số lượng<small style="color: red; font-size: 16px">*</small>
               </h1>
-              <input class="form-input width" type="text" />
+              <input class="form-input width" type="text" required />
             </div>
           </div>
           <div class="tile-input3">
             <h1 class="form-tile">
               Thành tiền<small style="color: red; font-size: 16px">*</small>
             </h1>
-            <input class="form-input width" type="text" />
+            <input class="form-input width" type="text" required />
             <h1 class="form-tile">Thông số kỹ thuật</h1>
             <input class="form-input width1" type="text" />
             <h1 class="form-tile">Ghi chú</h1>
@@ -170,8 +170,7 @@ export default {
   flex: 1;
 }
 
-.form-input.passClass{
+.form-input.passClass {
   padding-left: 347px;
 }
-
 </style>

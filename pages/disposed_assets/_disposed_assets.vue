@@ -51,20 +51,20 @@
                             type="date"
                             class="inp-search"
                             placeholder="Ngày bắt đầu"
+                            @input="Search"
                             v-model="startDate"
-                        >
+                        />
                     </div>
                     <div class="date-search">
                         <input
                             type="date"
                             class="inp-search"
                             placeholder="Ngày kết thúc"
+                            @input="Search"
                             v-model="endDate"
-                        >
+                        />
                     </div>
-                    <button class="btn-search" @click="Search">
-                        Search
-                    </button>
+                    <!-- <button class="btn-search" @click="Search">Search</button> -->
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
@@ -165,7 +165,7 @@ export default {
             listAssets: [],
             meta: [],
             currentPage: 1,
-            assetID: '',
+            currentAsset: {},
             isHaveContent: false,
             showNotification: '',
             isShowPopup: '',
@@ -178,13 +178,33 @@ export default {
         pageParam() {
             return this.$route.query.page;
         },
+        startDateParam() {
+            return this.$route.query.startDate;
+        },
+        endDateParam() {
+            return this.$route.query.endDate;
+        },
+        searchParam() {
+            return this.$route.query.search;
+        },
     },
     mounted() {
-        this.fetchData();
+        this.searchValue = this.searchParam;
+        this.startDate = this.startDateParam;
+        this.endDate = this.endDateParam;
+        if (this.searchValue || this.startDate || this.endDate) {
+            this.Search();
+        } else {
+            this.fetchData();
+        }
     },
     watch: {
         pageParam: async function () {
-            this.fetchData();
+            if (this.searchValue || this.startDate || this.endDate) {
+                this.Search();
+            } else {
+                this.fetchData();
+            }
         },
         listAssets: {
             deep: true,
@@ -215,36 +235,35 @@ export default {
                 console.log(error);
             }
         },
-        async searchDate() {
-            this.currentPage = this.pageParam;
-            try {
-                await this.$axios
-                    .get(
-                        `/disposed_asset?pageNumber=${this.currentPage}&pageSize=10&startDate=${this.startDate}&endDate=${this.endDate}`
-                    )
-                    .then((res) => {
-                        this.listAssets = res['data']['data'];
-                        this.meta = res['data']['meta'];
-                        console.log(this.listAssets);
-                    });
-            } catch (error) {
-                console.log(error);
-            }
-        },
         async Search() {
             this.currentPage = this.pageParam;
             try {
-                await this.$axios
-                    .get(
-                        `/disposed_asset?pageNumber=${this.currentPage}&pageSize=10&searchQuery=${this.searchValue}&startDate=${this.startDate}&endDate=${this.endDate}`
-                    )
-                    .then((res) => {
-                        this.listAssets = res['data']['data'];
-                        this.meta = res['data']['meta'];
-                        console.log(this.listAssets);
-                    });
+                const { currentPage, searchValue, startDate, endDate } = this;
+                const url = `/disposed_asset?pageNumber=${currentPage}&pageSize=10${
+                    startDate ? `&startDate=${startDate}` : ''
+                }${endDate ? `&endDate=${endDate}` : ''}${
+                    searchValue ? `&searchQuery=${searchValue}` : ''
+                }`;
+                const {
+                    data: { data, meta },
+                } = await this.$axios.get(url);
+                this.listAssets = data;
+                this.meta = meta;
+                console.log(this.listAssets);
+                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
+                const query = {};
+                if (startDate) {
+                    query.startDate = startDate;
+                }
+                if (endDate) {
+                    query.endDate = endDate;
+                }
+                if (searchValue) {
+                    query.search = searchValue;
+                }
+                this.$router.push({ path: '/disposed_assets?page=1', query });
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         },
         // debounce
@@ -256,7 +275,9 @@ export default {
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(`/disposed_asset/${this.assetID}`);
+                await this.$axios.delete(
+                    `/disposed_asset/${this.currentAsset.assetID}`
+                );
                 this.fetchData();
                 this.isShowPopup = '';
                 this.showNotification = 'delete';
@@ -269,7 +290,9 @@ export default {
         },
         async cancelDispose() {
             try {
-                await this.$axios.post(`/disposed_asset/${this.assetID}`);
+                await this.$axios.post(
+                    `/disposed_asset/${this.currentAsset.assetID}`
+                );
                 this.fetchData();
                 this.isShowPopup = '';
                 this.showNotification = 'cancel';
@@ -293,7 +316,9 @@ export default {
                 .classList.remove('open-collapse');
         },
         openTab() {
-            document.querySelector('.main-content').classList.add('open-collapse');
+            document
+                .querySelector('.main-content')
+                .classList.add('open-collapse');
             document
                 .querySelector('.main-content')
                 .classList.remove('close-collapse');
@@ -303,15 +328,16 @@ export default {
                 .classList.remove('close-collapse');
         },
         submitForm(type) {
+            this.isShowPopup = '';
             if (type == 'delete') {
                 this.deleteAsset();
             } else if (type == 'dispose') {
                 this.disposeAsset();
             }
         },
-        showPopup(type, id) {
+        showPopup(type, asset) {
             this.isShowPopup = type;
-            this.assetID = id;
+            this.currentAsset = asset;
         },
         closePopup() {
             this.isShowPopup = '';

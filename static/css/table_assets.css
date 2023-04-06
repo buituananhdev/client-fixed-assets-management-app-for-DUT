@@ -111,16 +111,19 @@
     color: #9fa2b4;
 }
 .action-container {
+    position: relative;
     width: 100%;
     padding: 0 42px;
     display: flex;
     gap: 8px;
 }
 .search {
+    height: 100%;
     width: 200px;
     position: relative;
 }
 .inp-search {
+    height: 100%;
     width: 100%;
     padding: 6px 12px;
     padding-right: 32px;
@@ -136,20 +139,22 @@ input[type='date'] {
 }
 .icn-search {
     position: absolute;
-    top: 7px;
-    right: 10px;
+    top: 11px;
+    right: 15px;
 }
 
-.btn-search {
+.create-btn {
+    position: absolute;
+    right: 32px;
     /*text*/
-    padding: 0 16px;
+    height: 100%;
+    padding: 8px 18px;
     font-style: normal;
-    font-weight: 500;
-    line-height: 24px;
+    font-weight: 600;
     /* identical to box height, or 150% */
     /* Gray/700 */
     font-size: 12px;
-    background: #7f56d9;
+    background: #008cde;
     color: #fff;
     cursor: pointer;
     /* _Button base */
@@ -161,6 +166,9 @@ input[type='date'] {
     /* Shadow/xs */
     box-shadow: 0px 1px 2px rgba(16, 24, 40, 0.05);
     border-radius: 10px;
+}
+.create-btn:hover {
+    opacity: .8;
 }
 
 .date-search {

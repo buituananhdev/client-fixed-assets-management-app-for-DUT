@@ -1,5 +1,6 @@
 <template>
-    <div class="popup-container div-center" @click="closePopup()">
+    <div class="popup-container div-center">
+        <div class="overlay" @click="closePopup()"></div>
         <div class="popup-form div-center">
             <div class="popup-content">
                 <img src="../../static/icons/warning.svg" alt="" />

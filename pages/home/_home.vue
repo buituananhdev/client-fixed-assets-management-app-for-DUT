@@ -33,6 +33,7 @@
         ></PopUp>
         <CreateAsset
             :type="'update'"
+            :assetID="assetID"
             v-show="isShowPopup == 'popupCreate'"
             @closePopup="closePopup()"
         >
@@ -64,6 +65,7 @@
                         placeholder="Trạng thái của tài sản"
                         @input="Search"
                     ></multiselect>
+                    <button class="create-btn" @click="isShowPopup = 'popupCreate'">Thêm tài sản</button>
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
@@ -163,18 +165,19 @@ export default {
             listAssets: [],
             meta: [],
             currentPage: 1,
-            assetID: '',
+            assetID: {},
             isHaveContent: false,
-            isShowPopup: '',
+            isShowPopup: 'popupCreate',
             showNotification: '',
             searchValue: '',
             timeoutId: null, // thêm biến timeoutId vào component
             selectedOption: '',
             options: [
+                'Tất cả',
                 'Hoạt động tốt',
                 'Hư hỏng, cần được sửa chữa',
                 'Đang bảo dưỡng',
-                'GOOD'
+                'GOOD',
             ],
         };
     },
@@ -182,13 +185,30 @@ export default {
         pageParam() {
             return this.$route.query.page;
         },
+        pageSearch() {
+            return this.$route.query.search;
+        },
+        pageStatus() {
+            return this.$route.query.status;
+        },
     },
     mounted() {
-        this.fetchData();
+        this.searchValue = this.pageSearch;
+        this.selectedOption = this.pageStatus;
+        if (this.searchValue !== '' || this.selectedOption !== '') {
+            this.Search();
+        }
+        else {
+            this.fetchData();
+        }
     },
     watch: {
         pageParam: async function () {
-            this.fetchData();
+            if (this.searchValue !== '' || this.selectedOption !== '') {
+                this.Search();
+            }else {
+                this.fetchData();
+            }
         },
         listAssets: {
             deep: true,
@@ -219,21 +239,32 @@ export default {
         },
         async Search() {
             this.currentPage = this.pageParam;
-            let url = `/asset?pageNumber=${this.currentPage}&pageSize=10`;
-            if (this.selectedOption !== '') {
-                url += `&status=${this.selectedOption}`;
-            }
-            if (this.searchValue !== '') {
-                url += `&searchQuery=${this.searchValue}`;
-            }
             try {
-                await this.$axios.get(url).then((res) => {
-                    this.listAssets = res['data']['data'];
-                    this.meta = res['data']['meta'];
-                    console.log(this.listAssets);
-                });
+                const { currentPage, selectedOption, searchValue } = this;
+                let url = `/asset?pageNumber=${currentPage}&pageSize=10`;
+                if (selectedOption && selectedOption !== 'Tất cả') {
+                    url += `&status=${selectedOption}`;
+                }
+                if (searchValue) {
+                    url += `&searchQuery=${searchValue}`;
+                }
+                const {
+                    data: { data, meta },
+                } = await this.$axios.get(url);
+                this.listAssets = data;
+                this.meta = meta;
+                console.log(this.listAssets);
+                // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
+                const query = {};
+                if (selectedOption) {
+                    query.status = selectedOption;
+                }
+                if (searchValue) {
+                    query.search = searchValue;
+                }
+                this.$router.push({ path: `/home?page=${currentPage}`, query });
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         },
         // debounce
@@ -268,6 +299,7 @@ export default {
             }
         },
         submitForm(type) {
+            this.isShowPopup = '';
             if (type == 'delete') {
                 this.deleteAsset();
             } else if (type == 'dispose') {
@@ -306,8 +338,16 @@ export default {
             this.isShowPopup = '';
         },
         goToIndexPage() {
+            const query = {};
+            query.page = this.currentPage;
+            if (this.selectedOption) {
+                query.status = this.selectedOption;
+            }
+            if (this.searchValue) {
+                query.search = this.searchValue;
+            }
             this.$router.push({
-                query: { page: this.currentPage },
+                query: query,
             });
         },
         goToNextPage() {

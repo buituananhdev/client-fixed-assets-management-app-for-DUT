@@ -38,7 +38,6 @@ input {
     font-size: 16px;
     box-shadow: inset 0 0 0 1px #89888d;
     border-style: none;
-
     border-radius: 4px;
 }
 input:focus {
@@ -61,7 +60,6 @@ input:focus {
     justify-content: center;
     align-items: center;
 }
-
 .logo-img {
     width: 70px;
     height: auto;

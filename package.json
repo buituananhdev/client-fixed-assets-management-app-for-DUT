@@ -20,6 +20,7 @@
     "jwt-decode": "^3.1.2",
     "nuxt": "^2.15.8",
     "nuxt-vue-multiselect": "^1.0.4",
+    "vee-validate": "^2.2.13",
     "vue": "^2.7.10",
     "vue-chartjs": "^3.5.1",
     "vue-flatpickr-component": "^11.0.3",

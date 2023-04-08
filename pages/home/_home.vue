@@ -36,6 +36,7 @@
             :assetProp="currentAsset"
             v-show="isShowPopup == 'popupCreate'"
             @closePopup="closePopup()"
+            @submitForm="submitForm"
         >
         </CreateAsset>
         <Header class="page-top"></Header>
@@ -65,7 +66,12 @@
                         placeholder="Trạng thái của tài sản"
                         @input="Search"
                     ></multiselect>
-                    <button class="create-btn" @click="isShowPopup = 'popupCreate'">Thêm tài sản</button>
+                    <button
+                        class="create-btn"
+                        @click="isShowPopup = 'popupCreate'"
+                    >
+                        Thêm tài sản
+                    </button>
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
@@ -198,8 +204,7 @@ export default {
         this.selectedOption = this.pageStatus;
         if (this.searchValue !== '' || this.selectedOption !== '') {
             this.Search();
-        }
-        else {
+        } else {
             this.fetchData();
         }
     },
@@ -207,7 +212,7 @@ export default {
         pageParam: async function () {
             if (this.searchValue !== '' || this.selectedOption !== '') {
                 this.Search();
-            }else {
+            } else {
                 this.fetchData();
             }
         },
@@ -240,12 +245,10 @@ export default {
         },
         async fetchDetail(id) {
             try {
-                await this.$axios
-                    .get(`/asset/${id}`)
-                    .then((res) => {
-                        this.currentAsset = res['data']['data'];
-                        console.log(this.currentAsset);
-                    });
+                await this.$axios.get(`/asset/${id}`).then((res) => {
+                    this.currentAsset = res['data']['data'];
+                    console.log(this.currentAsset);
+                });
             } catch (error) {
                 console.log(error);
             }
@@ -287,6 +290,25 @@ export default {
                 this.Search();
             }, 700); // tạo mới setTimeout() với thời gian chờ là 700ms
         },
+        async addAsset(asset) {
+            try {
+                await this.$axios.post(`/asset`, {
+                    assetID: asset.assetID,
+                    deviceID: asset.deviceID,
+                    roomID: asset.roomID,
+                    assetName: asset.assetName,
+                    yearOfUse: 2023,
+                    technicalSpecification: asset.technicalSpecification,
+                    quantity: asset.quantity,
+                    cost: asset.cost,
+                    status: 'Hoạt động tốt',
+                    notes: asset.notes
+                });
+                this.fetchData();
+            } catch (error) {
+                console.log(error);
+            }
+        },
         async deleteAsset() {
             try {
                 await this.$axios.delete(`/asset/${this.assetID}`);
@@ -311,12 +333,15 @@ export default {
                 console.log(error);
             }
         },
-        submitForm(type) {
+        submitForm(type, asset) {
             this.isShowPopup = '';
             if (type == 'delete') {
                 this.deleteAsset();
             } else if (type == 'dispose') {
                 this.disposeAsset();
+            }
+            else if (type == 'create') {
+                this.addAsset(asset);
             }
         },
         closeTab() {
@@ -344,11 +369,10 @@ export default {
                 .classList.remove('close-collapse');
         },
         showPopup(type, id) {
-            if(type == 'popupCreate') {
+            if (type == 'popupCreate') {
                 this.fetchDetail(id);
                 this.isShowPopup = type;
-            }
-            else {
+            } else {
                 this.isShowPopup = type;
                 this.assetID = id;
             }

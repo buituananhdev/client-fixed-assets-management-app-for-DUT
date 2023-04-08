@@ -9,12 +9,13 @@
                     alt=""
                     @click="closePopup()"
                 />
-                <h1 class="popup-title" v-if="JSON.stringify(currentAsset) === '{}'">
+                <h1
+                    class="popup-title"
+                    v-if="JSON.stringify(currentAsset) === '{}'"
+                >
                     Thêm tài sản
                 </h1>
-                <h1 class="popup-title" v-else>
-                    Cập nhật tài sản
-                </h1>
+                <h1 class="popup-title" v-else>Cập nhật tài sản</h1>
                 <div class="form-container">
                     <div class="asset-id form-col">
                         <p class="form-label">
@@ -24,7 +25,16 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.assetID"
+                            v-validate="'required|min:1|max:10'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('asset ID'),
+                            }"
+                            name="asset ID"
                         />
+                        <span v-show="errors.has('asset ID')" class="err">{{
+                            errors.first('asset ID')
+                        }}</span>
                     </div>
                     <div class="device-id form-col">
                         <p class="form-label">
@@ -34,7 +44,18 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.deviceID"
+                            v-validate="'required|min:1|max:10'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('DEVICE ID'),
+                            }"
+                            name="DEVICE ID"
                         />
+                        <span
+                            v-show="errors.has('DEVICE ID')"
+                            class="err"
+                            >{{ errors.first('DEVICE ID') }}</span
+                        >
                     </div>
                     <div class="asset-name form-col">
                         <p class="form-label">
@@ -44,7 +65,16 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.assetName"
+                            v-validate="'required|min:1|max:10'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('ASSET NAME'),
+                            }"
+                            name="ASSET NAME"
                         />
+                        <span v-show="errors.has('ASSET NAME')" class="err">{{
+                            errors.first('ASSET NAME')
+                        }}</span>
                     </div>
                     <div class="organization-name form-col">
                         <p class="form-label">
@@ -73,10 +103,21 @@
                             Số lượng <small style="color: #c7422e">*</small>
                         </p>
                         <input
-                            type="number"
+                            type="text"
                             class="form-inp"
                             v-model="currentAsset.quantity"
+                            v-validate="'required|numeric|min:1|max:10'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('QUANTITY'),
+                            }"
+                            name="QUANTITY"
                         />
+                        <span
+                            v-show="errors.has('QUANTITY')"
+                            class="err"
+                            >{{ errors.first('QUANTITY') }}</span
+                        >
                     </div>
                     <div class="total form-col">
                         <p class="form-label">
@@ -86,6 +127,7 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.cost"
+
                         />
                     </div>
                     <div class="technicalSpecification form-col">
@@ -140,8 +182,7 @@ export default {
     },
     methods: {
         submitForm() {
-            console.log(this.assetID);
-            this.$emit('submitForm');
+            this.$emit('submitForm', 'create', this.currentAsset);
         },
         closePopup() {
             this.$emit('closePopup');
@@ -154,10 +195,10 @@ export default {
 .popup-form {
     top: 5%;
     width: 680px;
-    height: 620px;
+    height: 700px;
     padding: 32px;
     padding-bottom: 48px;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 .popup-content {
@@ -244,7 +285,7 @@ export default {
 
 .form-inp {
     width: 100%;
-    padding: 6px 12px;
+    padding: 6px;
     border: solid 0.5px #dfe0eb;
     border-radius: 6px;
     cursor: pointer;
@@ -259,6 +300,12 @@ input {
 
 textarea {
     resize: none;
-    height: 100px;
+    height: 120px;
+}
+.err {
+    font-size: 12px;
+    display: flex;
+    justify-content: flex-start;
+    color: #ff4433;
 }
 </style>

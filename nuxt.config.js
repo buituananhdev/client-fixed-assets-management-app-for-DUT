@@ -34,6 +34,7 @@ export default {
         '@plugins/chart.js',
         '@plugins/handleErrorApi.js',
         { src: '~/plugins/vue-datepicker', ssr: false },
+        { src: '~/plugins/vee-validate.js', ssr: true }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

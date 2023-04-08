@@ -1,0 +1,10 @@
+1. PULL CODE MỚI
+$ git pull origin client
+
+2. ĐẨY CODE CỦA MÌNH LÊN 
+B1: PULL CODE MỚI
+B2:
+$ git add *
+$ git commit -m "viết commit có ý nghĩa"
+$ git branch -M <tên nhánh muốn tạo>
+$ git push origin <tên nhánh vừa tạo>

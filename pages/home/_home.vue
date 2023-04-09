@@ -66,17 +66,13 @@
                         placeholder="Trạng thái của tài sản"
                         @input="Search"
                     ></multiselect>
-                    <button
-                        class="create-btn"
-                        @click="isShowPopup = 'popupCreate'"
-                    >
+                    <button class="create-btn" @click="downloadFile">
                         Thêm tài sản
                     </button>
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
-                        <p class="div-center id-col">Mã TS</p>
                         <p class="div-center device-id-col">Mã số TB</p>
                         <p class="div-center name-col">
                             Tên tài sản cố định, CC, DC và đồ gỗ ...
@@ -184,7 +180,6 @@ export default {
                 'Hoạt động tốt',
                 'Hư hỏng, cần được sửa chữa',
                 'Đang bảo dưỡng',
-                'GOOD',
             ],
         };
     },
@@ -229,16 +224,33 @@ export default {
         },
     },
     methods: {
+        async downloadFile() {
+            const apiURL =
+                'https://localhost:7011/api/asset?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+            const response = await this.$axios({
+                method: 'get',
+                url: apiURL,
+                responseType: 'blob', // yêu cầu Axios trả về dữ liệu dạng blob (binary large object)
+            });
+            // Tạo đường dẫn đến tệp được tải xuống
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            // Tạo một thẻ a để kích hoạt tải xuống tệp
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'SoTheoDoiTSCD.xlsx');
+            document.body.appendChild(link);
+            link.click();
+            // Xóa đối tượng thẻ a để tránh hiển thị thừa trên trang
+            document.body.removeChild(link);
+        },
         async fetchData() {
-            this.currentPage = this.pageParam;
             try {
-                await this.$axios
-                    .get(`/asset?pageNumber=${this.currentPage}&pageSize=10`)
-                    .then((res) => {
-                        this.listAssets = res['data']['data'];
-                        this.meta = res['data']['meta'];
-                        console.log(this.listAssets);
-                    });
+                const response = await this.$axios.get(
+                    `/asset?pageNumber=${this.currentPage}&pageSize=10`
+                );
+                this.listAssets = response.data.data;
+                this.meta = response.data.meta;
+                console.log(this.listAssets);
             } catch (error) {
                 console.log(error);
             }
@@ -293,6 +305,24 @@ export default {
         async addAsset(asset) {
             try {
                 await this.$axios.post(`/asset`, {
+                    deviceID: asset.deviceID,
+                    roomID: asset.roomID,
+                    assetName: asset.assetName,
+                    yearOfUse: 2023,
+                    technicalSpecification: asset.technicalSpecification,
+                    quantity: asset.quantity,
+                    cost: asset.cost,
+                    status: 'Hoạt động tốt',
+                    notes: asset.notes,
+                });
+                this.fetchData();
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async updateAsset(asset) {
+            try {
+                await this.$axios.put(`/asset/${asset.assetID}`, {
                     assetID: asset.assetID,
                     deviceID: asset.deviceID,
                     roomID: asset.roomID,
@@ -302,7 +332,7 @@ export default {
                     quantity: asset.quantity,
                     cost: asset.cost,
                     status: 'Hoạt động tốt',
-                    notes: asset.notes
+                    notes: asset.notes,
                 });
                 this.fetchData();
             } catch (error) {
@@ -339,9 +369,12 @@ export default {
                 this.deleteAsset();
             } else if (type == 'dispose') {
                 this.disposeAsset();
-            }
-            else if (type == 'create') {
-                this.addAsset(asset);
+            } else if (type == 'create') {
+                if (!asset.assetID) {
+                    this.addAsset(asset);
+                } else {
+                    this.updateAsset(asset);
+                }
             }
         },
         closeTab() {

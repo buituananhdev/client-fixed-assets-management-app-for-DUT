@@ -10,7 +10,7 @@
                 <div class="number">
                     <div class="number-box">
                         <p class="type">Tổng số tài sản</p>
-                        <div class="number-of-type">12056</div>
+                        <div class="number-of-type">{{ count[0] }}</div>
                         <div
                             class="line"
                             style="background-color: #7f56d9"
@@ -18,7 +18,10 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài tài hoạt động tốt</p>
-                        <div class="number-of-type">11074</div>
+                        <div class="number-of-type">{{ count[1] }}</div>
+                        <div class="percent">
+                            <p>{{ (count[1] * 100 / count[0]).toFixed(2) }} %</p>
+                        </div>
                         <div
                             class="line"
                             style="background-color: #50c878"
@@ -26,7 +29,10 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản đang bảo trì</p>
-                        <div class="number-of-type">856</div>
+                        <div class="number-of-type">{{ count[2] }}</div>
+                        <div class="percent">
+                            <p>{{ (count[2] * 100 / count[0]).toFixed(2) }} %</p>
+                        </div>
                         <div
                             class="line"
                             style="background-color: #fdc571"
@@ -34,7 +40,10 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản bị hỏng</p>
-                        <div class="number-of-type">126</div>
+                        <div class="number-of-type">{{ count[3] }}</div>
+                        <div class="percent">
+                            <p>{{ (count[3] * 100 / count[0]).toFixed(2) }} %</p>
+                        </div>
                         <div
                             class="line"
                             style="background-color: #c7422e"
@@ -42,7 +51,10 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản đã thanh lý</p>
-                        <div class="number-of-type">2346</div>
+                        <div class="number-of-type">{{ count[4] }}</div>
+                        <div class="percent">
+                            <p>{{ (count[4] * 100 / count[0]).toFixed(2) }} %</p>
+                        </div>
                         <div
                             class="line"
                             style="background-color: #008cde"
@@ -86,12 +98,10 @@
 </template>
 
 <script>
-import { Doughnut } from 'vue-chartjs';
-
 export default {
     data() {
         return {
-            count: [11074, 856, 126, 2346],
+            count: [12064, 11074, 856, 126, 2346],
             isHeaderActive: false,
         };
     },
@@ -165,7 +175,6 @@ export default {
         },
     },
     mounted() {
-        //this.fetchData();
         const pageMain = document.querySelector('.main-content')
         pageMain.addEventListener('scroll', this.handleScroll.bind(this));
     },
@@ -277,6 +286,17 @@ export default {
     justify-content: center;
     align-items: center;
     padding: 24px;
+}
+.percent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 40%;
+    right: 12px;
+}
+.percent p {
+    font-size: 12px;
 }
 .line {
     height: 10px;

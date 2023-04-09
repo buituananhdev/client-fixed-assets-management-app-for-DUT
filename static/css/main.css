@@ -15,26 +15,23 @@ html, body {
     align-items: center;
 }
 .stt-col {
-    width: 3.47%;
-}
-.id-col{
-    width: 8.4%;
+    width: 4.47%;
 }
 
 .device-id-col {
-    width: 10.42%;
+    width: 11.42%;
 }
 
 .name-col{
-    width: 27.777%;
+    width: 28.777%;
 }
 
 .year-used-col {
-    width: 10.4%;
+    width: 11.4%;
 }
 
 .quantity-col{
-    width: 8.4%;
+    width: 9.4%;
 }
 
 .cost-col{
@@ -42,12 +39,12 @@ html, body {
 }
 
 .status-col {
-    width: 14%;
+    width: 15%;
 }
 
 .show-action-col {
     position: relative;
-    width: 8.4%;
+    width: 9.4%;
     height: 100%;
     cursor: pointer;
 }

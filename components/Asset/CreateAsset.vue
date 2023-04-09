@@ -11,31 +11,12 @@
                 />
                 <h1
                     class="popup-title"
-                    v-if="JSON.stringify(currentAsset) === '{}'"
+                    v-if="JSON.stringify(assetProp) === '{}'"
                 >
                     Thêm tài sản
                 </h1>
                 <h1 class="popup-title" v-else>Cập nhật tài sản</h1>
                 <div class="form-container">
-                    <div class="asset-id form-col">
-                        <p class="form-label">
-                            Mã tài sản <small style="color: #c7422e">*</small>
-                        </p>
-                        <input
-                            type="text"
-                            class="form-inp"
-                            v-model="currentAsset.assetID"
-                            v-validate="'required|min:1|max:10'"
-                            :class="{
-                                input: true,
-                                'is-danger': errors.has('asset ID'),
-                            }"
-                            name="asset ID"
-                        />
-                        <span v-show="errors.has('asset ID')" class="err">{{
-                            errors.first('asset ID')
-                        }}</span>
-                    </div>
                     <div class="device-id form-col">
                         <p class="form-label">
                             Mã thiết bị <small style="color: #c7422e">*</small>
@@ -44,18 +25,16 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.deviceID"
-                            v-validate="'required|min:1|max:10'"
+                            v-validate="'required|min:1|max:30'"
                             :class="{
                                 input: true,
-                                'is-danger': errors.has('DEVICE ID'),
+                                'is-danger': errors.has('Mã thiết bị'),
                             }"
-                            name="DEVICE ID"
+                            name="Mã thiết bị"
                         />
-                        <span
-                            v-show="errors.has('DEVICE ID')"
-                            class="err"
-                            >{{ errors.first('DEVICE ID') }}</span
-                        >
+                        <span v-show="errors.has('Mã thiết bị')" class="err">{{
+                            errors.first('Mã thiết bị')
+                        }}</span>
                     </div>
                     <div class="asset-name form-col">
                         <p class="form-label">
@@ -65,38 +44,39 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.assetName"
-                            v-validate="'required|min:1|max:10'"
+                            v-validate="'required|min:1|max:40'"
                             :class="{
                                 input: true,
-                                'is-danger': errors.has('ASSET NAME'),
+                                'is-danger': errors.has('Tên tài sản'),
                             }"
-                            name="ASSET NAME"
+                            name="Tên tài sản"
                         />
-                        <span v-show="errors.has('ASSET NAME')" class="err">{{
-                            errors.first('ASSET NAME')
+                        <span v-show="errors.has('Tên tài sản')" class="err">{{
+                            errors.first('Tên tài sản')
                         }}</span>
-                    </div>
-                    <div class="organization-name form-col">
-                        <p class="form-label">
-                            Tên khoa sử dụng
-                            <small style="color: #c7422e">*</small>
-                        </p>
-                        <input
-                            type="text"
-                            class="form-inp"
-                            v-model="currentAsset.deviceID"
-                        />
                     </div>
                     <div class="room-name form-col">
                         <p class="form-label">
                             Phòng sử dụng
                             <small style="color: #c7422e">*</small>
                         </p>
-                        <input
-                            type="text"
-                            class="form-inp"
+                        <multiselect
+                            class="multiselect"
+                            :options="listRooms"
                             v-model="currentAsset.roomID"
-                        />
+                            placeholder="Tìm kiếm hoặc chọn phòng"
+                            v-validate="'required'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Phòng sử dụng'),
+                            }"
+                            name="Phòng sử dụng"
+                        ></multiselect>
+                        <span
+                            v-show="errors.has('Phòng sử dụng')"
+                            class="err"
+                            >{{ errors.first('Phòng sử dụng') }}</span
+                        >
                     </div>
                     <div class="quantity form-col">
                         <p class="form-label">
@@ -106,18 +86,16 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.quantity"
-                            v-validate="'required|numeric|min:1|max:10'"
+                            v-validate="'required|numeric'"
                             :class="{
                                 input: true,
-                                'is-danger': errors.has('QUANTITY'),
+                                'is-danger': errors.has('Số lượng'),
                             }"
-                            name="QUANTITY"
+                            name="Số lượng"
                         />
-                        <span
-                            v-show="errors.has('QUANTITY')"
-                            class="err"
-                            >{{ errors.first('QUANTITY') }}</span
-                        >
+                        <span v-show="errors.has('Số lượng')" class="err">{{
+                            errors.first('Số lượng')
+                        }}</span>
                     </div>
                     <div class="total form-col">
                         <p class="form-label">
@@ -127,8 +105,16 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.cost"
-
+                            v-validate="'required|numeric'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Thành tiền'),
+                            }"
+                            name="Thành tiền"
                         />
+                        <span v-show="errors.has('Thành tiền')" class="err">{{
+                            errors.first('Thành tiền')
+                        }}</span>
                     </div>
                     <div class="technicalSpecification form-col">
                         <p class="form-label">Thông số kỹ thuật</p>
@@ -136,18 +122,37 @@
                             type="text"
                             class="form-inp"
                             v-model="currentAsset.technicalSpecification"
+                            v-validate="'min:1|max:255'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Thông số kỹ thuật'),
+                            }"
+                            name="Thông số kỹ thuật"
                         />
+                        <span
+                            v-show="errors.has('Thông số kỹ thuật')"
+                            class="err"
+                            >{{ errors.first('Thông số kỹ thuật') }}</span
+                        >
                     </div>
-                    <div class="note form-col">
+                    <div class="note">
                         <p class="form-label">Ghi chú</p>
                         <textarea
-                            name=""
                             id=""
                             cols="30"
                             rows="10"
                             class="form-inp"
                             v-model="currentAsset.notes"
+                            v-validate="'min:1|max:255'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Ghi chú'),
+                            }"
+                            name="Ghi chú"
                         ></textarea>
+                        <span v-show="errors.has('Ghi chú')" class="err">{{
+                            errors.first('Ghi chú')
+                        }}</span>
                     </div>
                 </div>
             </div>
@@ -173,7 +178,12 @@ export default {
     data() {
         return {
             currentAsset: {},
+            listRooms: [],
+            checkBtn: false,
         };
+    },
+    mounted() {
+        this.fetchRoom();
     },
     watch: {
         assetProp(newValue) {
@@ -181,8 +191,19 @@ export default {
         },
     },
     methods: {
-        submitForm() {
-            this.$emit('submitForm', 'create', this.currentAsset);
+        async fetchRoom() {
+            try {
+                const response = await this.$axios.get(`/rooms`);
+                this.listRooms = response.data.data.map((room) => room.roomID);
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async submitForm() {
+            const result = await this.$validator.validateAll();
+            if (result) {
+                this.$emit('submitForm', 'create', this.currentAsset);
+            }
         },
         closePopup() {
             this.$emit('closePopup');
@@ -195,20 +216,22 @@ export default {
 .popup-form {
     top: 5%;
     width: 680px;
-    height: 700px;
-    padding: 32px;
-    padding-bottom: 48px;
-    justify-content: space-evenly;
-    align-items: center;
+    min-height: 630px;
+    padding: 32px 24px 32px 24px;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 32px;
 }
 .popup-content {
     position: relative;
-    max-height: 90%;
+    max-height: 85%;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    justify-content: flex-start;
+    gap: 32px;
 }
 .button-box {
+    height: 10%;
     width: 100%;
 }
 .popup-title {
@@ -220,72 +243,73 @@ export default {
     position: absolute;
     width: 15px;
     height: 15px;
-    top: 0;
-    right: -5px;
+    right: 5px;
     transition: 0.2s ease;
 }
 .close-icn:hover {
     transform: rotate(90deg);
 }
+
 .form-container {
-    /* grid setting */
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
-    gap: 12px 24px;
+    gap: 24px 24px;
     grid-auto-flow: row;
     width: 100%;
-    height: 80%;
-}
-
-.asset-id {
-    grid-area: 1 / 1 / 2 / 2;
-}
-
-.device-id {
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-.asset-name {
-    grid-area: 3 / 1 / 4 / 2;
-}
-
-.organization-name {
-    grid-area: 1 / 2 / 2 / 3;
-}
-
-.room-name {
-    grid-area: 2 / 2 / 3 / 3;
-}
-
-.quantity {
-    grid-area: 4 / 1 / 5 / 2;
-}
-
-.total {
-    grid-area: 3 / 2 / 4 / 3;
-}
-
-.technicalSpecification {
-    grid-area: 4 / 2 / 5 / 3;
+    max-height: 70%;
 }
 
 .note {
-    grid-area: 5 / 1 / 6 / 3;
+    grid-area: 4 / 1 / 5 / 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    height: 70%;
+}
+
+.device-id {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.asset-name {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.quantity {
+    grid-area: 3 / 1 / 4 / 2;
+}
+
+.room-name {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.technicalSpecification {
+    grid-area: 3 / 2 / 4 / 3;
+}
+
+.total {
+    grid-area: 2 / 2 / 3 / 3;
 }
 
 .form-col {
+    min-height: 66px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 8px;
 }
-
+.multiselect {
+    width: 100%;
+    height: 100%;
+}
 .form-inp {
     width: 100%;
-    padding: 6px;
+    height: 100%;
+    padding: 6px 12px;
     border: solid 0.5px #dfe0eb;
     border-radius: 6px;
     cursor: pointer;

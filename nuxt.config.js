@@ -49,6 +49,7 @@ export default {
         '@nuxtjs/auth',
         '@nuxtjs/dotenv',
         'nuxt-vue-multiselect'
+        
     ],
     axios: {
         // extra config e.g

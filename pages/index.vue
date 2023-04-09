@@ -217,7 +217,7 @@ export default {
                         );
                         localStorage.setItem(
                             'currentUser',
-                            res['data']['username']
+                            res['data']['fullName']
                         );
                         this.$router.push('/home?page=1');
                     });

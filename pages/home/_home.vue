@@ -1,19 +1,10 @@
 <template>
     <div class="container">
         <Notification
-            :type="'success'"
-            :content="'Đăng nhập thành công'"
-            v-if="showNotification == 'login'"
-        ></Notification>
-        <Notification
-            :type="'success'"
-            :content="'Xóa tài sản thành công'"
-            v-if="showNotification == 'delete'"
-        ></Notification>
-        <Notification
-            :type="'success'"
-            :content="'Thanh lý tài sản thành công'"
-            v-if="showNotification == 'dispose'"
+            :type="notiType"
+            :object="notiObject"
+            :action="notiAction"
+            v-if="showNotification == true"
         ></Notification>
         <PopUp
             class="popup"
@@ -66,9 +57,17 @@
                         placeholder="Trạng thái của tài sản"
                         @input="Search"
                     ></multiselect>
-                    <button class="create-btn" @click="downloadFile">
-                        Thêm tài sản
-                    </button>
+                    <div class="btn-container">
+                        <button class="create-btn" @click="downloadFile">
+                            Xuất ra file excel
+                        </button>
+                        <button
+                            class="create-btn"
+                            @click="isShowPopup = 'popupCreate'"
+                        >
+                            Thêm tài sản
+                        </button>
+                    </div>
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
@@ -170,7 +169,10 @@ export default {
             assetID: {},
             isHaveContent: false,
             isShowPopup: '',
-            showNotification: '',
+            showNotification: false,
+            notiAction: '',
+            notiObject: '',
+            notiType: '',
             searchValue: '',
             timeoutId: null, // thêm biến timeoutId vào component
             selectedOption: '',
@@ -225,23 +227,42 @@ export default {
     },
     methods: {
         async downloadFile() {
-            const apiURL =
-                'https://localhost:7011/api/asset?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
-            const response = await this.$axios({
-                method: 'get',
-                url: apiURL,
-                responseType: 'blob', // yêu cầu Axios trả về dữ liệu dạng blob (binary large object)
-            });
-            // Tạo đường dẫn đến tệp được tải xuống
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            // Tạo một thẻ a để kích hoạt tải xuống tệp
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'SoTheoDoiTSCD.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            // Xóa đối tượng thẻ a để tránh hiển thị thừa trên trang
-            document.body.removeChild(link);
+            try {
+                const apiURL =
+                    'https://localhost:7011/api/asset?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                const response = await this.$axios({
+                    method: 'get',
+                    url: apiURL,
+                    responseType: 'blob', // yêu cầu Axios trả về dữ liệu dạng blob (binary large object)
+                });
+                // Tạo đường dẫn đến tệp được tải xuống
+                const url = window.URL.createObjectURL(
+                    new Blob([response.data])
+                );
+                // Tạo một thẻ a để kích hoạt tải xuống tệp
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'SoTheoDoiTSCD.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                // Xóa đối tượng thẻ a để tránh hiển thị thừa trên trang
+                document.body.removeChild(link);
+                this.notiAction = 'Download';
+                this.notiObject = 'file';
+                this.notiType = 'thành công';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
+            } catch (error) {
+                this.notiAction = 'Export';
+                this.notiObject = 'file';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
+            }
         },
         async fetchData() {
             try {
@@ -315,8 +336,22 @@ export default {
                     status: 'Hoạt động tốt',
                     notes: asset.notes,
                 });
+                this.notiAction = 'Thêm mới';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
                 this.fetchData();
             } catch (error) {
+                this.notiAction = 'Thêm mới';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
                 console.log(error);
             }
         },
@@ -334,32 +369,66 @@ export default {
                     status: 'Hoạt động tốt',
                     notes: asset.notes,
                 });
+                this.notiAction = 'Cập nhật';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
                 this.fetchData();
             } catch (error) {
+                this.notiAction = 'Cập nhật';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
                 console.log(error);
             }
         },
         async deleteAsset() {
             try {
                 await this.$axios.delete(`/asset/${this.assetID}`);
-                this.fetchData();
-                this.showNotification = 'delete';
+                this.notiAction = 'Xóa';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
+                this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
+                this.fetchData();
             } catch (error) {
+                this.notiAction = 'Xóa';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
                 console.log(error);
             }
         },
         async disposeAsset() {
             try {
                 await this.$axios.post(`/asset/${this.assetID}`);
-                this.fetchData();
-                this.showNotification = 'dispose';
+                this.notiAction = 'Thanh lý';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
+                this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
+                this.fetchData();
             } catch (error) {
+                this.notiAction = 'Thanh lý';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
                 console.log(error);
             }
         },

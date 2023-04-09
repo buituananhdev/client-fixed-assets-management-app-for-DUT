@@ -1,18 +1,75 @@
 <template>
-    <div class="notification" :style="{'border-color': type === 'success' ? '#7CB969' : type === 'failure' ? '#C7422E' : '#FDC571'}">
+    <div
+        class="notification"
+        :style="{
+            'border-color':
+                type === 'thành công'
+                    ? '#7CB969'
+                    : type === 'thất bại'
+                    ? '#C7422E'
+                    : '#FDC571',
+        }"
+    >
         <div class="noti-container">
-            <img class="close-icn" src="../../static/icons/close.svg" alt="">
-            <img v-show="type == 'success'" src="../../static/icons/success-noti.svg" alt="">
-            <img v-show="type == 'failure'" src="../../static/icons/failure-noti.svg" alt="">
+            <img class="close-icn" src="../../static/icons/close.svg" alt="" />
+            <img
+                v-show="type == 'thành công'"
+                src="../../static/icons/success-noti.svg"
+                alt=""
+            />
+            <img
+                v-show="type == 'thất bại'"
+                src="../../static/icons/failure-noti.svg"
+                alt=""
+            />
             <p class="content">{{ content }}</p>
         </div>
-        <div class="progress" :style="{'background-color': type === 'success' ? '#7CB969' : type === 'failure' ? '#C7422E' : '#FDC571'}"></div>
+        <div
+            class="progress"
+            :style="{
+                'background-color':
+                    type === 'thành công'
+                        ? '#7CB969'
+                        : type === 'thất bại'
+                        ? '#C7422E'
+                        : '#FDC571',
+            }"
+        ></div>
     </div>
 </template>
 
 <script>
 export default {
-    props: ['type', 'title', 'content'],
+    props: ['type', 'action', 'object'],
+    data() {
+        return {
+            content: this.action + ' ' + this.object + ' ' + this.type,
+        };
+    },
+    watch: {
+        action(newValue) {
+            // switch (newValue) {
+            //     case 'logout':
+            //         this.action_text = 'Đăng xuất';
+            //         break;
+            //     case 'delete':
+            //         this.action_text = 'Xóa';
+            //         break;
+            //     case 'update':
+            //         this.action_text = 'Cập nhật';
+            //         break;
+            //     case 'create':
+            //         this.action_text = 'Thêm mới';
+            //         break;
+            //     case 'dispose': 
+            //         this.action_text = 'Thanh lý'
+            //         break;
+            // }
+            // this.content = 
+            // console.log('aaaaaaaaaaaaaaaaaaaa');
+            // console.log(this.content);
+        },
+    },
 };
 </script>
 
@@ -37,7 +94,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: show .3s ease-in;
+    animation: show 0.3s ease-in;
 }
 @keyframes show {
     from {
@@ -81,7 +138,6 @@ header {
     position: absolute;
     bottom: 0;
     left: 0;
-
     width: 100%;
     height: 5px;
     animation: progress_bar 3s ease;
@@ -99,7 +155,7 @@ header {
     position: absolute;
     top: 0;
     right: 0;
-    transition: .2s ease;
+    transition: 0.2s ease;
 }
 .close-icn:hover {
     transform: rotate(90deg);

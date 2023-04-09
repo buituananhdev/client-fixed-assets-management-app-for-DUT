@@ -69,7 +69,6 @@
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
-                        <p class="div-center id-col">Mã TS</p>
                         <p class="div-center device-id-col">Mã số TB</p>
                         <p class="div-center name-col">
                             Tên tài sản cố định, CC, DC và đồ gỗ ...
@@ -165,7 +164,7 @@ export default {
             listAssets: [],
             meta: [],
             currentPage: 1,
-            currentAsset: {},
+            assetID: "",
             isHaveContent: false,
             showNotification: '',
             isShowPopup: '',
@@ -276,7 +275,7 @@ export default {
         async deleteAsset() {
             try {
                 await this.$axios.delete(
-                    `/disposed_asset/${this.currentAsset.assetID}`
+                    `/disposed_asset/${this.assetID}`
                 );
                 this.fetchData();
                 this.isShowPopup = '';
@@ -291,7 +290,7 @@ export default {
         async cancelDispose() {
             try {
                 await this.$axios.post(
-                    `/disposed_asset/${this.currentAsset.assetID}`
+                    `/disposed_asset/${this.assetID}`
                 );
                 this.fetchData();
                 this.isShowPopup = '';
@@ -335,9 +334,9 @@ export default {
                 this.disposeAsset();
             }
         },
-        showPopup(type, asset) {
+        showPopup(type, id) {
             this.isShowPopup = type;
-            this.currentAsset = asset;
+            this.assetID = id;
         },
         closePopup() {
             this.isShowPopup = '';

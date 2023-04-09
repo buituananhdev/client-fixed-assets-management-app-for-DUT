@@ -8,12 +8,6 @@
                 {{ itemIndex }}
             </p>
             <p
-                class="div-center id-col"
-                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
-            >
-                {{ itemProp.assetID }}
-            </p>
-            <p
                 class="div-center device-id-col"
                 @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
             >

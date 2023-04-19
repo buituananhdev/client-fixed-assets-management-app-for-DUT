@@ -86,7 +86,7 @@
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
                     <assetItem
-                        v-for="(item, index) in listAssets"
+                        v-for="(item, index) in listOrganizations"
                         :type="'asset'"
                         :key="index"
                         :itemProp="item"
@@ -159,7 +159,7 @@ export default {
     },
     data() {
         return {
-            listAssets: [],
+            listOrganizations: [],
             meta: [],
             currentPage: 1,
             assetID: {},
@@ -193,13 +193,13 @@ export default {
         },
     },
     mounted() {
-        this.searchValue = this.pageSearch;
-        this.selectedOption = this.pageStatus;
-        if (this.searchValue !== '' || this.selectedOption !== '') {
-            this.Search();
-        } else {
-            this.fetchData();
-        }
+        // this.searchValue = this.pageSearch;
+        // this.selectedOption = this.pageStatus;
+        // if (this.searchValue !== '' || this.selectedOption !== '') {
+        //     this.Search();
+        // } else {
+        //     this.fetchData();
+        // }
     },
     watch: {
         pageParam: async function () {
@@ -209,7 +209,7 @@ export default {
                 this.fetchData();
             }
         },
-        listAssets: {
+        listOrganizations: {
             deep: true,
             immediate: true,
             handler(newVal) {
@@ -224,7 +224,7 @@ export default {
     methods: {
         async downloadFile() {
             try {
-                const apiURL = '/asset?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                const apiURL = '/organization?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
                 const response = await this.$axios({
                     method: 'get',
                     url: apiURL,
@@ -262,11 +262,11 @@ export default {
         async fetchData() {
             try {
                 const response = await this.$axios.get(
-                    `/asset?pageNumber=${this.currentPage}&pageSize=10`
+                    `/organization?pageNumber=${this.currentPage}&pageSize=10`
                 );
-                this.listAssets = response.data.data;
+                this.listOrganizations = response.data.data;
                 this.meta = response.data.meta;
-                console.log(this.listAssets);
+                console.log(this.listOrganizations);
             } catch (error) {
                 console.log(error);
                 this.notiAction = 'Tải';
@@ -302,9 +302,9 @@ export default {
                 const {
                     data: { data, meta },
                 } = await this.$axios.get(url);
-                this.listAssets = data;
+                this.listOrganizations = data;
                 this.meta = meta;
-                console.log(this.listAssets);
+                console.log(this.listOrganizations);
                 // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
                 const query = {};
                 if (selectedOption) {

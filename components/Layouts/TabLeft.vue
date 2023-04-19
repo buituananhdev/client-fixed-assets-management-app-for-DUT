@@ -193,17 +193,29 @@
                     />
                     <p class="feature-name">Tài sản đã thanh lý</p>
                 </li>
-                <!-- <li
-                    :class="{ isActive: pageParam == '/add_asset' }"
-                    @click="$router.push('/add_asset')"
+                <li
+                    :class="{ isActive: pageParam == '/organizations' }"
+                    @click="$router.push('/organizations?page=1')"
                 >
                     <img
                         class="feature-icn"
-                        src="../../static/icons/cart-plus.svg"
+                        src="../../static/icons/building.svg"
                         alt=""
                     />
-                    <p class="feature-name">Thêm tài sản</p>
-                </li> -->
+                    <p class="feature-name">Khoa, phòng ban,...</p>
+                </li>
+                <li
+                    :class="{ isActive: pageParam == '/users' }"
+                    @click="$router.push('/users?page=1')"
+                    v-show="currentRole == 'admin'"
+                >
+                    <img
+                        class="feature-icn"
+                        src="../../static/icons/people-fill.svg"
+                        alt=""
+                    />
+                    <p class="feature-name">Users</p>
+                </li>
                 <li
                     :class="{ isActive: pageParam == '/statistics' }"
                     @click="$router.push('/statistics')"
@@ -214,18 +226,6 @@
                         alt=""
                     />
                     <p class="feature-name">Thống kê</p>
-                </li>
-                <li
-                    :class="{ isActive: pageParam == '/users' }"
-                    @click="$router.push('/users')"
-                    v-show="currentRole == 'admin'"
-                >
-                    <img
-                        class="feature-icn"
-                        src="../../static/icons/people-fill.svg"
-                        alt=""
-                    />
-                    <p class="feature-name">Users</p>
                 </li>
                 <li
                     style="border-top: 0.5px solid #dfe0ebb7"
@@ -261,11 +261,12 @@
         </div>
         <PopUp
             class="popup"
+            :type="'warning'"
+            :action="'đăng xuất'"
+            :object="''"
             v-show="showPopup"
             @closePopup="closePopup"
             @submitForm="submitForm"
-            :title="'Sign out ?'"
-            :content="'Bạn có chắc sẽ đăng xuất'"
         ></PopUp>
     </div>
 </template>

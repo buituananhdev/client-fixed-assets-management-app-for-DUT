@@ -46,30 +46,6 @@ export default {
             content: this.action + ' ' + this.object + ' ' + this.type,
         };
     },
-    watch: {
-        action(newValue) {
-            // switch (newValue) {
-            //     case 'logout':
-            //         this.action_text = 'Đăng xuất';
-            //         break;
-            //     case 'delete':
-            //         this.action_text = 'Xóa';
-            //         break;
-            //     case 'update':
-            //         this.action_text = 'Cập nhật';
-            //         break;
-            //     case 'create':
-            //         this.action_text = 'Thêm mới';
-            //         break;
-            //     case 'dispose': 
-            //         this.action_text = 'Thanh lý'
-            //         break;
-            // }
-            // this.content = 
-            // console.log('aaaaaaaaaaaaaaaaaaaa');
-            // console.log(this.content);
-        },
-    },
 };
 </script>
 

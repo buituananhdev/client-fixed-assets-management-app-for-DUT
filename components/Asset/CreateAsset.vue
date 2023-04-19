@@ -202,7 +202,7 @@ export default {
         async submitForm() {
             const result = await this.$validator.validateAll();
             if (result) {
-                this.$emit('submitForm', 'create', this.currentAsset);
+                this.$emit('submitForm', 'thêm mới', this.currentAsset);
             }
         },
         closePopup() {

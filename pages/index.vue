@@ -111,6 +111,12 @@ input:focus {
             :content="'Đăng nhập thất bại!'"
             v-if="showNoti"
         ></Notification>
+        <Notification
+            :type="'thất bại'"
+            :object="''"
+            :action="'Đăng nhập'"
+            v-if="showNoti"
+        ></Notification>
         <div class="container div-center">
             <div class="logo-container">
                 <img

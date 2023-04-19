@@ -1,30 +1,19 @@
 <template>
     <div class="container">
         <Notification
-            :type="'success'"
-            :content="'Xóa tài sản thành công'"
-            v-if="showNotification == 'delete'"
-        ></Notification>
-        <Notification
-            :type="'success'"
-            :content="'Hủy thanh lý tài sản thành công'"
-            v-if="showNotification == 'cancel'"
+            :type="notiType"
+            :object="notiObject"
+            :action="notiAction"
+            v-if="showNotification"
         ></Notification>
         <PopUp
             class="popup"
-            v-show="isShowPopup == 'popupDelete'"
-            @closePopup="closePopup()"
-            @submitForm="submitForm('delete')"
-            :title="'Delete ?'"
-            :content="'Bạn có chắc muốn xóa tài sản này'"
-        ></PopUp>
-        <PopUp
-            class="popup"
-            v-show="isShowPopup == 'popupCancel'"
-            @closePopup="closePopup()"
-            @submitForm="cancelDispose()"
-            :title="'Cancel liquidation?'"
-            :content="'Bạn có chắc muốn hủy bỏ thanh lý tài sản này'"
+            :type="'warning'"
+            :action="notiAction"
+            :object="notiObject"
+            v-show="isShowPopup"
+            @closePopup="closePopup"
+            @submitForm="submitForm"
         ></PopUp>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
@@ -63,6 +52,11 @@
                             @input="Search"
                             v-model="endDate"
                         />
+                    </div>
+                    <div class="btn-container">
+                        <button class="create-btn" @click="showPopup('xuất file', 'bảng dữ liệu')">
+                            Xuất file excel
+                        </button>
                     </div>
                     <!-- <button class="btn-search" @click="Search">Search</button> -->
                 </div>
@@ -167,7 +161,10 @@ export default {
             assetID: "",
             isHaveContent: false,
             showNotification: '',
-            isShowPopup: '',
+            notiAction: '',
+            notiObject: '',
+            notiType: '',
+            isShowPopup: false,
             searchValue: '',
             startDate: null,
             endDate: null,
@@ -218,6 +215,44 @@ export default {
         },
     },
     methods: {
+        async downloadFile() {
+            try {
+                const apiURL =
+                    '/disposed_asset?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                const response = await this.$axios({
+                    method: 'get',
+                    url: apiURL,
+                    responseType: 'blob', // yêu cầu Axios trả về dữ liệu dạng blob (binary large object)
+                });
+                // Tạo đường dẫn đến tệp được tải xuống
+                const url = window.URL.createObjectURL(
+                    new Blob([response.data])
+                );
+                // Tạo một thẻ a để kích hoạt tải xuống tệp
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'SoTheoDoiTSCD.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                // Xóa đối tượng thẻ a để tránh hiển thị thừa trên trang
+                document.body.removeChild(link);
+                this.notiAction = 'Export';
+                this.notiObject = 'file';
+                this.notiType = 'thành công';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+            } catch (error) {
+                this.notiAction = 'Export';
+                this.notiObject = 'file';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+            }
+        },
         async fetchData() {
             this.currentPage = this.pageParam;
             try {
@@ -231,6 +266,13 @@ export default {
                         console.log(this.listAssets);
                     });
             } catch (error) {
+                this.notiAction = 'Tải';
+                this.notiObject = 'dữ liệu';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
                 console.log(error);
             }
         },
@@ -262,6 +304,13 @@ export default {
                 }
                 this.$router.push({ path: '/disposed_assets?page=1', query });
             } catch (error) {
+                this.notiAction = 'Tải';
+                this.notiObject = 'dữ liệu';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
                 console.error(error);
             }
         },
@@ -278,12 +327,21 @@ export default {
                     `/disposed_asset/${this.assetID}`
                 );
                 this.fetchData();
-                this.isShowPopup = '';
-                this.showNotification = 'delete';
+                this.notiAction = 'Xóa';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
+                this.showNotification = true;
                 setTimeout(() => {
-                    this.showNotification = '';
+                    this.showNotification = false;
                 }, 3000);
             } catch (error) {
+                this.notiAction = 'Xóa';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
                 console.log(error);
             }
         },
@@ -293,12 +351,21 @@ export default {
                     `/disposed_asset/${this.assetID}`
                 );
                 this.fetchData();
-                this.isShowPopup = '';
-                this.showNotification = 'cancel';
+                this.notiAction = 'Hủy thanh lý';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
+                this.showNotification = true;
                 setTimeout(() => {
-                    this.showNotification = '';
+                    this.showNotification = false;
                 }, 3000);
             } catch (error) {
+                this.notiAction = 'Hủy thanh lý';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
                 console.log(error);
             }
         },
@@ -326,20 +393,30 @@ export default {
                 .querySelector('.page-top')
                 .classList.remove('close-collapse');
         },
-        submitForm(type) {
-            this.isShowPopup = '';
-            if (type == 'delete') {
+        submitForm(action) {
+            this.isShowPopup = false;
+            if (action === 'xóa') {
                 this.deleteAsset();
-            } else if (type == 'dispose') {
-                this.disposeAsset();
+            } else if (action === 'hủy thanh lý') {
+                this.cancelDispose();
+            }
+            else {
+                this.downloadFile();
             }
         },
-        showPopup(type, id) {
-            this.isShowPopup = type;
+        showPopup(action, object, id) {
+            if(action === 'xuất file') {
+                this.notiObject = object;
+            }
+            else {
+                this.notiObject = 'tài sản';
+            }
+            this.notiAction = action;
+            this.isShowPopup = true;
             this.assetID = id;
         },
         closePopup() {
-            this.isShowPopup = '';
+            this.isShowPopup = false;
         },
         goToIndexPage() {
             this.$router.push({

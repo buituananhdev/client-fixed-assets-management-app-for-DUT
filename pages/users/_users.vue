@@ -1,23 +1,56 @@
 <template>
     <div class="container">
+        <Notification
+            :type="notiType"
+            :object="notiObject"
+            :action="notiAction"
+            v-if="showNotification"
+        ></Notification>
+        <PopUp
+            class="popup"
+            :type="'warning'"
+            :action="notiAction"
+            :object="notiObject"
+            v-show="isShowPopup"
+            @closePopup="closePopup"
+            @submitForm="submitForm"
+        ></PopUp>
+        <CreateAsset
+            :type="'update'"
+            :assetProp="currentAsset"
+            v-show="isShowPopup == 'thêm mới'"
+            @closePopup="closePopup"
+            @submitForm="submitForm"
+        >
+        </CreateAsset>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách người dùng</h1>
+                <div class="action-container">
+                    <div class="btn-container">
+                        <button
+                            class="create-btn"
+                            @click="showPopup('xuất file', 'bảng dữ liệu')"
+                        >
+                            Xuất file excel
+                        </button>
+                        <button
+                            class="create-btn"
+                            @click="isShowPopup = 'thêm mới'"
+                        >
+                            Thêm tài sản
+                        </button>
+                    </div>
+                </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
-                        <p class="div-center id-col">Mã TS</p>
-                        <p class="div-center device-id-col">Mã số TB</p>
-                        <p class="div-center name-col">
-                            Tên tài sản cố định, CC, DC và đồ gỗ ...
-                        </p>
-                        <p class="div-center year-used-col">Năm sử dụng</p>
-                        <p class="div-center quantity-col">Số lượng</p>
-                        <p class="div-center cost-col">Thành tiền</p>
-                        <p class="div-center status-col">Ngày thanh lý</p>
-                        <p class="div-center show-action-col">Action</p>
+                        <p class="div-center">Tên đăng nhập</p>
+                        <p class="div-center">Họ và tên</p>
+                        <p class="div-center">Chức vụ</p>
+                        <p class="div-center">Action</p>
                     </span>
                     <div class="empty-icn div-center" v-show="!isHaveContent">
                         <img
@@ -26,13 +59,13 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <assetItem
-                        v-for="(item, index) in listAssets"
+                    <userItem
+                        v-for="(item, index) in listUsers"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
                         style="width: 100%"
-                    ></assetItem>
+                    ></userItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -91,18 +124,30 @@
 </template>
 
 <script>
-import assetItem from '@/components/Asset/assetItem.vue';
-
+import userItem from '@/components/Users/userItem.vue';
 export default {
     components: {
-        assetItem,
+        userItem,
     },
     data() {
         return {
-            listAssets: [],
+            listUsers: [],
             meta: [],
             currentPage: 1,
             isHaveContent: false,
+            isShowPopup: false,
+            showNotification: false,
+            notiAction: '',
+            notiObject: '',
+            notiType: '',
+            selectedOption: '',
+            currentAsset: {},
+            options: [
+                'Tất cả',
+                'Hoạt động tốt',
+                'Hư hỏng, cần được sửa chữa',
+                'Đang bảo dưỡng',
+            ],
         };
     },
     computed: {
@@ -110,27 +155,61 @@ export default {
             return this.$route.query.page;
         },
     },
-    mounted() {
-        this.fetchData();
-    },
     watch: {
         pageParam: async function () {
             this.fetchData();
         },
+        listUsers: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                if (newVal.length > 0) {
+                    this.isHaveContent = true;
+                } else {
+                    this.isHaveContent = false;
+                }
+            },
+        },
     },
     methods: {
         async fetchData() {
-            this.currentPage = this.pageParam;
             try {
-                await this.$axios
-                    .get(`/disposed_asset?pageNumber=${this.currentPage}&pageSize=10`)
-                    .then((res) => {
-                        this.listAssets = res['data']['data'];
-                        this.meta = res['data']['meta'];
-                        this.isHaveContent = true;
-                        console.log(this.listAssets);
-                    });
+                const response = await this.$axios.get(
+                    `/user?pageNumber=${this.currentPage}&pageSize=10`
+                );
+                this.listUsers = response.data.data;
+                this.meta = response.data.meta;
+                console.log(this.listUsers);
             } catch (error) {
+                console.log(error);
+                this.notiAction = 'Tải';
+                this.notiObject = 'dữ liệu';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+            }
+        },
+        async deleteAsset() {
+            try {
+                await this.$axios.delete(`/user/${this.assetID}`);
+                this.notiAction = 'Xóa';
+                this.notiObject = 'người dùng';
+                this.notiType = 'thành công';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+                this.fetchData();
+            } catch (error) {
+                this.notiAction = 'Xóa';
+                this.notiObject = 'người dùng';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
                 console.log(error);
             }
         },
@@ -147,7 +226,9 @@ export default {
                 .classList.remove('open-collapse');
         },
         openTab() {
-            document.querySelector('.main-content').classList.add('open-collapse');
+            document
+                .querySelector('.main-content')
+                .classList.add('open-collapse');
             document
                 .querySelector('.main-content')
                 .classList.remove('close-collapse');
@@ -156,9 +237,49 @@ export default {
                 .querySelector('.page-top')
                 .classList.remove('close-collapse');
         },
+        showPopup(action, object, id) {
+            if (action == 'thêm mới') {
+                this.fetchDetail(id);
+                this.isShowPopup = action;
+            } else if (action == 'xuất file') {
+                this.notiObject = object;
+                this.isShowPopup = true;
+            } else {
+                this.isShowPopup = true;
+                this.assetID = id;
+                console.log(id);
+            }
+            this.notiAction = action;
+        },
+        submitForm(action, asset) {
+            console.log(action);
+            this.isShowPopup = false;
+            if (action === 'xóa') {
+                this.deleteAsset();
+            } else if (action === 'thanh lý') {
+                this.disposeAsset();
+            } else if (action === 'thêm mới') {
+                if (!asset.assetID) {
+                    this.addAsset(asset);
+                } else {
+                    this.updateAsset(asset);
+                }
+            } else {
+                this.downloadFile();
+            }
+        },
+        closePopup() {
+            this.isShowPopup = '';
+            this.currentAsset = {};
+        },
         goToIndexPage() {
+            const query = {};
+            query.page = this.currentPage;
+            if (this.selectedOption) {
+                query.status = this.selectedOption;
+            }
             this.$router.push({
-                query: { page: this.currentPage },
+                query: query,
             });
         },
         goToNextPage() {
@@ -171,6 +292,7 @@ export default {
 };
 </script>
 
-<style scoped src="../../static/css/table_assets.css">
+<style scoped src="../../static/css/table_assets.css"></style>
+<style>
 
 </style>

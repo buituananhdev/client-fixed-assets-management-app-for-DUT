@@ -64,6 +64,7 @@
     font-weight: 500;
     font-size: 22px;
     line-height: 28px;
+    text-transform: capitalize;
     /* identical to box height, or 156% */
     /* Gray/900 */
     color: #101828;

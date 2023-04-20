@@ -55,15 +55,15 @@
                     :type="type"
                     @mouseover="showAction()"
                     @delete="
-                        $emit('showPopup', 'popupDelete', itemProp.assetID)
+                        $emit('showPopup', 'xóa', 'tài sản', itemProp.assetID)
                     "
                     @dispose="
-                        $emit('showPopup', 'popupDispose', itemProp.assetID)
+                        $emit('showPopup', 'thanh lý', 'tài sản', itemProp.assetID)
                     "
                     @update="
-                        $emit('showPopup', 'popupCreate', itemProp.assetID)
+                        $emit('showPopup', 'thêm mới', 'tài sản', itemProp.assetID)
                     "
-                    @cancel_dispose="$emit('showPopup', 'popupCancel', itemProp.assetID)"
+                    @cancel_dispose="$emit('showPopup', 'hủy thanh lý', 'tài sản', itemProp.assetID)"
                 ></Tooltip>
             </span>
         </div>

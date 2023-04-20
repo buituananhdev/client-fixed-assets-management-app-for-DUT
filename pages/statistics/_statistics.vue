@@ -10,7 +10,7 @@
                 <div class="number">
                     <div class="number-box">
                         <p class="type">Tổng số tài sản</p>
-                        <div class="number-of-type">{{ count[0] }}</div>
+                        <div class="number-of-type">{{ count.total }}</div>
                         <div
                             class="line"
                             style="background-color: #7f56d9"
@@ -18,9 +18,17 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài tài hoạt động tốt</p>
-                        <div class="number-of-type">{{ count[1] }}</div>
+                        <div class="number-of-type">{{ count.count_good }}</div>
                         <div class="percent">
-                            <p>{{ (count[1] * 100 / count[0]).toFixed(2) }} %</p>
+                            <p>
+                                {{
+                                    (
+                                        (count.count_good * 100) /
+                                        count.total
+                                    ).toFixed(2)
+                                }}
+                                %
+                            </p>
                         </div>
                         <div
                             class="line"
@@ -29,9 +37,19 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản đang bảo trì</p>
-                        <div class="number-of-type">{{ count[2] }}</div>
+                        <div class="number-of-type">
+                            {{ count.count_maintenance }}
+                        </div>
                         <div class="percent">
-                            <p>{{ (count[2] * 100 / count[0]).toFixed(2) }} %</p>
+                            <p>
+                                {{
+                                    (
+                                        (count.count_maintenance * 100) /
+                                        count.total
+                                    ).toFixed(2)
+                                }}
+                                %
+                            </p>
                         </div>
                         <div
                             class="line"
@@ -40,9 +58,19 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản bị hỏng</p>
-                        <div class="number-of-type">{{ count[3] }}</div>
+                        <div class="number-of-type">
+                            {{ count.count_broken }}
+                        </div>
                         <div class="percent">
-                            <p>{{ (count[3] * 100 / count[0]).toFixed(2) }} %</p>
+                            <p>
+                                {{
+                                    (
+                                        (count.count_broken * 100) /
+                                        count.total
+                                    ).toFixed(2)
+                                }}
+                                %
+                            </p>
                         </div>
                         <div
                             class="line"
@@ -51,9 +79,19 @@
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản đã thanh lý</p>
-                        <div class="number-of-type">{{ count[4] }}</div>
+                        <div class="number-of-type">
+                            {{ count.count_disposed }}
+                        </div>
                         <div class="percent">
-                            <p>{{ (count[4] * 100 / count[0]).toFixed(2) }} %</p>
+                            <p>
+                                {{
+                                    (
+                                        (count.count_disposed * 100) /
+                                        count.total
+                                    ).toFixed(2)
+                                }}
+                                %
+                            </p>
                         </div>
                         <div
                             class="line"
@@ -101,7 +139,8 @@
 export default {
     data() {
         return {
-            count: [12064, 11074, 856, 126, 2346],
+            count: {},
+            chartData: [],
             isHeaderActive: false,
         };
     },
@@ -117,7 +156,7 @@ export default {
                 datasets: [
                     {
                         label: '',
-                        data: [11074, 856, 126, 2346],
+                        data: [1, 2, 3, 4],
                         backgroundColor: [
                             '#50C878',
                             '#fdc571',
@@ -175,21 +214,17 @@ export default {
         },
     },
     mounted() {
-        const pageMain = document.querySelector('.main-content')
+        const pageMain = document.querySelector('.main-content');
         pageMain.addEventListener('scroll', this.handleScroll.bind(this));
+        this.fetchData();
     },
     methods: {
         async fetchData() {
             try {
-                await this.$axios
-                    .get(`/asset/${this.pageParam}`)
-                    .then((res) => {
-                        this.currentAsset = res['data']['data'];
-                        this.isHaveContent = true;
-                        console.log(this.currentAsset);
-                    });
+                const response = await this.$axios.get(`/asset/statistic`);
+                this.count = response.data.data;
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         },
         closeTab() {
@@ -205,7 +240,9 @@ export default {
                 .classList.remove('open-collapse');
         },
         openTab() {
-            document.querySelector('.main-content').classList.add('open-collapse');
+            document
+                .querySelector('.main-content')
+                .classList.add('open-collapse');
             document
                 .querySelector('.main-content')
                 .classList.remove('close-collapse');
@@ -215,7 +252,7 @@ export default {
                 .classList.remove('close-collapse');
         },
         handleScroll() {
-            const pageMain = document.querySelector('.main-content')
+            const pageMain = document.querySelector('.main-content');
             const scrollPosition = pageMain.scrollTop;
             if (scrollPosition >= 200) {
                 this.isHeaderActive = true;
@@ -307,11 +344,11 @@ export default {
     right: 0;
 }
 .navSticky {
-    transition: .2s ease;
+    transition: 0.2s ease;
     transform: translateY(-100%);
 }
 .max_height {
-    transition: .2s ease;
+    transition: 0.2s ease;
     height: 100%;
 }
 </style>

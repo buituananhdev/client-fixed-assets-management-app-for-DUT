@@ -5,16 +5,62 @@
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">
-                    <img src="../../static/icons/back.svg" alt="" style="cursor: pointer;" @click="$router.go(-1)"/> 
+                    <img
+                        src="../../static/icons/back.svg"
+                        alt=""
+                        style="cursor: pointer"
+                        @click="$router.go(-1)"
+                    />
                     Chi tiết tài sản
                 </h1>
                 <div class="table-assets">
-                    <div
-                        class="asset_container"
-                        v-for="item in currentAsset"
-                        :key="item"
-                    >
-                        {{ item }}
+                    <div class="table-container">
+                        <div class="detail-container">
+                            <p class="detail-title">Mã thiết bị</p>
+                            <p class="detail">{{ currentAsset.deviceID }}</p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Tên thiết bị</p>
+                            <p class="detail">{{ currentAsset.assetName }}</p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Phòng đang sử dụng</p>
+                            <p class="detail">{{ currentAsset.roomID }}</p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Năm sử dụng</p>
+                            <p class="detail">{{ currentAsset.yearOfUse }}</p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Thông số kỹ thuật</p>
+                            <p class="detail">
+                                {{ currentAsset.technicalSpecification }}
+                            </p>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <div class="detail-container">
+                            <p class="detail-title">Số lượng</p>
+                            <p class="detail">{{ currentAsset.quantity }}</p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Thành tiền</p>
+                            <p class="detail">{{ currentAsset.cost }}</p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Tỷ lệ % CL</p>
+                            <p class="detail">
+                                {{ currentAsset.percentageCL }}
+                            </p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Trạng thái</p>
+                            <p class="detail">{{ currentAsset.status }}</p>
+                        </div>
+                        <div class="detail-container">
+                            <p class="detail-title">Ghi chú</p>
+                            <p class="detail">{{ currentAsset.notes }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -105,9 +151,32 @@ export default {
 </script>
 
 <style scoped src="../../static/css/table_assets.css"></style>
-\
 <style scoped>
-.asset_container {
-    padding: 12px;
+.table-assets {
+    max-width: 50%;
+    padding-top: 32px;
+    padding-left: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.table-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.detail-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.detail {
+    font-size: 16px;
 }
 </style>

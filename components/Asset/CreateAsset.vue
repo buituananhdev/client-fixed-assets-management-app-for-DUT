@@ -135,6 +135,29 @@
                             >{{ errors.first('Thông số kỹ thuật') }}</span
                         >
                     </div>
+                    <div class="status form-col" v-if="JSON.stringify(assetProp) != '{}'">
+                        <p class="form-label">
+                            Tình trạng
+                            <small style="color: #c7422e">*</small>
+                        </p>
+                        <multiselect
+                            class="multiselect"
+                            :options="listStatus"
+                            v-model="status"
+                            placeholder="Chọn tình trạng"
+                            v-validate="'required'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Tình trạng'),
+                            }"
+                            name="Tình trạng"
+                        ></multiselect>
+                        <span
+                            v-show="errors.has('Tình trạng')"
+                            class="err"
+                            >{{ errors.first('Tình trạng') }}</span
+                        >
+                    </div>
                     <div class="note">
                         <p class="form-label">Ghi chú</p>
                         <textarea
@@ -178,8 +201,14 @@ export default {
     data() {
         return {
             currentAsset: {},
+            status: "",
             listRooms: [],
             checkBtn: false,
+            listStatus: [
+                'Hoạt động tốt',
+                'Hư hỏng, cần được sửa chữa',
+                'Đang bảo dưỡng',
+            ],
         };
     },
     mounted() {
@@ -188,7 +217,11 @@ export default {
     watch: {
         assetProp(newValue) {
             this.currentAsset = newValue;
+            this.status = newValue.status;
         },
+        status(newVal) {
+            this.currentAsset.status =  this.status;
+        }
     },
     methods: {
         async fetchRoom() {
@@ -216,7 +249,7 @@ export default {
 .popup-form {
     top: 5%;
     width: 680px;
-    min-height: 630px;
+    min-height: 700px;
     padding: 32px 24px 32px 24px;
     flex-direction: column;
     justify-content: flex-start;
@@ -224,7 +257,7 @@ export default {
 }
 .popup-content {
     position: relative;
-    max-height: 85%;
+    max-height: 90%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -253,46 +286,56 @@ export default {
 .form-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
     gap: 24px 24px;
     grid-auto-flow: row;
     width: 100%;
     max-height: 70%;
+    grid-template-areas:
+        'device-id room-name'
+        'asset-name total'
+        'quantity technicalSpecification'
+        'status .'
+        'note note';
+}
+
+.device-id {
+    grid-area: device-id;
+}
+
+.asset-name {
+    grid-area: asset-name;
+}
+
+.quantity {
+    grid-area: quantity;
+}
+
+.room-name {
+    grid-area: room-name;
+}
+
+.technicalSpecification {
+    grid-area: technicalSpecification;
+}
+
+.total {
+    grid-area: total;
+}
+
+.status {
+    grid-area: status;
 }
 
 .note {
-    grid-area: 4 / 1 / 5 / 3;
+    grid-area: note;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 8px;
     height: 70%;
-}
-
-.device-id {
-    grid-area: 1 / 1 / 2 / 2;
-}
-
-.asset-name {
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-.quantity {
-    grid-area: 3 / 1 / 4 / 2;
-}
-
-.room-name {
-    grid-area: 1 / 2 / 2 / 3;
-}
-
-.technicalSpecification {
-    grid-area: 3 / 2 / 4 / 3;
-}
-
-.total {
-    grid-area: 2 / 2 / 3 / 3;
 }
 
 .form-col {

@@ -221,6 +221,7 @@ export default {
         },
         status(newVal) {
             this.currentAsset.status =  this.status;
+            console.log(this.currentAsset);
         }
     },
     methods: {
@@ -236,6 +237,7 @@ export default {
             const result = await this.$validator.validateAll();
             if (result) {
                 this.$emit('submitForm', 'thêm mới', this.currentAsset);
+                console.log(this.currentAsset);
             }
         },
         closePopup() {

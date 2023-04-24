@@ -8,100 +8,102 @@
         <div class="main-content" :class="{ max_height: isHeaderActive }">
             <div class="page-main">
                 <div class="number">
-                    <div class="number-box">
+                    <!-- <div class="number-box">
                         <p class="type">Tổng số tài sản</p>
-                        <div class="number-of-type">{{ count.total }}</div>
+                        <div class="number-of-type">
+                            {{ countStatus.total }}
+                        </div>
                         <div
                             class="line"
                             style="background-color: #7f56d9"
                         ></div>
-                    </div>
+                    </div> -->
                     <div class="number-box">
-                        <p class="type">Tài tài hoạt động tốt</p>
-                        <div class="number-of-type">{{ count.count_good }}</div>
-                        <div class="percent">
-                            <p>
+                        <p class="type">Tài sản hoạt động tốt</p>
+                        <div class="number-of-type">
+                            {{ countStatus.count_good }}
+                        </div>
+                        <div class="circle">
+                            <p class="percent">
                                 {{
                                     (
-                                        (count.count_good * 100) /
-                                        count.total
+                                        (countStatus.count_good * 100) /
+                                        countStatus.total
                                     ).toFixed(2)
                                 }}
-                                %
                             </p>
                         </div>
-                        <div
+                        <!-- <div
                             class="line"
                             style="background-color: #50c878"
-                        ></div>
+                        ></div> -->
                     </div>
                     <div class="number-box">
-                        <p class="type">Tài sản đang bảo trì</p>
+                        <p class="type">Tài sản đang bảo dưỡng</p>
                         <div class="number-of-type">
-                            {{ count.count_maintenance }}
+                            {{ countStatus.count_maintenance }}
                         </div>
-                        <div class="percent">
-                            <p>
+                        <div class="circle">
+                            <p class="percent">
                                 {{
                                     (
-                                        (count.count_maintenance * 100) /
-                                        count.total
+                                        (countStatus.count_maintenance * 100) /
+                                        countStatus.total
                                     ).toFixed(2)
                                 }}
-                                %
                             </p>
                         </div>
-                        <div
+                        <!-- <div
                             class="line"
                             style="background-color: #fdc571"
-                        ></div>
+                        ></div> -->
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản bị hỏng</p>
                         <div class="number-of-type">
-                            {{ count.count_broken }}
+                            {{ countStatus.count_broken }}
                         </div>
-                        <div class="percent">
-                            <p>
+                        <div class="circle">
+                            <p class="percent">
                                 {{
                                     (
-                                        (count.count_broken * 100) /
-                                        count.total
+                                        (countStatus.count_broken * 100) /
+                                        countStatus.total
                                     ).toFixed(2)
                                 }}
-                                %
                             </p>
                         </div>
-                        <div
+                        <!-- <div
                             class="line"
                             style="background-color: #c7422e"
-                        ></div>
+                        ></div> -->
                     </div>
                     <div class="number-box">
                         <p class="type">Tài sản đã thanh lý</p>
                         <div class="number-of-type">
-                            {{ count.count_disposed }}
+                            {{ countStatus.count_disposed }}
                         </div>
-                        <div class="percent">
-                            <p>
+                        <div class="circle">
+                            <p class="percent">
                                 {{
                                     (
-                                        (count.count_disposed * 100) /
-                                        count.total
+                                        (countStatus.count_disposed * 100) /
+                                        countStatus.total
                                     ).toFixed(2)
                                 }}
-                                %
                             </p>
                         </div>
-                        <div
+                        <!-- <div
                             class="line"
                             style="background-color: #008cde"
-                        ></div>
+                        ></div> -->
                     </div>
                 </div>
                 <div class="chart-container">
+                    <p class="number-of-type count-total">{{ countStatus.total }}</p>
                     <client-only placeholder="Loading...">
                         <donut-chart
+                            v-if="JSON.stringify(countStatus) != '{}'"
                             :data="donutChartData"
                             :options="chartOptions"
                             :height="310"
@@ -113,6 +115,7 @@
                 <div class="chart-container">
                     <client-only placeholder="Loading...">
                         <bar-chart
+                            v-if="countDisposeMonth.length != 0"
                             :data="barChartData"
                             :options="chartOptions"
                             :height="310"
@@ -123,6 +126,8 @@
                 <div class="chart-container">
                     <client-only placeholder="Loading...">
                         <line-chart
+                            ref="chart"
+                            v-if="countDisposeMonth.length != 0"
                             :data="barChartData"
                             :options="chartOptions"
                             :height="310"
@@ -139,12 +144,21 @@
 export default {
     data() {
         return {
-            count: {},
-            chartData: [],
+            countStatus: {},
+            countDisposeMonth: [],
+            chartData: [1, 2, 3, 4],
             isHeaderActive: false,
         };
     },
     computed: {
+        countDisposeMonthData() {
+            return this.countDisposeMonth;
+        },
+        countStatusData() {
+            const countStatusArray = Object.values(this.countStatus).slice(1);
+            console.log(countStatusArray);
+            return countStatusArray;
+        },
         donutChartData() {
             return {
                 labels: [
@@ -156,7 +170,7 @@ export default {
                 datasets: [
                     {
                         label: '',
-                        data: [1, 2, 3, 4],
+                        data: this.countStatusData,
                         backgroundColor: [
                             '#50C878',
                             '#fdc571',
@@ -190,11 +204,8 @@ export default {
                         borderRadius: 8,
                         hoverBorderRadius: 8,
                         label: '',
-                        data: [
-                            1074, 856, 1263, 2567, 3451, 5672, 3456, 1945, 1990,
-                            1234, 3461, 1067,
-                        ],
-                        backgroundColor: '#008cde',
+                        data: this.countDisposeMonthData,
+                        backgroundColor: '#7f56d9',
                     },
                 ],
             };
@@ -210,19 +221,37 @@ export default {
                 hoverBorderWidth: 1,
                 weight: 0,
                 borderRadius: 8,
+                categoryPercentage: 0.2,
+                barPercentage: 0.1,
             };
         },
     },
-    mounted() {
+    async mounted() {
+        await this.fetchData();
         const pageMain = document.querySelector('.main-content');
         pageMain.addEventListener('scroll', this.handleScroll.bind(this));
-        this.fetchData();
+        // lấy danh sách tất cả các phần tử có class là "percent"
+        const percentElements = document.querySelectorAll('.percent');
+        // lặp qua từng phần tử và cập nhật độ rộng nền với phần trăm tương ứng
+        percentElements.forEach((percentElement) => {
+            const percent = parseInt(percentElement.innerHTML);
+            // lấy phần tử circle tương ứng với phần trăm đang xét
+            const circle = percentElement.closest('.circle');
+            if (circle) {
+                circle.style.background = `conic-gradient(#7f56d9 ${percent}%, #F5F5F5 0)`;
+            }
+        });
     },
     methods: {
         async fetchData() {
             try {
                 const response = await this.$axios.get(`/asset/statistic`);
-                this.count = response.data.data;
+                this.countStatus = response.data.data.countStatus;
+                const data = response.data.data.countDisposeMonth;
+                for (let i = 0; i < data.length; i++) {
+                    this.countDisposeMonth.push(data[i].count);
+                }
+                console.log(this.countDisposeMonth);
             } catch (error) {
                 console.error(error);
             }
@@ -281,22 +310,22 @@ export default {
 }
 .number-box {
     position: relative;
-    width: calc(100% / 5.2);
+    width: calc(100% / 4.2);
     height: 100%;
     border: 2px solid #eceef7;
     border-radius: 6px;
     overflow: hidden;
-    padding: 24px 18px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 8px;
 }
 .type {
     /* Tổng số tài sản */
     height: 20px;
     font-style: normal;
     font-weight: 700;
-    font-size: 16px;
+    font-size: 12px;
     line-height: 20px;
     /* identical to box height */
     letter-spacing: 0.01em;
@@ -306,13 +335,13 @@ export default {
     height: 35px;
     font-style: normal;
     font-weight: 700;
-    font-size: 32px;
+    font-size: 35px;
     line-height: 35px;
     letter-spacing: 0.01em;
     color: #232323;
 }
 .chart-container {
-    /* Rectangle 292 */
+    position: relative;
     box-sizing: border-box;
     width: 100%;
     height: 362px;
@@ -324,16 +353,25 @@ export default {
     align-items: center;
     padding: 24px;
 }
-.percent {
+.circle {
     display: flex;
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 40%;
+    top: 20%;
     right: 12px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
 }
-.percent p {
+.percent {
     font-size: 12px;
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .line {
     height: 10px;
@@ -350,5 +388,10 @@ export default {
 .max_height {
     transition: 0.2s ease;
     height: 100%;
+}
+.count-total {
+    position: absolute;
+    top: 50%;
+    font-weight: 800;
 }
 </style>

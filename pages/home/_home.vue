@@ -375,7 +375,7 @@ export default {
                     technicalSpecification: asset.technicalSpecification,
                     quantity: asset.quantity,
                     cost: asset.cost,
-                    status: 'Hoạt động tốt',
+                    status: asset.status,
                     notes: asset.notes,
                 });
                 this.fetchData();
@@ -481,6 +481,7 @@ export default {
         },
         submitForm(action, asset) {
             console.log(action);
+            console.log(asset);
             this.isShowPopup = false;
             if (action === 'xóa') {
                 this.deleteAsset();

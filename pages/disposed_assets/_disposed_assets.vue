@@ -35,11 +35,19 @@
                             alt=""
                         />
                     </div>
+                    <multiselect
+                        class="multiselect"
+                        :options="options"
+                        v-model="selectedOption"
+                        placeholder="Trạng thái của tài sản"
+                        @input="Search"
+                    ></multiselect>
                     <div class="date-search">
                         <input
                             type="date"
                             class="inp-search"
                             placeholder="Ngày bắt đầu"
+                            :max="endDate"
                             @input="Search"
                             v-model="startDate"
                         />
@@ -49,6 +57,7 @@
                             type="date"
                             class="inp-search"
                             placeholder="Ngày kết thúc"
+                            :min="startDate"
                             @input="Search"
                             v-model="endDate"
                         />
@@ -168,6 +177,13 @@ export default {
             searchValue: '',
             startDate: null,
             endDate: null,
+            selectedOption: '',
+            options: [
+                'Tất cả',
+                'Hoạt động tốt',
+                'Hư hỏng, cần được sửa chữa',
+                'Đang bảo dưỡng',
+            ],
         };
     },
     computed: {

@@ -399,7 +399,7 @@ export default {
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(`/asset/${this.assetID}`);
+                await this.$axios.delete(`/organization/${this.assetID}`);
                 this.notiAction = 'Xóa';
                 this.notiObject = 'tài sản';
                 this.notiType = 'thành công';

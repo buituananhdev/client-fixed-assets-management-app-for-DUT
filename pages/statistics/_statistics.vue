@@ -8,122 +8,97 @@
         <div class="main-content" :class="{ max_height: isHeaderActive }">
             <div class="page-main">
                 <div class="number">
-                    <!-- <div class="number-box">
-                        <p class="type">Tổng số tài sản</p>
-                        <div class="number-of-type">
-                            {{ countStatus.total }}
-                        </div>
-                        <div
-                            class="line"
-                            style="background-color: #7f56d9"
-                        ></div>
-                    </div> -->
-                    <div class="number-box">
+                    <div class="number-box good-box">
                         <p class="type">Tài sản hoạt động tốt</p>
                         <div class="number-of-type">
                             {{ countStatus.count_good }}
                         </div>
-                        <div class="circle">
-                            <p class="percent">
+                        <div class="circle div-center">
+                            <p class="percent div-center">
                                 {{
                                     (
                                         (countStatus.count_good * 100) /
                                         countStatus.total
                                     ).toFixed(2)
-                                }}
+                                }}%
                             </p>
                         </div>
-                        <!-- <div
-                            class="line"
-                            style="background-color: #50c878"
-                        ></div> -->
                     </div>
-                    <div class="number-box">
+                    <div class="number-box broken-box">
                         <p class="type">Tài sản đang bảo dưỡng</p>
                         <div class="number-of-type">
                             {{ countStatus.count_maintenance }}
                         </div>
-                        <div class="circle">
-                            <p class="percent">
+                        <div class="circle div-center">
+                            <p class="percent div-center">
                                 {{
                                     (
                                         (countStatus.count_maintenance * 100) /
                                         countStatus.total
                                     ).toFixed(2)
-                                }}
+                                }}%
                             </p>
                         </div>
-                        <!-- <div
-                            class="line"
-                            style="background-color: #fdc571"
-                        ></div> -->
                     </div>
-                    <div class="number-box">
+                    <div class="number-box broken-box">
                         <p class="type">Tài sản bị hỏng</p>
                         <div class="number-of-type">
                             {{ countStatus.count_broken }}
                         </div>
-                        <div class="circle">
-                            <p class="percent">
+                        <div class="circle circle-broken div-center">
+                            <p class="percent div-center">
                                 {{
                                     (
                                         (countStatus.count_broken * 100) /
                                         countStatus.total
                                     ).toFixed(2)
-                                }}
+                                }}%
                             </p>
                         </div>
-                        <!-- <div
-                            class="line"
-                            style="background-color: #c7422e"
-                        ></div> -->
                     </div>
-                    <div class="number-box">
+                    <div class="number-box disposed-box">
                         <p class="type">Tài sản đã thanh lý</p>
                         <div class="number-of-type">
                             {{ countStatus.count_disposed }}
                         </div>
-                        <div class="circle">
-                            <p class="percent">
+                        <div class="circle circle-disposed div-center">
+                            <p class="percent div-center">
                                 {{
                                     (
                                         (countStatus.count_disposed * 100) /
                                         countStatus.total
                                     ).toFixed(2)
-                                }}
+                                }}%
                             </p>
                         </div>
-                        <!-- <div
-                            class="line"
-                            style="background-color: #008cde"
-                        ></div> -->
                     </div>
                 </div>
-                <div class="chart-container">
-                    <p class="number-of-type count-total">{{ countStatus.total }}</p>
-                    <client-only placeholder="Loading...">
-                        <donut-chart
-                            v-if="JSON.stringify(countStatus) != '{}'"
-                            :data="donutChartData"
-                            :options="chartOptions"
-                            :height="310"
-                            :width="1000"
-                            class="pie-chart"
-                        ></donut-chart>
-                    </client-only>
+                <div class="div-center" style="gap: 32px">
+                    <div class="chart-container" style="flex: 1.3">
+                        <client-only placeholder="Loading...">
+                            <bar-chart
+                                v-if="countDisposeMonth.length != 0"
+                                :data="barChartData"
+                                :options="barChartOptions"
+                                :height="310"
+                                class="bar-chart"
+                            ></bar-chart>
+                        </client-only>
+                    </div>
+                    <div class="chart-container" style="flex: 0.7">
+                        <client-only placeholder="Loading...">
+                            <donut-chart
+                                v-if="JSON.stringify(countStatus) != '{}'"
+                                :data="donutChartData"
+                                :options="chartOptions"
+                                :height="310"
+                                class="pie-chart"
+                            ></donut-chart>
+                        </client-only>
+                    </div>
                 </div>
-                <div class="chart-container">
-                    <client-only placeholder="Loading...">
-                        <bar-chart
-                            v-if="countDisposeMonth.length != 0"
-                            :data="barChartData"
-                            :options="chartOptions"
-                            :height="310"
-                            class="bar-chart"
-                        ></bar-chart>
-                    </client-only>
-                </div>
-                <div class="chart-container">
+
+                <!-- <div class="chart-container">
                     <client-only placeholder="Loading...">
                         <line-chart
                             ref="chart"
@@ -134,7 +109,7 @@
                             class="bar-chart"
                         ></line-chart>
                     </client-only>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -163,7 +138,7 @@ export default {
             return {
                 labels: [
                     'Hoạt động tốt',
-                    'Đang sửa chữa',
+                    'Đang bảo dưỡng',
                     'Bị hỏng',
                     'Đã thanh lý',
                 ],
@@ -201,13 +176,45 @@ export default {
                 ],
                 datasets: [
                     {
-                        borderRadius: 8,
-                        hoverBorderRadius: 8,
-                        label: '',
+                        label: 'Tài sản đã thanh lý',
                         data: this.countDisposeMonthData,
-                        backgroundColor: '#7f56d9',
+                        backgroundColor: [
+                            '#99aa00',
+                            '#aabbee',
+                            '#990000',
+                            '#99ff00',
+                            '#994400',
+                            '#9900ff',
+                        ],
+                        borderColor: 'rgba(255, 255, 255, 1)',
+                        borderWidth: 2,
+                        radius: 240,
+                        //hoverBackgroundColor: 'rgba(100, 0, 0, 0.5)',
+                        hoverOffset: 350,
                     },
                 ],
+            };
+        },
+        barChartOptions() {
+            return {
+                responsive: true,
+                maintainAspectRatio: false,
+                pointStyle: 'star',
+                barThickness: 3,
+                hoverOffset: 4,
+                borderRadius: 8,
+                radius: 12,
+                categoryPercentage: 0.2,
+                barPercentage: 0.1,
+                title: {
+                    display: true,
+                    text: 'Biểu đồ tài sản đã thanh lý qua từng tháng',
+                    fontSize: 22,
+                    fontColor: '#6b7280',
+                },
+                tooltips: {
+                    backgroundColor: '#363740',
+                },
             };
         },
         chartOptions() {
@@ -220,9 +227,15 @@ export default {
                 hoverOffset: 32,
                 hoverBorderWidth: 1,
                 weight: 0,
-                borderRadius: 8,
-                categoryPercentage: 0.2,
-                barPercentage: 0.1,
+                title: {
+                    display: true,
+                    text: 'Biểu đồ tài sản',
+                    fontSize: 22,
+                    fontColor: '#6b7280',
+                },
+                tooltips: {
+                    backgroundColor: '#363740',
+                },
             };
         },
     },
@@ -230,17 +243,35 @@ export default {
         await this.fetchData();
         const pageMain = document.querySelector('.main-content');
         pageMain.addEventListener('scroll', this.handleScroll.bind(this));
-        // lấy danh sách tất cả các phần tử có class là "percent"
         const percentElements = document.querySelectorAll('.percent');
-        // lặp qua từng phần tử và cập nhật độ rộng nền với phần trăm tương ứng
-        percentElements.forEach((percentElement) => {
-            const percent = parseInt(percentElement.innerHTML);
-            // lấy phần tử circle tương ứng với phần trăm đang xét
-            const circle = percentElement.closest('.circle');
-            if (circle) {
-                circle.style.background = `conic-gradient(#7f56d9 ${percent}%, #F5F5F5 0)`;
+        for (let i = 0; i < percentElements.length; i++) {
+            const percent = parseInt(percentElements[i].innerHTML);
+            const circle = percentElements[i].closest('.circle');
+            switch (i) {
+                case 0:
+                    if (circle) {
+                        circle.style.background = `conic-gradient(#50c878 ${percent}%, #F5F5F5 0)`;
+                    }
+                    break;
+                case 1:
+                    if (circle) {
+                        circle.style.background = `conic-gradient(#fdc571 ${percent}%, #F5F5F5 0)`;
+                    }
+                    break;
+                case 2:
+                    if (circle) {
+                        circle.style.background = `conic-gradient(#c7422e ${percent}%, #F5F5F5 0)`;
+                    }
+                    break;
+                case 3:
+                    if (circle) {
+                        circle.style.background = `conic-gradient(#008cde ${percent}%, #F5F5F5 0)`;
+                    }
+                    break;
+                default:
+                    break;
             }
-        });
+        }
     },
     methods: {
         async fetchData() {
@@ -296,17 +327,16 @@ export default {
 <style scoped src="../../static/css/table_assets.css"></style>
 <style scoped>
 .bar-chart {
-    width: 80%;
+    width: 95%;
 }
 .page-main {
     box-shadow: none;
-    gap: 19px;
+    gap: 32px;
 }
 .number {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    height: 150px;
 }
 .number-box {
     position: relative;
@@ -315,17 +345,57 @@ export default {
     border: 2px solid #eceef7;
     border-radius: 6px;
     overflow: hidden;
-    padding: 18px;
+    padding: 32px 18px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    align-items: flex-end;
+    gap: 10px;
+}
+.good-box {
+    animation: from-left 0.8s ease-in-out;
+}
+.broken-box {
+    animation: from-top 0.9s ease-in-out;
+}
+.disposed-box {
+    animation: from-right 0.8s ease-in-out;
+}
+@keyframes from-top {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+@keyframes from-left {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+@keyframes from-right {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 .type {
     /* Tổng số tài sản */
     height: 20px;
     font-style: normal;
     font-weight: 700;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 20px;
     /* identical to box height */
     letter-spacing: 0.01em;
@@ -335,7 +405,7 @@ export default {
     height: 35px;
     font-style: normal;
     font-weight: 700;
-    font-size: 35px;
+    font-size: 36px;
     line-height: 35px;
     letter-spacing: 0.01em;
     color: #232323;
@@ -344,34 +414,45 @@ export default {
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    height: 362px;
     background: #ffffff;
     border: 2px solid #eceef7;
     border-radius: 6px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 24px;
+    gap: 12px;
+    padding: 12px;
+}
+.chart-name {
+    font-size: 22px;
+    font-weight: 700;
 }
 .circle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: absolute;
-    top: 20%;
-    right: 12px;
-    width: 50px;
-    height: 50px;
+    top: 10%;
+    left: 24px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     overflow: hidden;
+    transition: 0.3s ease-in-out;
+}
+.circle:hover {
+    transform: scale(1.2);
+}
+.circle:hover .percent {
+    font-weight: 800;
 }
 .percent {
+    background: #ffffff;
+    border-radius: 50%;
     font-size: 12px;
-    font-weight: 900;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    font-weight: 400;
+    display: flex;
+    width: 60px;
+    height: 60px;
+    transition: 0.3s ease-in-out;
 }
 .line {
     height: 10px;

@@ -204,19 +204,11 @@ export default {
         this.searchValue = this.searchParam;
         this.startDate = this.startDateParam;
         this.endDate = this.endDateParam;
-        if (this.searchValue || this.startDate || this.endDate) {
-            this.Search();
-        } else {
-            this.fetchData();
-        }
+        this.refreshData();
     },
     watch: {
         pageParam: async function () {
-            if (this.searchValue || this.startDate || this.endDate) {
-                this.Search();
-            } else {
-                this.fetchData();
-            }
+            this.refreshData();
         },
         listAssets: {
             deep: true,
@@ -231,6 +223,13 @@ export default {
         },
     },
     methods: {
+        refreshData() {
+            if (this.searchValue || this.startDate || this.endDate) {
+                this.Search();
+            } else {
+                this.fetchData();
+            }
+        },
         async downloadFile() {
             try {
                 const apiURL =
@@ -342,7 +341,7 @@ export default {
                 await this.$axios.delete(
                     `/disposed_asset/${this.assetID}`
                 );
-                this.fetchData();
+                this.refreshData();
                 this.notiAction = 'Xóa';
                 this.notiObject = 'tài sản';
                 this.notiType = 'thành công';
@@ -366,7 +365,7 @@ export default {
                 await this.$axios.post(
                     `/disposed_asset/${this.assetID}`
                 );
-                this.fetchData();
+                this.refreshData();
                 this.notiAction = 'Hủy thanh lý';
                 this.notiObject = 'tài sản';
                 this.notiType = 'thành công';

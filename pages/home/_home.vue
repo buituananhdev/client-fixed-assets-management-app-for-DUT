@@ -195,19 +195,11 @@ export default {
     mounted() {
         this.searchValue = this.pageSearch;
         this.selectedOption = this.pageStatus;
-        if (this.searchValue !== '' || this.selectedOption !== '') {
-            this.Search();
-        } else {
-            this.fetchData();
-        }
+        this.refreshData();
     },
     watch: {
         pageParam: async function () {
-            if (this.searchValue !== '' || this.selectedOption !== '') {
-                this.Search();
-            } else {
-                this.fetchData();
-            }
+            this.refreshData();
         },
         listAssets: {
             deep: true,
@@ -222,6 +214,13 @@ export default {
         },
     },
     methods: {
+        refreshData() {
+            if (this.searchValue !== '' || this.selectedOption !== '') {
+                this.Search();
+            } else {
+                this.fetchData();
+            }
+        },
         async downloadFile() {
             try {
                 const apiURL = '/asset?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
@@ -345,7 +344,7 @@ export default {
                     status: 'Hoạt động tốt',
                     notes: asset.notes,
                 });
-                this.fetchData();
+                this.refreshData()
                 this.notiAction = 'Thêm mới';
                 this.notiObject = 'tài sản';
                 this.notiType = 'thành công';
@@ -378,7 +377,7 @@ export default {
                     status: asset.status,
                     notes: asset.notes,
                 });
-                this.fetchData();
+                this.refreshData();
                 this.notiAction = 'Cập nhật';
                 this.notiObject = 'tài sản';
                 this.notiType = 'thành công';
@@ -407,7 +406,7 @@ export default {
                 setTimeout(() => {
                     this.showNotification = false;
                 }, 3000);
-                this.fetchData();
+                this.refreshData();
             } catch (error) {
                 this.notiAction = 'Xóa';
                 this.notiObject = 'tài sản';
@@ -429,7 +428,7 @@ export default {
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
-                this.fetchData();
+                this.refreshData();
             } catch (error) {
                 this.notiAction = 'Thanh lý';
                 this.notiObject = 'tài sản';

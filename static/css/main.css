@@ -1,50 +1,72 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
-html, body {
-    margin: 0;
-    overflow: hidden;
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap");
+html,
+body {
+  margin: 0;
+  overflow: hidden;
 }
 * {
-    margin: 0;
-    box-sizing: border-box;
-    font-family: 'Mulish';
-    font-size: 14px;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Mulish";
+  font-size: 14px;
 }
 .div-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .stt-col {
-    width: 4.47%;
+  width: 4.47%;
+}
+/* - */
+.stt-user-col {
+  width: 5% !important;
 }
 
+.account-col {
+  width: 46.875% !important;
+}
+
+.name-user-col {
+  width: 26.875% !important;
+}
+
+.roll-col {
+  width: 16.25% !important;
+}
+
+.show-action-user-col {
+  width: 5% !important;
+}
+/* - */
 .device-id-col {
-    width: 11.42%;
+  width: 11.42%;
 }
 
-.name-col{
-    width: 28.777%;
+.name-col {
+  width: 28.777%;
 }
 
 .year-used-col {
-    width: 11.4%;
+  width: 11.4%;
 }
 
-.quantity-col{
-    width: 9.4%;
+.quantity-col {
+  width: 9.4%;
 }
 
-.cost-col{
-    width: 14.23%;
+.cost-col {
+  width: 14.23%;
 }
 
 .status-col {
-    width: 15%;
+  width: 15%;
 }
 
 .show-action-col {
-    position: relative;
-    width: 9.4%;
-    height: 100%;
-    cursor: pointer;
+  position: relative;
+  width: 9.4%;
+  height: 100%;
+  cursor: pointer;
 }

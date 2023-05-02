@@ -2,27 +2,27 @@
     <div class="main" :class="{ evenLine: itemIndex % 2 == 0 }">
         <div class="item div-center">
             <p
-                class="div-center"
+                class="div-center stt-user-col"
             >
                 {{ itemIndex }}
             </p>
             <p
-                class="div-center"
+                class="div-center account-col"
             >
                 {{ itemProp.username }}
             </p>
             <p
-                class="div-center"
+                class="div-center name-user-col"
             >
                 {{ itemProp.fullName }}
             </p>
             <p
-                class="div-center"
+                class="div-center roll-col"
             >
                 {{ itemProp.userRole }}
             </p>
             <span
-                class="div-center show-action-col"
+                class="div-center show-action-user-col"
                 @mouseover="showAction()"
                 @mouseleave="hideAction()"
             >

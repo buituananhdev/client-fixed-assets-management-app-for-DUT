@@ -59,13 +59,13 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <userItem
+                    <UserItem
                         v-for="(item, index) in listUsers"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
                         style="width: 100%"
-                    ></userItem>
+                    ></UserItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -124,10 +124,10 @@
 </template>
 
 <script>
-import userItem from '@/components/Users/userItem.vue';
+import UserItem from '@/components/Users/UserItem.vue';
 export default {
     components: {
-        userItem,
+        UserItem,
     },
     data() {
         return {

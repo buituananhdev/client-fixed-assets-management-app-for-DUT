@@ -69,11 +69,11 @@
 </template>
 
 <script>
-import assetItem from '@/components/Asset/assetItem.vue';
+import AssetItem from '@/components/Asset/AssetItem.vue';
 
 export default {
     components: {
-        assetItem,
+        AssetItem,
     },
     data() {
         return {

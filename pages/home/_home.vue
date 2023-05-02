@@ -85,7 +85,7 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <assetItem
+                    <AssetItem
                         v-for="(item, index) in listAssets"
                         :type="'asset'"
                         :key="index"
@@ -93,7 +93,7 @@
                         :itemIndex="index + 1"
                         @showPopup="showPopup"
                         style="width: 100%"
-                    ></assetItem>
+                    ></AssetItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -152,10 +152,10 @@
 </template>
 
 <script>
-import assetItem from '@/components/Asset/assetItem.vue';
+import AssetItem from '@/components/Asset/AssetItem.vue';
 export default {
     components: {
-        assetItem,
+        AssetItem,
     },
     data() {
         return {
@@ -241,17 +241,13 @@ export default {
                 link.click();
                 // Xóa đối tượng thẻ a để tránh hiển thị thừa trên trang
                 document.body.removeChild(link);
-                this.notiAction = 'Export';
-                this.notiObject = 'file';
-                this.notiType = 'thành công';
+                this.setNotification('Export', 'file', 'thành công');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
                 }, 3000);
             } catch (error) {
-                this.notiAction = 'Export';
-                this.notiObject = 'file';
-                this.notiType = 'thất bại';
+                this.setNotification('Export', 'file', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -268,9 +264,7 @@ export default {
                 console.log(this.listAssets);
             } catch (error) {
                 console.log(error);
-                this.notiAction = 'Tải';
-                this.notiObject = 'dữ liệu';
-                this.notiType = 'thất bại';
+                this.setNotification('Tải', 'dữ liệu', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -284,6 +278,11 @@ export default {
                     console.log(this.currentAsset);
                 });
             } catch (error) {
+                this.setNotification('Tải', 'dữ liệu', 'thất bại');
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
                 console.log(error);
             }
         },
@@ -315,9 +314,7 @@ export default {
                 this.$router.push({ path: `/home?page=${currentPage}`, query });
             } catch (error) {
                 console.error(error);
-                this.notiAction = 'Tải';
-                this.notiObject = 'dữ liệu';
-                this.notiType = 'thất bại';
+                this.setNotification('Tải', 'dữ liệu', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -344,18 +341,14 @@ export default {
                     status: 'Hoạt động tốt',
                     notes: asset.notes,
                 });
-                this.refreshData()
-                this.notiAction = 'Thêm mới';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thành công';
+                this.setNotification('Thêm mới', 'tài sản', 'thành công');
                 this.showNotification = true;
+                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
             } catch (error) {
-                this.notiAction = 'Thêm mới';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thất bại';
+                this.setNotification('Thêm mới', 'tài sản', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -377,21 +370,17 @@ export default {
                     status: asset.status,
                     notes: asset.notes,
                 });
-                this.refreshData();
-                this.notiAction = 'Cập nhật';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thành công';
+                this.setNotification('Cập nhật', 'tài sản', 'thành công');
                 this.showNotification = true;
+                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = false;
                 }, 3000);
             } catch (error) {
-                this.notiAction = 'Cập nhật';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thất bại';
+                this.setNotification('Cập nhật', 'tài sản', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
-                    this.showNotification = '';
+                    this.showNotification = false;
                 }, 3000);
                 console.log(error);
             }
@@ -399,18 +388,14 @@ export default {
         async deleteAsset() {
             try {
                 await this.$axios.delete(`/asset/${this.assetID}`);
-                this.notiAction = 'Xóa';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thành công';
+                this.setNotification('Xóa', 'tài sản', 'thành công');
                 this.showNotification = true;
+                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = false;
                 }, 3000);
-                this.refreshData();
             } catch (error) {
-                this.notiAction = 'Xóa';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thất bại';
+                this.setNotification('Xóa', 'tài sản', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -421,18 +406,14 @@ export default {
         async disposeAsset() {
             try {
                 await this.$axios.post(`/asset/${this.assetID}`);
-                this.notiAction = 'Thanh lý';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thành công';
+                this.setNotification('Thanh lý', 'tài sản', 'thành công');
                 this.showNotification = true;
+                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
-                this.refreshData();
             } catch (error) {
-                this.notiAction = 'Thanh lý';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thất bại';
+                this.setNotification('Thanh lý', 'tài sản', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -451,6 +432,11 @@ export default {
             document
                 .querySelector('.page-top')
                 .classList.remove('open-collapse');
+        },
+        setNotification(action, object, type) {
+            this.notiAction = action;
+            this.notiObject = object;
+            this.notiType = type;
         },
         openTab() {
             document

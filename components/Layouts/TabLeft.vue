@@ -152,6 +152,9 @@
     position: absolute;
     right: 22px;
 }
+.border-right {
+    border-right: solid 4px #dde2ff;
+}
 </style>
 <template>
     <div
@@ -323,6 +326,7 @@ export default {
                     featureIcons.forEach((icon) =>
                         icon.classList.add('feature-icn--position')
                     );
+                    document.querySelector('.isActive').classList.add('border-right');
                     this.$emit('closeTab');
                     break;
                 case 'open':
@@ -342,6 +346,7 @@ export default {
                     featureIcons.forEach((icon) =>
                         icon.classList.remove('feature-icn--position')
                     );
+                    document.querySelector('.isActive').classList.remove('border-right');
                     this.$emit('openTab');
                     break;
             }

@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <OptionExport @closePopup=""></OptionExport>
         <Header
             class="page-top"
             :class="{ navSticky: isHeaderActive }"
@@ -7,14 +8,32 @@
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content" :class="{ max_height: isHeaderActive }">
             <div class="page-main">
+                <div class="action-container">
+                    <multiselect
+                        class="multiselect"
+                        :options="years"
+                        v-model="selectedYear"
+                        placeholder="Năm"
+                        @input="fetchData(selectedYear)"
+                    ></multiselect>
+                    <button
+                        class="create-btn"
+                        @click="showPopup('xuất file', 'bảng dữ liệu')"
+                    >
+                        Xuất file excel
+                    </button>
+                </div>
                 <div class="number">
                     <div class="number-box good-box">
                         <p class="type">Tài sản hoạt động tốt</p>
-                        <div class="number-of-type">
+                        <h3 class="number-of-type">
                             {{ countStatus.count_good }}
-                        </div>
+                        </h3>
                         <div class="circle div-center">
-                            <p class="percent div-center">
+                            <p
+                                style="background: #edffef"
+                                class="percent div-center"
+                            >
                                 {{
                                     (
                                         (countStatus.count_good * 100) /
@@ -24,11 +43,11 @@
                             </p>
                         </div>
                     </div>
-                    <div class="number-box broken-box">
+                    <div class="number-box broken-box repair-box">
                         <p class="type">Tài sản đang bảo dưỡng</p>
-                        <div class="number-of-type">
+                        <h3 class="number-of-type">
                             {{ countStatus.count_maintenance }}
-                        </div>
+                        </h3>
                         <div class="circle div-center">
                             <p class="percent div-center">
                                 {{
@@ -42,9 +61,9 @@
                     </div>
                     <div class="number-box broken-box">
                         <p class="type">Tài sản bị hỏng</p>
-                        <div class="number-of-type">
+                        <h3 class="number-of-type">
                             {{ countStatus.count_broken }}
-                        </div>
+                        </h3>
                         <div class="circle circle-broken div-center">
                             <p class="percent div-center">
                                 {{
@@ -58,9 +77,9 @@
                     </div>
                     <div class="number-box disposed-box">
                         <p class="type">Tài sản đã thanh lý</p>
-                        <div class="number-of-type">
+                        <h3 class="number-of-type">
                             {{ countStatus.count_disposed }}
-                        </div>
+                        </h3>
                         <div class="circle circle-disposed div-center">
                             <p class="percent div-center">
                                 {{
@@ -116,13 +135,21 @@
 </template>
 
 <script>
+import OptionExport from '@/components/File/OptionExport.vue';
+
 export default {
+    components: {
+        OptionExport
+    },
     data() {
         return {
             countStatus: {},
             countDisposeMonth: [],
             chartData: [1, 2, 3, 4],
             isHeaderActive: false,
+            selectedYear: '',
+            showPopup: false,
+            years: ['2023', '2022', '2021', '2020', '2019', '2018', '2017'],
         };
     },
     computed: {
@@ -147,10 +174,10 @@ export default {
                         label: '',
                         data: this.countStatusData,
                         backgroundColor: [
-                            '#50C878',
-                            '#fdc571',
-                            '#c7422e',
-                            '#008cde',
+                            '#50c878',
+                            '#5c93d1',
+                            '#9B715D',
+                            '#5E5498',
                         ],
                         borderColor: '#fff',
                         borderWidth: 1,
@@ -178,16 +205,10 @@ export default {
                     {
                         label: 'Tài sản đã thanh lý',
                         data: this.countDisposeMonthData,
-                        backgroundColor: [
-                            '#99aa00',
-                            '#aabbee',
-                            '#990000',
-                            '#99ff00',
-                            '#994400',
-                            '#9900ff',
-                        ],
+                        backgroundColor: '#5E5498',
                         borderColor: 'rgba(255, 255, 255, 1)',
-                        borderWidth: 2,
+                        borderWidth: 0,
+                        borderRadius: 12,
                         radius: 240,
                         //hoverBackgroundColor: 'rgba(100, 0, 0, 0.5)',
                         hoverOffset: 350,
@@ -240,7 +261,7 @@ export default {
         },
     },
     async mounted() {
-        await this.fetchData();
+        await this.fetchData(this.selectedYear);
         const pageMain = document.querySelector('.main-content');
         pageMain.addEventListener('scroll', this.handleScroll.bind(this));
         const percentElements = document.querySelectorAll('.percent');
@@ -250,22 +271,22 @@ export default {
             switch (i) {
                 case 0:
                     if (circle) {
-                        circle.style.background = `conic-gradient(#50c878 ${percent}%, #F5F5F5 0)`;
+                        circle.style.background = `conic-gradient(#50c878 ${percent}%, #BAE7B6 0)`;
                     }
                     break;
                 case 1:
                     if (circle) {
-                        circle.style.background = `conic-gradient(#fdc571 ${percent}%, #F5F5F5 0)`;
+                        circle.style.background = `conic-gradient(#5c93d1 ${percent}%, #c2dbf9 0)`;
                     }
                     break;
                 case 2:
                     if (circle) {
-                        circle.style.background = `conic-gradient(#c7422e ${percent}%, #F5F5F5 0)`;
+                        circle.style.background = `conic-gradient(#9B715D ${percent}%, #F3D5C8 0)`;
                     }
                     break;
                 case 3:
                     if (circle) {
-                        circle.style.background = `conic-gradient(#008cde ${percent}%, #F5F5F5 0)`;
+                        circle.style.background = `conic-gradient(#5E5498 ${percent}%, #D8D3F5 0)`;
                     }
                     break;
                 default:
@@ -273,10 +294,21 @@ export default {
             }
         }
     },
+    watch: {
+        selectedYear(newValue) {
+            this.fetchData(newValue);
+        },
+    },
     methods: {
-        async fetchData() {
+        async fetchData(year) {
             try {
-                const response = await this.$axios.get(`/asset/statistic`);
+                let url;
+                if (year != '') {
+                    url = `/asset/statistic?year_dispose${year}`;
+                } else {
+                    url = `/asset/statistic`;
+                }
+                const response = await this.$axios.get(url);
                 this.countStatus = response.data.data.countStatus;
                 const data = response.data.data.countDisposeMonth;
                 for (let i = 0; i < data.length; i++) {
@@ -342,22 +374,34 @@ export default {
     position: relative;
     width: calc(100% / 4.2);
     height: 100%;
-    border: 2px solid #eceef7;
-    border-radius: 6px;
+    border-radius: 12px;
     overflow: hidden;
     padding: 32px 18px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 10px;
+    box-shadow: 30px 30.24px 20px rgba(0, 0, 0, 0.02),
+        0px 12.16px 8.576px rgba(0, 0, 0, 0.013152),
+        0px 2.72px 3.712px rgba(0, 0, 0, 0.008304);
 }
 .good-box {
+    background: #edffef;
+    color: #55a55e;
     animation: from-left 0.8s ease-in-out;
 }
 .broken-box {
+    background: #fff2ec;
+    color: #9b715d;
     animation: from-top 0.9s ease-in-out;
 }
+.repair-box {
+    background: #edf5ff;
+    color: #5c93d1;
+}
 .disposed-box {
+    background: #f4f2ff;
+    color: #5e5498;
     animation: from-right 0.8s ease-in-out;
 }
 @keyframes from-top {
@@ -394,12 +438,11 @@ export default {
     /* Tổng số tài sản */
     height: 20px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 400;
     font-size: 14px;
     line-height: 20px;
     /* identical to box height */
     letter-spacing: 0.01em;
-    color: #343434;
 }
 .number-of-type {
     height: 35px;
@@ -408,21 +451,23 @@ export default {
     font-size: 36px;
     line-height: 35px;
     letter-spacing: 0.01em;
-    color: #232323;
 }
 .chart-container {
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    background: #ffffff;
-    border: 2px solid #eceef7;
-    border-radius: 6px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 12px;
     padding: 12px;
+    background: #ffffff;
+    border: 1px solid #f2eeee;
+    box-shadow: 30px 30.24px 20px rgba(0, 0, 0, 0.02),
+        0px 12.16px 8.576px rgba(0, 0, 0, 0.013152),
+        0px 2.72px 3.712px rgba(0, 0, 0, 0.008304);
 }
 .chart-name {
     font-size: 22px;
@@ -430,10 +475,10 @@ export default {
 }
 .circle {
     position: absolute;
-    top: 10%;
+    top: 20%;
     left: 24px;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     overflow: hidden;
     transition: 0.3s ease-in-out;
@@ -445,13 +490,13 @@ export default {
     font-weight: 800;
 }
 .percent {
-    background: #ffffff;
+    color: #11263c;
     border-radius: 50%;
-    font-size: 12px;
-    font-weight: 400;
+    font-size: 13px;
+    font-weight: 600;
     display: flex;
-    width: 60px;
-    height: 60px;
+    width: 65px;
+    height: 65px;
     transition: 0.3s ease-in-out;
 }
 .line {
@@ -474,5 +519,8 @@ export default {
     position: absolute;
     top: 50%;
     font-weight: 800;
+}
+.action-container {
+    padding: 0;
 }
 </style>

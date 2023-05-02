@@ -43,27 +43,28 @@
                         @input="Search"
                     ></multiselect>
                     <div class="date-search">
-                        <input
-                            type="date"
+                        <date-picker
                             class="inp-search"
                             placeholder="Ngày bắt đầu"
                             :max="endDate"
                             @input="Search"
                             v-model="startDate"
-                        />
+                        ></date-picker>
                     </div>
                     <div class="date-search">
-                        <input
-                            type="date"
+                        <date-picker
                             class="inp-search"
                             placeholder="Ngày kết thúc"
                             :min="startDate"
                             @input="Search"
                             v-model="endDate"
-                        />
+                        ></date-picker>
                     </div>
                     <div class="btn-container">
-                        <button class="create-btn" @click="showPopup('xuất file', 'bảng dữ liệu')">
+                        <button
+                            class="create-btn"
+                            @click="showPopup('xuất file', 'bảng dữ liệu')"
+                        >
                             Xuất file excel
                         </button>
                     </div>
@@ -89,7 +90,7 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <assetItem
+                    <AssetItem
                         v-for="(item, index) in listAssets"
                         :type="'disposed'"
                         :key="index"
@@ -97,7 +98,7 @@
                         :itemIndex="index + 1"
                         @showPopup="showPopup"
                         style="width: 100%"
-                    ></assetItem>
+                    ></AssetItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -156,18 +157,18 @@
 </template>
 
 <script>
-import assetItem from '@/components/Asset/assetItem.vue';
+import AssetItem from '@/components/Asset/AssetItem.vue';
 
 export default {
     components: {
-        assetItem,
+        AssetItem,
     },
     data() {
         return {
             listAssets: [],
             meta: [],
             currentPage: 1,
-            assetID: "",
+            assetID: '',
             isHaveContent: false,
             showNotification: '',
             notiAction: '',
@@ -229,6 +230,11 @@ export default {
             } else {
                 this.fetchData();
             }
+        },
+        test() {
+            console.log('aaaaaaaaaa');
+            console.log(this.startDate);
+            console.log(this.endDate);
         },
         async downloadFile() {
             try {
@@ -338,9 +344,7 @@ export default {
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(
-                    `/disposed_asset/${this.assetID}`
-                );
+                await this.$axios.delete(`/disposed_asset/${this.assetID}`);
                 this.refreshData();
                 this.notiAction = 'Xóa';
                 this.notiObject = 'tài sản';
@@ -362,9 +366,7 @@ export default {
         },
         async cancelDispose() {
             try {
-                await this.$axios.post(
-                    `/disposed_asset/${this.assetID}`
-                );
+                await this.$axios.post(`/disposed_asset/${this.assetID}`);
                 this.refreshData();
                 this.notiAction = 'Hủy thanh lý';
                 this.notiObject = 'tài sản';
@@ -414,16 +416,14 @@ export default {
                 this.deleteAsset();
             } else if (action === 'hủy thanh lý') {
                 this.cancelDispose();
-            }
-            else {
+            } else {
                 this.downloadFile();
             }
         },
         showPopup(action, object, id) {
-            if(action === 'xuất file') {
+            if (action === 'xuất file') {
                 this.notiObject = object;
-            }
-            else {
+            } else {
                 this.notiObject = 'tài sản';
             }
             this.notiAction = action;

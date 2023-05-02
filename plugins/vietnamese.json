@@ -1,0 +1,58 @@
+{
+    "firstDayOfWeek": 1,
+    "weekdays": {
+      "shorthand": ["日", "月", "火", "水", "木", "金", "土"],
+      "longhand": [
+        "日曜日",
+        "月曜日",
+        "火曜日",
+        "水曜日",
+        "木曜日",
+        "金曜日",
+        "土曜日"
+      ]
+    },
+    "months": {
+      "shorthand": [
+        "1月",
+        "2月",
+        "3月",
+        "4月",
+        "5月",
+        "6月",
+        "7月",
+        "8月",
+        "9月",
+        "10月",
+        "11月",
+        "12月"
+      ],
+      "longhand": [
+        "1月",
+        "2月",
+        "3月",
+        "4月",
+        "5月",
+        "6月",
+        "7月",
+        "8月",
+        "9月",
+        "10月",
+        "11月",
+        "12月"
+      ]
+    },
+    "rangeSeparator": " から ",
+    "time_24hr": true,
+    "dateFormat": "Y/m/d",
+    "noCalendar": false,
+    "enableTime": true,
+    "timeFormat": "H:i",
+    "altInput": false,
+    "altFormat": "Y/m/d H:i",
+    "hourIncrement": 1,
+    "minuteIncrement": 1,
+    "time_24hr": true,
+    "minDate": "1900-01-01",
+    "maxDate": "2099-12-31"
+  }  

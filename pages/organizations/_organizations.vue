@@ -27,7 +27,7 @@
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
-                <h1 class="page-main-title">Danh sách tài sản</h1>
+                <h1 class="page-main-title">Danh sách tổ chức</h1>
                 <div class="action-container">
                     <div class="search">
                         <input
@@ -85,7 +85,7 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <assetItem
+                    <AssetItem
                         v-for="(item, index) in listOrganizations"
                         :type="'asset'"
                         :key="index"
@@ -93,7 +93,7 @@
                         :itemIndex="index + 1"
                         @showPopup="showPopup"
                         style="width: 100%"
-                    ></assetItem>
+                    ></AssetItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -152,10 +152,10 @@
 </template>
 
 <script>
-import assetItem from '@/components/Asset/assetItem.vue';
+import AssetItem from '@/components/Asset/AssetItem.vue';
 export default {
     components: {
-        assetItem,
+        AssetItem,
     },
     data() {
         return {
@@ -292,7 +292,7 @@ export default {
             this.currentPage = this.pageParam;
             try {
                 const { currentPage, selectedOption, searchValue } = this;
-                let url = `/asset?pageNumber=${currentPage}&pageSize=10`;
+                let url = `/organization?pageNumber=${currentPage}&pageSize=10`;
                 if (selectedOption && selectedOption !== 'Tất cả') {
                     url += `&status=${selectedOption}`;
                 }
@@ -313,7 +313,7 @@ export default {
                 if (searchValue) {
                     query.search = searchValue;
                 }
-                this.$router.push({ path: `/home?page=${currentPage}`, query });
+                this.$router.push({ path: `/organization?page=${currentPage}`, query });
             } catch (error) {
                 console.error(error);
                 this.notiAction = 'Tải';
@@ -399,7 +399,7 @@ export default {
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(`/asset/${this.assetID}`);
+                await this.$axios.delete(`/organization/${this.assetID}`);
                 this.notiAction = 'Xóa';
                 this.notiObject = 'tài sản';
                 this.notiType = 'thành công';

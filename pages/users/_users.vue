@@ -15,42 +15,37 @@
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
-        <CreateAsset
+        <CreateUser
             :type="'update'"
-            :assetProp="currentAsset"
+            :assetProp="currentUser"
             v-show="isShowPopup == 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         >
-        </CreateAsset>
+        </CreateUser>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách người dùng</h1>
-                <div class="action-container">
-                    <div class="btn-container">
+                <div class="action-container-user">
+                    <div class="btn-container-user">
                         <button
-                            class="create-btn"
-                            @click="showPopup('xuất file', 'bảng dữ liệu')"
-                        >
-                            Xuất file excel
-                        </button>
-                        <button
-                            class="create-btn"
+                            class="create-btn-user"
                             @click="isShowPopup = 'thêm mới'"
                         >
-                            Thêm tài sản
+                            Thêm người dùng
                         </button>
                     </div>
                 </div>
+                    
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
-                        <p class="div-center stt-col">STT</p>
-                        <p class="div-center">Tên đăng nhập</p>
-                        <p class="div-center">Họ và tên</p>
-                        <p class="div-center">Chức vụ</p>
-                        <p class="div-center">Action</p>
+                        <p class="div-center stt-user-col">STT</p>
+                        <p class="div-center account-col">Tên đăng nhập</p>
+                        <p class="div-center name-user-col">Họ và tên</p>
+                        <p class="div-center roll-col">Chức vụ</p>
+                        <p class="div-center show-action-user-col">Action</p>
                     </span>
                     <div class="empty-icn div-center" v-show="!isHaveContent">
                         <img
@@ -125,10 +120,12 @@
 
 <script>
 import userItem from '@/components/Users/userItem.vue';
+import CreateUser from '../../components/Asset/CreateUser.vue';
 export default {
     components: {
-        userItem,
-    },
+    userItem,
+    CreateUser
+},
     data() {
         return {
             listUsers: [],
@@ -141,19 +138,16 @@ export default {
             notiObject: '',
             notiType: '',
             selectedOption: '',
-            currentAsset: {},
-            options: [
-                'Tất cả',
-                'Hoạt động tốt',
-                'Hư hỏng, cần được sửa chữa',
-                'Đang bảo dưỡng',
-            ],
+            currentUser: {},
         };
     },
     computed: {
         pageParam() {
             return this.$route.query.page;
         },
+    },
+    mounted() {
+        this.fetchData();
     },
     watch: {
         pageParam: async function () {
@@ -191,9 +185,37 @@ export default {
                 }, 3000);
             }
         },
-        async deleteAsset() {
+        async addUser(user) {
             try {
-                await this.$axios.delete(`/user/${this.assetID}`);
+                await this.$axios.post(`/user`, {
+                    userID: user.userID,
+                    username: user.username,
+                    password: user.password,
+                    fullName: user.fullName,
+                    userRole: user.userRole,
+                });
+                this.fetchData();
+                this.notiAction = 'Thêm mới';
+                this.notiObject = 'user';
+                this.notiType = 'thành công';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
+            } catch (error) {
+                this.notiAction = 'Thêm mới';
+                this.notiObject = 'user';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+                console.log(error);
+            }
+        },
+        async deleteUser() {
+            try {
+                await this.$axios.delete(`/user/${this.UserID}`);
                 this.notiAction = 'Xóa';
                 this.notiObject = 'người dùng';
                 this.notiType = 'thành công';
@@ -209,6 +231,34 @@ export default {
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
+                }, 3000);
+                console.log(error);
+            }
+        },
+        async updateUser(user) {
+            try {
+                await this.$axios.put(`/user/${asset.assetID}`, {
+                    userID: user.userID,
+                    username: user.username,
+                    password: user.password,
+                    fullName: user.fullName,
+                    userRole: user.userRole,
+                });
+                this.fetchData();
+                this.notiAction = 'Cập nhật';
+                this.notiObject = 'user';
+                this.notiType = 'thành công';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+            } catch (error) {
+                this.notiAction = 'Cập nhật';
+                this.notiObject = 'user';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = '';
                 }, 3000);
                 console.log(error);
             }
@@ -251,18 +301,17 @@ export default {
             }
             this.notiAction = action;
         },
-        submitForm(action, asset) {
+        submitForm(action, user) {
             console.log(action);
+            console.log(user);
             this.isShowPopup = false;
             if (action === 'xóa') {
-                this.deleteAsset();
-            } else if (action === 'thanh lý') {
-                this.disposeAsset();
+                this.deleteUser();
             } else if (action === 'thêm mới') {
-                if (!asset.assetID) {
-                    this.addAsset(asset);
+                if (!user.userID) {
+                    this.addUser(user);
                 } else {
-                    this.updateAsset(asset);
+                    this.updateUser(user);
                 }
             } else {
                 this.downloadFile();
@@ -270,7 +319,7 @@ export default {
         },
         closePopup() {
             this.isShowPopup = '';
-            this.currentAsset = {};
+            this.currentUser = {};
         },
         goToIndexPage() {
             const query = {};

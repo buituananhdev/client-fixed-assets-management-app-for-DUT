@@ -205,7 +205,18 @@
                         src="../../static/icons/building.svg"
                         alt=""
                     />
-                    <p class="feature-name">Khoa, phòng ban,...</p>
+                    <p class="feature-name">Tổ chức</p>
+                </li>
+                <li
+                    :class="{ isActive: pageParam == '/rooms' }"
+                    @click="$router.push('/rooms?page=1')"
+                >
+                    <img
+                        class="feature-icn"
+                        src="../../static/icons/door.svg"
+                        alt=""
+                    />
+                    <p class="feature-name">Phòng</p>
                 </li>
                 <li
                     :class="{ isActive: pageParam == '/users' }"

@@ -55,7 +55,7 @@
                 Xóa
             </div>
             <div
-                v-if="type == 'asset'"
+                v-if="type === 'asset' || type === 'organization'"
                 class="button update"
                 @click="$emit('update')"
             >

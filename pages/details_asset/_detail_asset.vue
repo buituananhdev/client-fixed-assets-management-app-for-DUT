@@ -100,7 +100,7 @@ export default {
         async fetchData() {
             try {
                 await this.$axios
-                    .get(`/asset/${this.pageParam}`)
+                    .get(`/assets/${this.pageParam}`)
                     .then((res) => {
                         this.currentAsset = res['data']['data'];
                         this.isHaveContent = true;
@@ -112,14 +112,14 @@ export default {
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(`/asset/${this.itemProp.assetID}`);
+                await this.$axios.delete(`/assets/${this.itemProp.assetID}`);
             } catch (error) {
                 console.log(error);
             }
         },
         async disposeAsset() {
             try {
-                await this.$axios.post(`/asset/${this.itemProp.assetID}`);
+                await this.$axios.post(`/assets/${this.itemProp.assetID}`);
             } catch (error) {
                 console.log(error);
             }

@@ -28,10 +28,10 @@
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách người dùng</h1>
-                <div class="action-container-user">
-                    <div class="btn-container-user">
+                <div class="action-container">
+                    <div class="btn-container">
                         <button
-                            class="create-btn-user"
+                            class="create-btn"
                             @click="isShowPopup = 'thêm mới'"
                         >
                             Thêm người dùng
@@ -54,13 +54,7 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <UserItem
-                        v-for="(item, index) in listUsers"
-                        :key="index"
-                        :itemProp="item"
-                        :itemIndex="index + 1"
-                        style="width: 100%"
-                    ></UserItem>
+                    
                 </div>
                 <div class="pagination">
                     <div
@@ -119,13 +113,7 @@
 </template>
 
 <script>
-import userItem from '@/components/Users/userItem.vue';
-import CreateUser from '../../components/Asset/CreateUser.vue';
 export default {
-    components: {
-    userItem,
-    CreateUser
-},
     data() {
         return {
             listUsers: [],

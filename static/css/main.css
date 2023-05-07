@@ -70,3 +70,15 @@ body {
   height: 100%;
   cursor: pointer;
 }
+
+.organization-name-col {
+  width: 55%;
+}
+
+.organization-type-col {
+  width: 30%;
+}
+
+.room-name-col {
+  width: 95%;
+}

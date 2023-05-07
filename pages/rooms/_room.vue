@@ -11,23 +11,23 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-show="isShowPopup"
+            v-if="isShowPopup === 'abc'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
-        <CreateAsset
+        <CreateRoom
             :type="'update'"
-            :assetProp="currentAsset"
-            v-show="isShowPopup == 'thêm mới'"
+            :roomProp="currentAsset"
+            v-if="isShowPopup === 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         >
-        </CreateAsset>
+        </CreateRoom>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
-                <h1 class="page-main-title">Danh sách tài sản</h1>
+                <h1 class="page-main-title">Danh sách phòng</h1>
                 <div class="action-container">
                     <div class="search">
                         <input
@@ -47,7 +47,8 @@
                         class="multiselect"
                         :options="options"
                         v-model="selectedOption"
-                        placeholder="Trạng thái của tài sản"
+                        :label="selectedOption.organizationName"
+                        placeholder="Loại tổ chức"
                         @input="Search"
                     ></multiselect>
                     <div class="btn-container">
@@ -61,21 +62,17 @@
                             class="create-btn"
                             @click="isShowPopup = 'thêm mới'"
                         >
-                            Thêm tài sản
+                            Thêm tổ chức
                         </button>
                     </div>
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
-                        <p class="div-center device-id-col">Mã số TB</p>
-                        <p class="div-center name-col">
-                            Tên tài sản cố định, CC, DC và đồ gỗ ...
+                        <p class="div-center organization-type-col">Mã phòng</p>
+                        <p class="div-center organization-name-col">
+                            Tên Phòng
                         </p>
-                        <p class="div-center year-used-col">Năm sử dụng</p>
-                        <p class="div-center quantity-col">Số lượng</p>
-                        <p class="div-center cost-col">Thành tiền</p>
-                        <p class="div-center status-col">Trạng thái</p>
                         <p class="div-center show-action-col">Action</p>
                     </span>
                     <div class="empty-icn div-center" v-show="!isHaveContent">
@@ -85,15 +82,15 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <AssetItem
-                        v-for="(item, index) in listAssets"
-                        :type="'asset'"
+                    <RoomItem
+                        v-for="(item, index) in listRooms"
+                        :type="'room'"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
                         @showPopup="showPopup"
                         style="width: 100%"
-                    ></AssetItem>
+                    ></RoomItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -152,19 +149,21 @@
 </template>
 
 <script>
-import AssetItem from '@/components/Asset/AssetItem.vue';
+import RoomItem from '@/components/Room/RoomItem.vue';
+import CreateRoom from '@/components/Room/CreateRoom.vue';
 export default {
     components: {
-        AssetItem,
+        RoomItem,
+        CreateRoom,
     },
     data() {
         return {
-            listAssets: [],
+            listRooms: [],
             meta: [],
             currentPage: 1,
             assetID: {},
             isHaveContent: false,
-            isShowPopup: false,
+            isShowPopup: '',
             showNotification: false,
             notiAction: '',
             notiObject: '',
@@ -172,14 +171,8 @@ export default {
             searchValue: '',
             timeoutId: null, // thêm biến timeoutId vào component
             selectedOption: '',
-            currentAsset: {},
-            roomID: '',
-            options: [
-                'Tất cả',
-                'Hoạt động tốt',
-                'Hư hỏng, cần được sửa chữa',
-                'Đang bảo dưỡng',
-            ],
+            currentOrganization: {},
+            options: ['Tất cả', 'Khoa', 'Phòng ban', 'Trung tâm'],
         };
     },
     computed: {
@@ -189,24 +182,23 @@ export default {
         pageSearch() {
             return this.$route.query.search;
         },
-        pageStatus() {
-            return this.$route.query.status;
+        pageOrganization() {
+            return this.$route.query.organization_id;
         },
-        pageRoom() {
-            return this.$route.query.room_id;
-        }
     },
     mounted() {
         this.searchValue = this.pageSearch;
-        this.selectedOption = this.pageStatus;
-        this.roomID = this.pageRoom;
-        this.refreshData();
+        if (this.pageOrganization) {
+            this.fetchDetailOrganization(this.pageOrganization);
+        } else {
+            this.refreshData();
+        }
     },
     watch: {
         pageParam: async function () {
             this.refreshData();
         },
-        listAssets: {
+        listRooms: {
             deep: true,
             immediate: true,
             handler(newVal) {
@@ -220,7 +212,10 @@ export default {
     },
     methods: {
         refreshData() {
-            if (this.searchValue !== '' || this.selectedOption !== '' || this.roomID !== '') {
+            if (
+                this.searchValue !== '' ||
+                this.selectedOption.organizationID !== ''
+            ) {
                 this.Search();
             } else {
                 this.fetchData();
@@ -228,7 +223,7 @@ export default {
         },
         async downloadFile() {
             try {
-                const apiURL = '/assets?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                const apiURL = '/rooms?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
                 const response = await this.$axios({
                     method: 'get',
                     url: apiURL,
@@ -246,13 +241,17 @@ export default {
                 link.click();
                 // Xóa đối tượng thẻ a để tránh hiển thị thừa trên trang
                 document.body.removeChild(link);
-                this.setNotification('Export', 'file', 'thành công');
+                this.notiAction = 'Export';
+                this.notiObject = 'file';
+                this.notiType = 'thành công';
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
                 }, 3000);
             } catch (error) {
-                this.setNotification('Export', 'file', 'thất bại');
+                this.notiAction = 'Export';
+                this.notiObject = 'file';
+                this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -262,14 +261,16 @@ export default {
         async fetchData() {
             try {
                 const response = await this.$axios.get(
-                    `/assets?pageNumber=${this.currentPage}&pageSize=10`
+                    `/rooms?pageNumber=${this.currentPage}&pageSize=10`
                 );
-                this.listAssets = response.data.data;
+                this.listRooms = response.data.data;
                 this.meta = response.data.meta;
-                console.log(this.listAssets);
+                console.log(this.listRooms);
             } catch (error) {
                 console.log(error);
-                this.setNotification('Tải', 'dữ liệu', 'thất bại');
+                this.notiAction = 'Tải';
+                this.notiObject = 'dữ liệu';
+                this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -283,49 +284,47 @@ export default {
                     console.log(this.currentAsset);
                 });
             } catch (error) {
-                this.setNotification('Tải', 'dữ liệu', 'thất bại');
-                this.showNotification = true;
-                setTimeout(() => {
-                    this.showNotification = false;
-                }, 3000);
                 console.log(error);
             }
         },
         async Search() {
+            console.log('fetch');
             this.currentPage = this.pageParam;
             try {
-                const { currentPage, selectedOption, searchValue, roomID } = this;
-                let url = `/assets?pageNumber=${currentPage}&pageSize=10`;
-                if (selectedOption && selectedOption !== 'Tất cả') {
-                    url += `&status=${selectedOption}`;
+                const { currentPage, selectedOption, searchValue } = this;
+                let url = `/rooms?pageNumber=${currentPage}&pageSize=10`;
+                if (
+                    selectedOption.organizationID != '' &&
+                    selectedOption.organizationID !== 'Tất cả'
+                ) {
+                    url += `&organization_id=${selectedOption.organizationID}`;
                 }
                 if (searchValue) {
                     url += `&searchQuery=${searchValue}`;
                 }
-                if(roomID) {
-                    url += `&room_id=${roomID}`;
-                }
                 const {
                     data: { data, meta },
                 } = await this.$axios.get(url);
-                this.listAssets = data;
+                this.listRooms = data;
                 this.meta = meta;
-                console.log(this.listAssets);
+                console.log(this.listRooms);
                 // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
                 const query = {};
-                if (selectedOption) {
-                    query.status = selectedOption;
+                if (selectedOption.organizationID != '') {
+                    query.organization_id = selectedOption.organizationID;
                 }
                 if (searchValue) {
                     query.search = searchValue;
                 }
-                if (roomID) {
-                    query.room_id = roomID;
-                }
-                this.$router.push({ path: `/home?page=${currentPage}`, query });
+                this.$router.push({
+                    path: `/rooms?page=${currentPage}`,
+                    query,
+                });
             } catch (error) {
                 console.error(error);
-                this.setNotification('Tải', 'dữ liệu', 'thất bại');
+                this.notiAction = 'Tải';
+                this.notiObject = 'dữ liệu';
+                this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -339,27 +338,25 @@ export default {
                 this.Search();
             }, 700); // tạo mới setTimeout() với thời gian chờ là 700ms
         },
-        async addAsset(asset) {
+        async addRoom(room) {
             try {
-                await this.$axios.post(`/assets`, {
-                    deviceID: asset.deviceID,
-                    roomID: asset.roomID,
-                    assetName: asset.assetName,
-                    yearOfUse: 2023,
-                    technicalSpecification: asset.technicalSpecification,
-                    quantity: asset.quantity,
-                    cost: asset.cost,
-                    status: 'Hoạt động tốt',
-                    notes: asset.notes,
+                await this.$axios.post(`/rooms`, {
+                    roomID: room.roomID,
+                    roomName: room.roomName,
+                    roomType: room.roomType,
                 });
-                this.setNotification('Thêm mới', 'tài sản', 'thành công');
+                this.fetchData();
+                this.notiAction = 'Thêm mới';
+                this.notiObject = 'tổ chức';
+                this.notiType = 'thành công';
                 this.showNotification = true;
-                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
             } catch (error) {
-                this.setNotification('Thêm mới', 'tài sản', 'thất bại');
+                this.notiAction = 'Thêm mới';
+                this.notiObject = 'tổ chức';
+                this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -378,35 +375,43 @@ export default {
                     technicalSpecification: asset.technicalSpecification,
                     quantity: asset.quantity,
                     cost: asset.cost,
-                    status: asset.status,
+                    status: 'Hoạt động tốt',
                     notes: asset.notes,
                 });
-                this.setNotification('Cập nhật', 'tài sản', 'thành công');
+                this.fetchData();
+                this.notiAction = 'Cập nhật';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
                 this.showNotification = true;
-                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = false;
                 }, 3000);
             } catch (error) {
-                this.setNotification('Cập nhật', 'tài sản', 'thất bại');
+                this.notiAction = 'Cập nhật';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
-                    this.showNotification = false;
+                    this.showNotification = '';
                 }, 3000);
                 console.log(error);
             }
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(`/assets/${this.assetID}`);
-                this.setNotification('Xóa', 'tài sản', 'thành công');
+                await this.$axios.delete(`/rooms/${this.assetID}`);
+                this.notiAction = 'Xóa';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
                 this.showNotification = true;
-                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = false;
                 }, 3000);
+                this.fetchData();
             } catch (error) {
-                this.setNotification('Xóa', 'tài sản', 'thất bại');
+                this.notiAction = 'Xóa';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -417,14 +422,36 @@ export default {
         async disposeAsset() {
             try {
                 await this.$axios.post(`/assets/${this.assetID}`);
-                this.setNotification('Thanh lý', 'tài sản', 'thành công');
+                this.notiAction = 'Thanh lý';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thành công';
                 this.showNotification = true;
-                this.refreshData();
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
+                this.fetchData();
             } catch (error) {
-                this.setNotification('Thanh lý', 'tài sản', 'thất bại');
+                this.notiAction = 'Thanh lý';
+                this.notiObject = 'tài sản';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+                console.log(error);
+            }
+        },
+        async fetchDetailOrganization(id) {
+            try {
+                await this.$axios
+                    .get(`/organizations?organizationID=${id}`)
+                    .then((res) => {
+                        this.selectedOption = res['data']['data'];
+                        console.log(this.selectedOption);
+                        this.refreshData();
+                    });
+            } catch (error) {
+                this.setNotification('Tải', 'dữ liệu', 'thất bại');
                 this.showNotification = true;
                 setTimeout(() => {
                     this.showNotification = false;
@@ -443,11 +470,6 @@ export default {
             document
                 .querySelector('.page-top')
                 .classList.remove('open-collapse');
-        },
-        setNotification(action, object, type) {
-            this.notiAction = action;
-            this.notiObject = object;
-            this.notiType = type;
         },
         openTab() {
             document
@@ -475,19 +497,18 @@ export default {
             }
             this.notiAction = action;
         },
-        submitForm(action, asset) {
+        submitForm(action, room) {
             console.log(action);
-            console.log(asset);
             this.isShowPopup = false;
             if (action === 'xóa') {
                 this.deleteAsset();
             } else if (action === 'thanh lý') {
                 this.disposeAsset();
             } else if (action === 'thêm mới') {
-                if (!asset.assetID) {
-                    this.addAsset(asset);
+                if (room.roomID) {
+                    this.addRoom(room);
                 } else {
-                    this.updateAsset(asset);
+                    this.updateAsset(room);
                 }
             } else {
                 this.downloadFile();

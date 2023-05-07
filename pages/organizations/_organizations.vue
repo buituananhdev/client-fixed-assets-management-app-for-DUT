@@ -11,18 +11,18 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-show="isShowPopup"
+            v-if="isShowPopup === 'abc'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
-        <CreateAsset
+        <CreateOrganization
             :type="'update'"
-            :assetProp="currentAsset"
-            v-show="isShowPopup == 'thêm mới'"
+            :organizationProp="currentAsset"
+            v-if="isShowPopup === 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         >
-        </CreateAsset>
+        </CreateOrganization>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
@@ -47,7 +47,7 @@
                         class="multiselect"
                         :options="options"
                         v-model="selectedOption"
-                        placeholder="Trạng thái của tài sản"
+                        placeholder="Loại tổ chức"
                         @input="Search"
                     ></multiselect>
                     <div class="btn-container">
@@ -61,21 +61,15 @@
                             class="create-btn"
                             @click="isShowPopup = 'thêm mới'"
                         >
-                            Thêm tài sản
+                            Thêm tổ chức
                         </button>
                     </div>
                 </div>
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
-                        <p class="div-center device-id-col">Mã số TB</p>
-                        <p class="div-center name-col">
-                            Tên tài sản cố định, CC, DC và đồ gỗ ...
-                        </p>
-                        <p class="div-center year-used-col">Năm sử dụng</p>
-                        <p class="div-center quantity-col">Số lượng</p>
-                        <p class="div-center cost-col">Thành tiền</p>
-                        <p class="div-center status-col">Trạng thái</p>
+                        <p class="div-center organization-name-col">Tên tổ chức</p>
+                        <p class="div-center organization-type-col">Loại tổ chức</p>
                         <p class="div-center show-action-col">Action</p>
                     </span>
                     <div class="empty-icn div-center" v-show="!isHaveContent">
@@ -85,15 +79,15 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    <AssetItem
+                    <OrganizationItem
                         v-for="(item, index) in listOrganizations"
-                        :type="'asset'"
+                        :type="'organization'"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
                         @showPopup="showPopup"
                         style="width: 100%"
-                    ></AssetItem>
+                    ></OrganizationItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -152,10 +146,12 @@
 </template>
 
 <script>
-import AssetItem from '@/components/Asset/AssetItem.vue';
+import OrganizationItem from '@/components/Organization/OrganizationItem.vue';
+import CreateOrganization from '@/components/Organization/CreateOrganization.vue';
 export default {
     components: {
-        AssetItem,
+        OrganizationItem,
+        CreateOrganization
     },
     data() {
         return {
@@ -164,7 +160,7 @@ export default {
             currentPage: 1,
             assetID: {},
             isHaveContent: false,
-            isShowPopup: false,
+            isShowPopup: '',
             showNotification: false,
             notiAction: '',
             notiObject: '',
@@ -175,9 +171,9 @@ export default {
             currentAsset: {},
             options: [
                 'Tất cả',
-                'Hoạt động tốt',
-                'Hư hỏng, cần được sửa chữa',
-                'Đang bảo dưỡng',
+                'Khoa',
+                'Phòng ban',
+                'Trung tâm',
             ],
         };
     },
@@ -188,18 +184,18 @@ export default {
         pageSearch() {
             return this.$route.query.search;
         },
-        pageStatus() {
-            return this.$route.query.status;
+        pageType() {
+            return this.$route.query.type;
         },
     },
     mounted() {
-        // this.searchValue = this.pageSearch;
-        // this.selectedOption = this.pageStatus;
-        // if (this.searchValue !== '' || this.selectedOption !== '') {
-        //     this.Search();
-        // } else {
-        //     this.fetchData();
-        // }
+        this.searchValue = this.pageSearch;
+        this.selectedOption = this.pageType;
+        if (this.searchValue !== '' || this.selectedOption !== '') {
+            this.Search();
+        } else {
+            this.fetchData();
+        }
     },
     watch: {
         pageParam: async function () {
@@ -224,7 +220,8 @@ export default {
     methods: {
         async downloadFile() {
             try {
-                const apiURL = '/organization?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                const apiURL =
+                    '/organizations?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
                 const response = await this.$axios({
                     method: 'get',
                     url: apiURL,
@@ -262,7 +259,7 @@ export default {
         async fetchData() {
             try {
                 const response = await this.$axios.get(
-                    `/organization?pageNumber=${this.currentPage}&pageSize=10`
+                    `/organizations?pageNumber=${this.currentPage}&pageSize=10`
                 );
                 this.listOrganizations = response.data.data;
                 this.meta = response.data.meta;
@@ -292,9 +289,9 @@ export default {
             this.currentPage = this.pageParam;
             try {
                 const { currentPage, selectedOption, searchValue } = this;
-                let url = `/organization?pageNumber=${currentPage}&pageSize=10`;
+                let url = `/organizations?pageNumber=${currentPage}&pageSize=10`;
                 if (selectedOption && selectedOption !== 'Tất cả') {
-                    url += `&status=${selectedOption}`;
+                    url += `&organizationType=${selectedOption}`;
                 }
                 if (searchValue) {
                     url += `&searchQuery=${searchValue}`;
@@ -308,12 +305,15 @@ export default {
                 // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
                 const query = {};
                 if (selectedOption) {
-                    query.status = selectedOption;
+                    query.type = selectedOption;
                 }
                 if (searchValue) {
                     query.search = searchValue;
                 }
-                this.$router.push({ path: `/organization?page=${currentPage}`, query });
+                this.$router.push({
+                    path: `/organizations?page=${currentPage}`,
+                    query,
+                });
             } catch (error) {
                 console.error(error);
                 this.notiAction = 'Tải';
@@ -332,22 +332,16 @@ export default {
                 this.Search();
             }, 700); // tạo mới setTimeout() với thời gian chờ là 700ms
         },
-        async addAsset(asset) {
+        async addOrganization(organization) {
             try {
-                await this.$axios.post(`/asset`, {
-                    deviceID: asset.deviceID,
-                    roomID: asset.roomID,
-                    assetName: asset.assetName,
-                    yearOfUse: 2023,
-                    technicalSpecification: asset.technicalSpecification,
-                    quantity: asset.quantity,
-                    cost: asset.cost,
-                    status: 'Hoạt động tốt',
-                    notes: asset.notes,
+                await this.$axios.post(`/organizations`, {
+                    organizationID: '',
+                    organizationName: organization.organizationName,
+                    organizationType: organization.organizationType
                 });
                 this.fetchData();
                 this.notiAction = 'Thêm mới';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'tổ chức';
                 this.notiType = 'thành công';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -355,7 +349,7 @@ export default {
                 }, 3000);
             } catch (error) {
                 this.notiAction = 'Thêm mới';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'tổ chức';
                 this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -364,23 +358,16 @@ export default {
                 console.log(error);
             }
         },
-        async updateAsset(asset) {
+        async updateOrganization(organization) {
             try {
                 await this.$axios.put(`/asset/${asset.assetID}`, {
-                    assetID: asset.assetID,
-                    deviceID: asset.deviceID,
-                    roomID: asset.roomID,
-                    assetName: asset.assetName,
-                    yearOfUse: 2023,
-                    technicalSpecification: asset.technicalSpecification,
-                    quantity: asset.quantity,
-                    cost: asset.cost,
-                    status: 'Hoạt động tốt',
-                    notes: asset.notes,
+                    organizationID: organization.organizationID,
+                    organizationName: organization.organizationName,
+                    organizationType: organization.organizationType
                 });
                 this.fetchData();
                 this.notiAction = 'Cập nhật';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'tổ chức';
                 this.notiType = 'thành công';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -388,7 +375,7 @@ export default {
                 }, 3000);
             } catch (error) {
                 this.notiAction = 'Cập nhật';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'tổ chức';
                 this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -479,7 +466,7 @@ export default {
             }
             this.notiAction = action;
         },
-        submitForm(action, asset) {
+        submitForm(action, organization) {
             console.log(action);
             this.isShowPopup = false;
             if (action === 'xóa') {
@@ -487,10 +474,10 @@ export default {
             } else if (action === 'thanh lý') {
                 this.disposeAsset();
             } else if (action === 'thêm mới') {
-                if (!asset.assetID) {
-                    this.addAsset(asset);
+                if (!organization.organizationID) {
+                    this.addOrganization(organization);
                 } else {
-                    this.updateAsset(asset);
+                    this.updateAsset(organization);
                 }
             } else {
                 this.downloadFile();

@@ -20,8 +20,8 @@
     position: absolute;
     top: 20%;
     z-index: 999;
-    width: 400px;
-    height: 248px;
+    min-width: 400px;
+    min-height: 248px;
     /* White */
     background: #ffffff;
     /* Shadow/xl */

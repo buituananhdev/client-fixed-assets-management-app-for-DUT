@@ -251,7 +251,6 @@ export default {
 .popup-form {
     top: 5%;
     width: 680px;
-    min-height: 700px;
     padding: 32px 24px 32px 24px;
     flex-direction: column;
     justify-content: flex-start;
@@ -259,7 +258,6 @@ export default {
 }
 .popup-content {
     position: relative;
-    max-height: 90%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -294,7 +292,7 @@ export default {
     gap: 24px 24px;
     grid-auto-flow: row;
     width: 100%;
-    max-height: 70%;
+    max-height: 480px;
     grid-template-areas:
         'device-id room-name'
         'asset-name total'
@@ -341,7 +339,7 @@ export default {
 }
 
 .form-col {
-    min-height: 66px;
+    max-height: 66px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

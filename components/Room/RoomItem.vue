@@ -3,21 +3,21 @@
         <div class="item div-center">
             <p
                 class="div-center stt-col"
-                @click="$router.push(`/rooms?page=1&organization_id=${itemProp.organizationID}`)"
+                @click="$router.push(`/home?page=1&room_id=${itemProp.roomID}`)"
             >
                 {{ itemIndex }}
             </p>
             <p
-                class="div-center organization-name-col"
-                @click="$router.push(`/rooms?page=1&organization_id=${itemProp.organizationID}`)"
+                class="div-center organization-type-col"
+                @click="$router.push(`/home?page=1&room_id=${itemProp.roomID}`)"
             >
-                {{ itemProp.organizationName }}
+                {{ itemProp.roomID }}
             </p>
             <p
-                class="div-center organization-type-col"
-                @click="$router.push(`/rooms?page=1&organization_id=${itemProp.organizationID}`)"
+                class="div-center organization-name-col"
+                @click="$router.push(`/home?page=1&room_id=${itemProp.roomID}`)"
             >
-                {{ itemProp.organizationType }}
+                {{ itemProp.roomName }}
             </p>
             <span
                 class="div-center show-action-col"
@@ -31,15 +31,37 @@
                     :type="type"
                     @mouseover="showAction()"
                     @delete="
-                        $emit('showPopup', 'xóa', 'tổ chức', itemProp.organizationID)
+                        $emit(
+                            'showPopup',
+                            'xóa',
+                            'tổ chức',
+                            itemProp.organizationID
+                        )
                     "
                     @dispose="
-                        $emit('showPopup', 'thanh lý', 'tổ chức', itemProp.organizationID)
+                        $emit(
+                            'showPopup',
+                            'thanh lý',
+                            'tổ chức',
+                            itemProp.organizationID
+                        )
                     "
                     @update="
-                        $emit('showPopup', 'thêm mới', 'tổ chức', itemProp.organizationID)
+                        $emit(
+                            'showPopup',
+                            'thêm mới',
+                            'tổ chức',
+                            itemProp.organizationID
+                        )
                     "
-                    @cancel_dispose="$emit('showPopup', 'hủy thanh lý', 'tổ chức', itemProp.organizationID)"
+                    @cancel_dispose="
+                        $emit(
+                            'showPopup',
+                            'hủy thanh lý',
+                            'tổ chức',
+                            itemProp.organizationID
+                        )
+                    "
                 ></Tooltip>
             </span>
         </div>

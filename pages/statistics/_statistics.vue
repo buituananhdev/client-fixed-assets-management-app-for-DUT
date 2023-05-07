@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <OptionExport @closePopup=""></OptionExport>
+        <OptionExport @closePopup="actionPopup" v-if="showPopup"></OptionExport>
         <Header
             class="page-top"
             :class="{ navSticky: isHeaderActive }"
@@ -16,10 +16,7 @@
                         placeholder="Năm"
                         @input="fetchData(selectedYear)"
                     ></multiselect>
-                    <button
-                        class="create-btn"
-                        @click="showPopup('xuất file', 'bảng dữ liệu')"
-                    >
+                    <button class="create-btn" @click="actionPopup()">
                         Xuất file excel
                     </button>
                 </div>
@@ -49,7 +46,10 @@
                             {{ countStatus.count_maintenance }}
                         </h3>
                         <div class="circle div-center">
-                            <p class="percent div-center">
+                            <p
+                                style="background: #fff9e5"
+                                class="percent div-center"
+                            >
                                 {{
                                     (
                                         (countStatus.count_maintenance * 100) /
@@ -65,7 +65,10 @@
                             {{ countStatus.count_broken }}
                         </h3>
                         <div class="circle circle-broken div-center">
-                            <p class="percent div-center">
+                            <p
+                                style="background: #fbf1f3"
+                                class="percent div-center"
+                            >
                                 {{
                                     (
                                         (countStatus.count_broken * 100) /
@@ -81,7 +84,10 @@
                             {{ countStatus.count_disposed }}
                         </h3>
                         <div class="circle circle-disposed div-center">
-                            <p class="percent div-center">
+                            <p
+                                style="background: #edf5ff"
+                                class="percent div-center"
+                            >
                                 {{
                                     (
                                         (countStatus.count_disposed * 100) /
@@ -139,10 +145,11 @@ import OptionExport from '@/components/File/OptionExport.vue';
 
 export default {
     components: {
-        OptionExport
+        OptionExport,
     },
     data() {
         return {
+            showPopup: true,
             countStatus: {},
             countDisposeMonth: [],
             chartData: [1, 2, 3, 4],
@@ -175,9 +182,9 @@ export default {
                         data: this.countStatusData,
                         backgroundColor: [
                             '#50c878',
+                            '#ffc000',
+                            '#DC143C',
                             '#5c93d1',
-                            '#9B715D',
-                            '#5E5498',
                         ],
                         borderColor: '#fff',
                         borderWidth: 1,
@@ -205,7 +212,7 @@ export default {
                     {
                         label: 'Tài sản đã thanh lý',
                         data: this.countDisposeMonthData,
-                        backgroundColor: '#5E5498',
+                        backgroundColor: '#5c93d1',
                         borderColor: 'rgba(255, 255, 255, 1)',
                         borderWidth: 0,
                         borderRadius: 12,
@@ -276,17 +283,17 @@ export default {
                     break;
                 case 1:
                     if (circle) {
-                        circle.style.background = `conic-gradient(#5c93d1 ${percent}%, #c2dbf9 0)`;
+                        circle.style.background = `conic-gradient(#ffc000 ${percent}%, #ffeaa9 0)`;
                     }
                     break;
                 case 2:
                     if (circle) {
-                        circle.style.background = `conic-gradient(#9B715D ${percent}%, #F3D5C8 0)`;
+                        circle.style.background = `conic-gradient(#DC143C ${percent}%, #f8c3ce 0)`;
                     }
                     break;
                 case 3:
                     if (circle) {
-                        circle.style.background = `conic-gradient(#5E5498 ${percent}%, #D8D3F5 0)`;
+                        circle.style.background = `conic-gradient(#5c93d1 ${percent}%, #b1c8e2 0)`;
                     }
                     break;
                 default:
@@ -294,19 +301,14 @@ export default {
             }
         }
     },
-    watch: {
-        selectedYear(newValue) {
-            this.fetchData(newValue);
-        },
-    },
     methods: {
         async fetchData(year) {
             try {
                 let url;
                 if (year != '') {
-                    url = `/asset/statistic?year_dispose${year}`;
+                    url = `/assets/statistic?year_of_use=${year}`;
                 } else {
-                    url = `/asset/statistic`;
+                    url = `/assets/statistic`;
                 }
                 const response = await this.$axios.get(url);
                 this.countStatus = response.data.data.countStatus;
@@ -318,6 +320,9 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        actionPopup() {
+            this.showPopup = !this.showPopup;
         },
         closeTab() {
             document
@@ -391,17 +396,17 @@ export default {
     animation: from-left 0.8s ease-in-out;
 }
 .broken-box {
-    background: #fff2ec;
-    color: #9b715d;
+    background: #fbf1f3;
+    color: #dc143c;
     animation: from-top 0.9s ease-in-out;
 }
 .repair-box {
-    background: #edf5ff;
-    color: #5c93d1;
+    background: #fff9e5;
+    color: #ffc000;
 }
 .disposed-box {
-    background: #f4f2ff;
-    color: #5e5498;
+    background: #edf5ff;
+    color: #5c93d1;
     animation: from-right 0.8s ease-in-out;
 }
 @keyframes from-top {

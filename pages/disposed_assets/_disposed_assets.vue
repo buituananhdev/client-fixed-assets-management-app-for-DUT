@@ -239,7 +239,7 @@ export default {
         async downloadFile() {
             try {
                 const apiURL =
-                    '/disposed_asset?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                    '/disposed_assets?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
                 const response = await this.$axios({
                     method: 'get',
                     url: apiURL,
@@ -279,7 +279,7 @@ export default {
             try {
                 await this.$axios
                     .get(
-                        `/disposed_asset?pageNumber=${this.currentPage}&pageSize=10`
+                        `/disposed_assets?pageNumber=${this.currentPage}&pageSize=10`
                     )
                     .then((res) => {
                         this.listAssets = res['data']['data'];
@@ -301,7 +301,7 @@ export default {
             this.currentPage = this.pageParam;
             try {
                 const { currentPage, searchValue, startDate, endDate } = this;
-                const url = `/disposed_asset?pageNumber=${currentPage}&pageSize=10${
+                const url = `/disposed_assets?pageNumber=${currentPage}&pageSize=10${
                     startDate ? `&startDate=${startDate}` : ''
                 }${endDate ? `&endDate=${endDate}` : ''}${
                     searchValue ? `&searchQuery=${searchValue}` : ''
@@ -344,7 +344,7 @@ export default {
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(`/disposed_asset/${this.assetID}`);
+                await this.$axios.delete(`/disposed_assets/${this.assetID}`);
                 this.refreshData();
                 this.notiAction = 'Xóa';
                 this.notiObject = 'tài sản';
@@ -366,7 +366,7 @@ export default {
         },
         async cancelDispose() {
             try {
-                await this.$axios.post(`/disposed_asset/${this.assetID}`);
+                await this.$axios.post(`/disposed_assets/${this.assetID}`);
                 this.refreshData();
                 this.notiAction = 'Hủy thanh lý';
                 this.notiObject = 'tài sản';

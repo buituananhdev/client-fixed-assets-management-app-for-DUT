@@ -45,11 +45,10 @@
                     </div>
                     <multiselect
                         class="multiselect"
-                        :options="options"
+                        :options="listOrganizations"
                         v-model="selectedOption"
-                        :label="selectedOption.organizationName"
-                        placeholder="Loại tổ chức"
-                        @input="Search"
+                        label="organizationName"
+                        placeholder="Chọn hoặc tìm kiếm tổ chức"
                     ></multiselect>
                     <div class="btn-container">
                         <button
@@ -158,6 +157,7 @@ export default {
     },
     data() {
         return {
+            listOrganizations: [],
             listRooms: [],
             meta: [],
             currentPage: 1,
@@ -171,7 +171,7 @@ export default {
             searchValue: '',
             timeoutId: null, // thêm biến timeoutId vào component
             selectedOption: '',
-            currentOrganization: {},
+            organizationID: '',
             options: ['Tất cả', 'Khoa', 'Phòng ban', 'Trung tâm'],
         };
     },
@@ -188,11 +188,12 @@ export default {
     },
     mounted() {
         this.searchValue = this.pageSearch;
-        if (this.pageOrganization) {
-            this.fetchDetailOrganization(this.pageOrganization);
-        } else {
-            this.refreshData();
+        this.organizationID = this.pageOrganization;
+        if (this.pageOrganization != undefined) {
+            this.fetchDetailOrganization();
         }
+        this.refreshData();
+        this.fetchListOrganization();
     },
     watch: {
         pageParam: async function () {
@@ -209,12 +210,23 @@ export default {
                 }
             },
         },
+        selectedOption: {
+            deep: true,
+            immediate: true,
+            handler(newVal) {
+                console.log(newVal)
+                this.organizationID = this.selectedOption.organizationID;
+                this.Search();
+            },
+        },
     },
     methods: {
         refreshData() {
+            console.log(this.searchValue);
+            console.log(this.organizationID);
             if (
-                this.searchValue !== '' ||
-                this.selectedOption.organizationID !== ''
+                this.searchValue !== undefined ||
+                this.organizationID !== undefined
             ) {
                 this.Search();
             } else {
@@ -265,7 +277,7 @@ export default {
                 );
                 this.listRooms = response.data.data;
                 this.meta = response.data.meta;
-                console.log(this.listRooms);
+                console.log(this.meta);
             } catch (error) {
                 console.log(error);
                 this.notiAction = 'Tải';
@@ -288,16 +300,13 @@ export default {
             }
         },
         async Search() {
-            console.log('fetch');
+            console.log('search');
             this.currentPage = this.pageParam;
             try {
-                const { currentPage, selectedOption, searchValue } = this;
+                const { currentPage, organizationID, searchValue } = this;
                 let url = `/rooms?pageNumber=${currentPage}&pageSize=10`;
-                if (
-                    selectedOption.organizationID != '' &&
-                    selectedOption.organizationID !== 'Tất cả'
-                ) {
-                    url += `&organization_id=${selectedOption.organizationID}`;
+                if (organizationID && organizationID != '') {
+                    url += `&organization_id=${organizationID}`;
                 }
                 if (searchValue) {
                     url += `&searchQuery=${searchValue}`;
@@ -310,8 +319,8 @@ export default {
                 console.log(this.listRooms);
                 // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
                 const query = {};
-                if (selectedOption.organizationID != '') {
-                    query.organization_id = selectedOption.organizationID;
+                if (organizationID != '') {
+                    query.organization_id = organizationID;
                 }
                 if (searchValue) {
                     query.search = searchValue;
@@ -441,14 +450,29 @@ export default {
                 console.log(error);
             }
         },
-        async fetchDetailOrganization(id) {
+        async fetchListOrganization() {
+            try {
+                const response = await this.$axios.get(`/organizations`);
+                this.listOrganizations = response.data.data;
+                console.log(this.listOrganizations);
+            } catch (error) {
+                console.log(error);
+                this.notiAction = 'Tải';
+                this.notiObject = 'dữ liệu';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+            }
+        },
+        async fetchDetailOrganization() {
             try {
                 await this.$axios
-                    .get(`/organizations?organizationID=${id}`)
+                    .get(`/organizations/${this.organizationID}`)
                     .then((res) => {
                         this.selectedOption = res['data']['data'];
                         console.log(this.selectedOption);
-                        this.refreshData();
                     });
             } catch (error) {
                 this.setNotification('Tải', 'dữ liệu', 'thất bại');

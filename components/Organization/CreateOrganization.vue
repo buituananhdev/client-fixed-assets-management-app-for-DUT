@@ -182,7 +182,7 @@ export default {
 }
 
 .form-col {
-    min-height: 56px;
+    height: 76px;
     width: 100%;
     display: flex;
     flex-direction: column;

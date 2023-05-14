@@ -50,6 +50,14 @@
                         placeholder="Trạng thái của tài sản"
                         @input="Search"
                     ></multiselect>
+                    <multiselect
+                        class="multiselect"
+                        :options="listRooms"
+                        v-model="selectedRoom"
+                        label="roomName"
+                        placeholder="Tìm kiếm hoặc chọn phòng"
+                        @input="Search"
+                    ></multiselect>
                     <div class="btn-container">
                         <button
                             class="create-btn"
@@ -163,6 +171,8 @@ export default {
             meta: [],
             currentPage: 1,
             assetID: {},
+            listRooms: [],
+            selectedRoom: '',
             isHaveContent: false,
             isShowPopup: false,
             showNotification: false,
@@ -197,10 +207,15 @@ export default {
         }
     },
     mounted() {
+        this.roomID = this.pageRoom;
         this.searchValue = this.pageSearch;
         this.selectedOption = this.pageStatus;
         this.roomID = this.pageRoom;
+        if(this.roomID != undefined) {
+            this.fetchDetailRoom();
+        }
         this.refreshData();
+        this.fetchListRooms();
     },
     watch: {
         pageParam: async function () {
@@ -215,6 +230,12 @@ export default {
                 } else {
                     this.isHaveContent = false;
                 }
+            },
+        },
+        selectedRoom: {
+            
+            handler(newVal) {
+                this.roomID = newVal.roomID;
             },
         },
     },
@@ -443,6 +464,26 @@ export default {
             document
                 .querySelector('.page-top')
                 .classList.remove('open-collapse');
+        },
+        async fetchListRooms() {
+            try {
+                const response = await this.$axios.get(`/rooms`);
+                this.listRooms = response.data.data;
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async fetchDetailRoom() {
+            try {
+                await this.$axios
+                    .get(`/rooms/${this.roomID}`)
+                    .then((res) => {
+                        this.selectedRoom = res['data']['data'];
+                        console.log(this.selectedRoom);
+                    });
+            } catch (error) {
+                console.log(error);
+            }
         },
         setNotification(action, object, type) {
             this.notiAction = action;

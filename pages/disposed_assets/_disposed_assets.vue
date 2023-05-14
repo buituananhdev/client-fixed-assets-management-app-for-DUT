@@ -35,13 +35,6 @@
                             alt=""
                         />
                     </div>
-                    <multiselect
-                        class="multiselect"
-                        :options="options"
-                        v-model="selectedOption"
-                        placeholder="Trạng thái của tài sản"
-                        @input="Search"
-                    ></multiselect>
                     <div class="date-search">
                         <date-picker
                             class="inp-search"
@@ -60,6 +53,13 @@
                             v-model="endDate"
                         ></date-picker>
                     </div>
+                    <multiselect
+                        class="multiselect"
+                        :options="options"
+                        v-model="selectedOption"
+                        placeholder="Trạng thái của tài sản"
+                        @input="Search"
+                    ></multiselect>
                     <div class="btn-container">
                         <button
                             class="create-btn"
@@ -449,3 +449,9 @@ export default {
 </script>
 
 <style scoped src="../../static/css/table_assets.css"></style>
+<style scoped>
+.multiselect {
+    visibility: hidden;
+    pointer-events: none;
+}
+</style>

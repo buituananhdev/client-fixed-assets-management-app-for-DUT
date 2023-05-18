@@ -469,7 +469,6 @@ export default {
     gap: 12px;
     padding: 12px;
     background: #ffffff;
-    border: 1px solid #f2eeee;
     box-shadow: 30px 30.24px 20px rgba(0, 0, 0, 0.02),
         0px 12.16px 8.576px rgba(0, 0, 0, 0.013152),
         0px 2.72px 3.712px rgba(0, 0, 0, 0.008304);

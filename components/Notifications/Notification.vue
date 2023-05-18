@@ -22,6 +22,11 @@
                 src="../../static/icons/failure-noti.svg"
                 alt=""
             />
+            <img
+                v-show="type == 'cảnh báo'"
+                src="../../static/icons/warning-noti.svg"
+                alt=""
+            />
             <p class="content">{{ content }}</p>
         </div>
         <div
@@ -40,12 +45,17 @@
 
 <script>
 export default {
-    props: ['type', 'action', 'object'],
+    props: ['type', 'action', 'object', 'warning'],
     data() {
         return {
             content: this.action + ' ' + this.object + ' ' + this.type,
         };
     },
+    mounted() {
+        if(this.warning) {
+            this.content = this.warning;
+        }
+    }
 };
 </script>
 

@@ -1,5 +1,10 @@
 <template>
     <div class="popup-container div-center">
+        <Notification
+            :type="'cảnh báo'"
+            :warning="'Hãy nhập tất cả các trường bắt buộc'"
+            v-if="showNotification"
+        ></Notification>
         <div class="overlay" @click="closePopup()"></div>
         <div class="popup-form div-center">
             <div class="popup-content div-center">
@@ -103,6 +108,7 @@ export default {
             status: '',
             listRooms: [],
             checkBtn: false,
+            showNotification: false,
             listType: ['Khoa', 'Phòng ban', 'Trung tâm'],
         };
     },
@@ -122,6 +128,11 @@ export default {
             if (result) {
                 this.$emit('submitForm', 'thêm mới', this.currentOrganization);
                 console.log(this.currentOrganization);
+            } else {
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
             }
         },
         closePopup() {
@@ -182,7 +193,7 @@ export default {
 }
 
 .form-col {
-    height: 76px;
+    height: 68px;
     width: 100%;
     display: flex;
     flex-direction: column;

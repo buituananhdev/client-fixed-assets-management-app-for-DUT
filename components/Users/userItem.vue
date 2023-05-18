@@ -93,10 +93,6 @@ export default {
     font-size: 15px;
     width: calc(100% / 5);
 }
-.item:hover p {
-    color: #008cde;
-    text-decoration: underline;
-}
 .item:hover .custom-select-trigger {
     color: #008cde;
 }

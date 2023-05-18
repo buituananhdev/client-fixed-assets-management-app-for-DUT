@@ -208,4 +208,5 @@ input[type='date'] {
 }
 .multiselect {
     width: 235px;
+    cursor: pointer;
 }

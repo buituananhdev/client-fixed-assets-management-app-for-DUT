@@ -183,7 +183,6 @@ export default {
             timeoutId: null, // thêm biến timeoutId vào component
             selectedOption: '',
             currentAsset: {},
-            roomID: '',
             options: [
                 'Tất cả',
                 'Hoạt động tốt',
@@ -232,16 +231,10 @@ export default {
                 }
             },
         },
-        selectedRoom: {
-            
-            handler(newVal) {
-                this.roomID = newVal.roomID;
-            },
-        },
     },
     methods: {
         refreshData() {
-            if (this.searchValue !== '' || this.selectedOption !== '' || this.roomID !== '') {
+            if (this.searchValue !== '' || this.selectedOption !== '' || this.selectedRoom) {
                 this.Search();
             } else {
                 this.fetchData();
@@ -249,7 +242,17 @@ export default {
         },
         async downloadFile() {
             try {
-                const apiURL = '/assets?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                const { selectedOption, searchValue, selectedRoom } = this;
+                let apiURL = '/assets?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
+                if (selectedOption && selectedOption !== 'Tất cả') {
+                    apiURL += `&status=${selectedOption}`;
+                }
+                if (searchValue) {
+                    apiURL += `&searchQuery=${searchValue}`;
+                }
+                if(selectedRoom) {
+                    apiURL += `&room_id=${selectedRoom.roomID}`;
+                }
                 const response = await this.$axios({
                     method: 'get',
                     url: apiURL,
@@ -315,7 +318,7 @@ export default {
         async Search() {
             this.currentPage = this.pageParam;
             try {
-                const { currentPage, selectedOption, searchValue, roomID } = this;
+                const { currentPage, selectedOption, searchValue, selectedRoom, roomID } = this;
                 let url = `/assets?pageNumber=${currentPage}&pageSize=10`;
                 if (selectedOption && selectedOption !== 'Tất cả') {
                     url += `&status=${selectedOption}`;
@@ -323,7 +326,10 @@ export default {
                 if (searchValue) {
                     url += `&searchQuery=${searchValue}`;
                 }
-                if(roomID) {
+                if(selectedRoom) {
+                    url += `&room_id=${selectedRoom.roomID}`;
+                }
+                if(selectedRoom === '' && roomID) {
                     url += `&room_id=${roomID}`;
                 }
                 const {
@@ -340,7 +346,10 @@ export default {
                 if (searchValue) {
                     query.search = searchValue;
                 }
-                if (roomID) {
+                if (selectedRoom) {
+                    query.room_id = selectedRoom.roomID;
+                }
+                if(selectedRoom === '') {
                     query.room_id = roomID;
                 }
                 this.$router.push({ path: `/home?page=${currentPage}`, query });

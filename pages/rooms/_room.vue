@@ -49,6 +49,7 @@
                         v-model="selectedOption"
                         label="organizationName"
                         placeholder="Chọn hoặc tìm kiếm tổ chức"
+                        @input="Search"
                     ></multiselect>
                     <div class="btn-container">
                         <button
@@ -171,7 +172,6 @@ export default {
             searchValue: '',
             timeoutId: null, // thêm biến timeoutId vào component
             selectedOption: '',
-            organizationID: '',
             options: ['Tất cả', 'Khoa', 'Phòng ban', 'Trung tâm'],
         };
     },
@@ -210,24 +210,12 @@ export default {
                 }
             },
         },
-        selectedOption: {
-            deep: true,
-            immediate: true,
-            handler(newVal) {
-                console.log(newVal)
-                this.organizationID = this.selectedOption.organizationID;
-                this.Search();
-            },
-        },
     },
     methods: {
         refreshData() {
             console.log(this.searchValue);
             console.log(this.organizationID);
-            if (
-                this.searchValue !== undefined ||
-                this.organizationID !== undefined
-            ) {
+            if (this.searchValue !== undefined || this.organizationID !== undefined) {
                 this.Search();
             } else {
                 this.fetchData();
@@ -289,23 +277,15 @@ export default {
                 }, 3000);
             }
         },
-        async fetchDetail(id) {
-            try {
-                await this.$axios.get(`/assets/${id}`).then((res) => {
-                    this.currentAsset = res['data']['data'];
-                    console.log(this.currentAsset);
-                });
-            } catch (error) {
-                console.log(error);
-            }
-        },
         async Search() {
-            console.log('search');
             this.currentPage = this.pageParam;
             try {
-                const { currentPage, organizationID, searchValue } = this;
+                const { currentPage, selectedOption, searchValue, organizationID } = this;
                 let url = `/rooms?pageNumber=${currentPage}&pageSize=10`;
-                if (organizationID && organizationID != '') {
+                if (selectedOption) {
+                    url += `&organization_id=${selectedOption.organizationID}`;
+                }
+                if(selectedOption === '' && organizationID) {
                     url += `&organization_id=${organizationID}`;
                 }
                 if (searchValue) {
@@ -319,7 +299,10 @@ export default {
                 console.log(this.listRooms);
                 // Lưu trạng thái của selectedOption và searchValue vào URL của trang web
                 const query = {};
-                if (organizationID != '') {
+                if (selectedOption) {
+                    query.organization_id = selectedOption.organizationID;
+                }
+                if(selectedOption === '') {
                     query.organization_id = organizationID;
                 }
                 if (searchValue) {
@@ -566,3 +549,8 @@ export default {
 </script>
 
 <style scoped src="../../static/css/table_assets.css"></style>
+<style scoped>
+.multiselect {
+    width: 320px;
+}
+</style>

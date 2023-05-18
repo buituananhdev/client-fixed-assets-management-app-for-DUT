@@ -15,20 +15,41 @@
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
-        <CreateUser
+        <!-- <CreateUser
             :type="'update'"
             :assetProp="currentUser"
             v-show="isShowPopup == 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         >
-        </CreateUser>
+        </CreateUser> -->
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
                 <h1 class="page-main-title">Danh sách người dùng</h1>
                 <div class="action-container">
+                    <div class="search">
+                        <input
+                            type="text"
+                            class="inp-search"
+                            placeholder="Tìm kiếm..."
+                            v-model="searchValue"
+                            @input="onSearchInput"
+                        />
+                        <img
+                            class="icn-search"
+                            src="../../static/icons/search.svg"
+                            alt=""
+                        />
+                    </div>
+                    <multiselect
+                        class="multiselect"
+                        :options="listPermission"
+                        v-model="permission"
+                        placeholder="Chọn hoặc tìm kiếm chức vụ"
+                        @input="Search"
+                    ></multiselect>
                     <div class="btn-container">
                         <button
                             class="create-btn"
@@ -38,7 +59,7 @@
                         </button>
                     </div>
                 </div>
-                    
+
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-user-col">STT</p>
@@ -54,7 +75,15 @@
                         />
                         <h1 class="empty-err-mess">Không có dữ liệu</h1>
                     </div>
-                    
+                    <UserItem
+                        v-for="(item, index) in listUsers"
+                        :type="'room'"
+                        :key="index"
+                        :itemProp="item"
+                        :itemIndex="index + 1"
+                        @showPopup="showPopup"
+                        style="width: 100%"
+                    ></UserItem>
                 </div>
                 <div class="pagination">
                     <div
@@ -113,9 +142,16 @@
 </template>
 
 <script>
+import CreateUser from '@/components/Users/CreateUser.vue';
+import UserItem from '@/components/Users/UserItem.vue';
 export default {
+    components: {
+        UserItem,
+        CreateUser,
+    },
     data() {
         return {
+            searchValue: '',
             listUsers: [],
             meta: [],
             currentPage: 1,
@@ -125,7 +161,8 @@ export default {
             notiAction: '',
             notiObject: '',
             notiType: '',
-            selectedOption: '',
+            permission: '',
+            listPermission: ['Quản trị viên', 'Nhân viên'],
             currentUser: {},
         };
     },
@@ -133,13 +170,21 @@ export default {
         pageParam() {
             return this.$route.query.page;
         },
+        pageSearch() {
+            return this.$route.query.search;
+        },
+        pagePermission() {
+            return this.$route.query.permission;
+        },
     },
     mounted() {
-        this.fetchData();
+        this.permission = this.pagePermission;
+        this.searchValue = this.pageSearch;
+        this.refreshData();
     },
     watch: {
         pageParam: async function () {
-            this.fetchData();
+            this.refreshData();
         },
         listUsers: {
             deep: true,
@@ -154,10 +199,17 @@ export default {
         },
     },
     methods: {
+        refreshData() {
+            if (this.searchValue !== '' || this.permission !== '') {
+                this.Search();
+            } else {
+                this.fetchData();
+            }
+        },
         async fetchData() {
             try {
                 const response = await this.$axios.get(
-                    `/user?pageNumber=${this.currentPage}&pageSize=10`
+                    `/users?pageNumber=${this.currentPage}&pageSize=10`
                 );
                 this.listUsers = response.data.data;
                 this.meta = response.data.meta;
@@ -172,6 +224,54 @@ export default {
                     this.showNotification = false;
                 }, 3000);
             }
+        },
+        async Search() {
+            console.log('search');
+            this.currentPage = this.pageParam;
+            try {
+                const { currentPage, permission, searchValue } = this;
+                let url = `/users?pageNumber=${currentPage}&pageSize=10`;
+                if (permission && permission != '') {
+                    url += `&permission=${permission}`;
+                }
+                if (searchValue) {
+                    url += `&searchQuery=${searchValue}`;
+                }
+                const {
+                    data: { data, meta },
+                } = await this.$axios.get(url);
+                this.listUsers = data;
+                this.meta = meta;
+                console.log(this.listUsers);
+                // Lưu trạng thái của permission và searchValue vào URL của trang web
+                const query = {};
+                if (permission != '') {
+                    query.permission = permission;
+                }
+                if (searchValue) {
+                    query.search = searchValue;
+                }
+                this.$router.push({
+                    path: `/users?page=${currentPage}`,
+                    query,
+                });
+            } catch (error) {
+                console.error(error);
+                this.notiAction = 'Tải';
+                this.notiObject = 'dữ liệu';
+                this.notiType = 'thất bại';
+                this.showNotification = true;
+                setTimeout(() => {
+                    this.showNotification = false;
+                }, 3000);
+            }
+        },
+        // debounce
+        onSearchInput() {
+            clearTimeout(this.timeoutId); // xóa bỏ setTimeout() trước đó (nếu có)
+            this.timeoutId = setTimeout(() => {
+                this.Search();
+            }, 700); // tạo mới setTimeout() với thời gian chờ là 700ms
         },
         async addUser(user) {
             try {
@@ -312,8 +412,8 @@ export default {
         goToIndexPage() {
             const query = {};
             query.page = this.currentPage;
-            if (this.selectedOption) {
-                query.status = this.selectedOption;
+            if (this.permission) {
+                query.status = this.permission;
             }
             this.$router.push({
                 query: query,
@@ -330,6 +430,4 @@ export default {
 </script>
 
 <style scoped src="../../static/css/table_assets.css"></style>
-<style>
-
-</style>
+<style></style>

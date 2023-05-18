@@ -25,15 +25,15 @@ body {
 }
 
 .account-col {
-  width: 46.875% !important;
+  width: 30% !important;
 }
 
 .name-user-col {
-  width: 26.875% !important;
+  width: 30% !important;
 }
 
 .roll-col {
-  width: 16.25% !important;
+  width: 20% !important;
 }
 
 .show-action-user-col {
@@ -72,11 +72,11 @@ body {
 }
 
 .organization-name-col {
-  width: 55%;
+  width: 50%;
 }
 
 .organization-type-col {
-  width: 30%;
+  width: 35%;
 }
 
 .room-name-col {

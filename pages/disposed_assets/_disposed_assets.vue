@@ -46,6 +46,7 @@
                     </div>
                     <div class="date-search">
                         <date-picker
+                        style="padding-right: 0;"
                             class="inp-search"
                             placeholder="Ngày kết thúc"
                             :min="startDate"

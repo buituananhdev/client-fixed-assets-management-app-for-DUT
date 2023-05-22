@@ -1,24 +1,16 @@
 <template>
     <div class="main" :class="{ evenLine: itemIndex % 2 == 0 }">
         <div class="item div-center">
-            <p
-                class="div-center stt-user-col"
-            >
+            <p class="div-center stt-user-col">
                 {{ itemIndex }}
             </p>
-            <p
-                class="div-center account-col"
-            >
+            <p class="div-center account-col">
                 {{ itemProp.username }}
             </p>
-            <p
-                class="div-center name-user-col"
-            >
+            <p class="div-center name-user-col">
                 {{ itemProp.fullName }}
             </p>
-            <p
-                class="div-center roll-col"
-            >
+            <p class="div-center roll-col">
                 {{ itemProp.userRole }}
             </p>
             <span
@@ -26,17 +18,23 @@
                 @mouseover="showAction()"
                 @mouseleave="hideAction()"
             >
-                <img src="../../static/icons/three-dots-vertical.svg" alt="" />
+                <img v-if="itemProp.username !== Username" src="../../static/icons/three-dots-vertical.svg" alt="" />
                 <Tooltip
+                v-if="itemProp.username !== Username"
                     class="tooltip"
                     :class="'tooltip' + itemIndex"
                     :type="type"
                     @mouseover="showAction()"
                     @delete="
-                        $emit('showPopup', 'xóa', 'người dùng', itemProp.userID)
+                        $emit('showPopup', 'xóa', 'tài khoản', itemProp.userID)
                     "
                     @update="
-                        $emit('showPopup', 'thêm mới', 'người dùng', itemProp.userID)
+                        $emit(
+                            'showPopup',
+                            'thêm mới',
+                            'tài khoản',
+                            itemProp.userID
+                        )
                     "
                 ></Tooltip>
             </span>
@@ -47,10 +45,18 @@
 <script>
 export default {
     props: ['type', 'itemProp', 'itemIndex'],
+    data() {
+        return {
+            Username: '',
+        };
+    },
     computed: {
         pageParam() {
             return this.$route.query.page;
         },
+    },
+    created() {
+        this.Username = localStorage.getItem('currentUsername');
     },
     methods: {
         showAction() {
@@ -87,7 +93,6 @@ export default {
 }
 .item {
     width: 100%;
-    cursor: pointer;
 }
 .item p {
     font-size: 15px;

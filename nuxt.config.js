@@ -99,7 +99,7 @@ export default {
         redirect: {
             login: '/',
             logout: undefined,
-            home: '/home',
+            home: '/assets',
         },
         watchLoggedIn: true,
         rewriteRedirects: true,

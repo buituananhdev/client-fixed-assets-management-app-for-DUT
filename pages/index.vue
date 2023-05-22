@@ -225,7 +225,8 @@ export default {
                             'currentUser',
                             res['data']['fullName']
                         );
-                        this.$router.push('/home?page=1');
+                        localStorage.setItem('currentUsername', res['data']['username']);
+                        this.$router.push('/assets?page=1');
                     });
             } catch (error) {
                 this.$handleErrorApi(error, (message) => {

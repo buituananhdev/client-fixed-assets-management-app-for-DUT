@@ -16,9 +16,9 @@
                         placeholder="Năm"
                         @input="fetchData(selectedYear)"
                     ></multiselect>
-                    <button class="create-btn" @click="actionPopup()">
+                    <!-- <button class="create-btn" @click="actionPopup()">
                         Xuất file excel
-                    </button>
+                    </button> -->
                 </div>
                 <div class="number">
                     <div class="number-box good-box">
@@ -102,7 +102,7 @@
                     <div class="chart-container" style="flex: 1.3">
                         <client-only placeholder="Loading...">
                             <bar-chart
-                                v-if="countDisposeMonth.length != 0"
+                                ref="barChart"
                                 :data="barChartData"
                                 :options="barChartOptions"
                                 :height="310"
@@ -113,7 +113,7 @@
                     <div class="chart-container" style="flex: 0.7">
                         <client-only placeholder="Loading...">
                             <donut-chart
-                                v-if="JSON.stringify(countStatus) != '{}'"
+                                ref="donutChart"
                                 :data="donutChartData"
                                 :options="chartOptions"
                                 :height="310"
@@ -156,24 +156,20 @@ export default {
             isHeaderActive: false,
             selectedYear: '',
             showPopup: false,
-            years: ['2023', '2022', '2021', '2020', '2019', '2018', '2017'],
+            years: ['2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015','2014', '2013'],
         };
     },
     computed: {
-        countDisposeMonthData() {
-            return this.countDisposeMonth;
-        },
         countStatusData() {
             const countStatusArray = Object.values(this.countStatus).slice(1);
-            console.log(countStatusArray);
             return countStatusArray;
         },
         donutChartData() {
             return {
                 labels: [
                     'Hoạt động tốt',
-                    'Đang bảo dưỡng',
                     'Bị hỏng',
+                    'Đang bảo dưỡng',
                     'Đã thanh lý',
                 ],
                 datasets: [
@@ -182,8 +178,8 @@ export default {
                         data: this.countStatusData,
                         backgroundColor: [
                             '#50c878',
-                            '#ffc000',
                             '#DC143C',
+                            '#ffc000',
                             '#5c93d1',
                         ],
                         borderColor: '#fff',
@@ -211,7 +207,7 @@ export default {
                 datasets: [
                     {
                         label: 'Tài sản đã thanh lý',
-                        data: this.countDisposeMonthData,
+                        data: this.countDisposeMonth,
                         backgroundColor: '#5c93d1',
                         borderColor: 'rgba(255, 255, 255, 1)',
                         borderWidth: 0,
@@ -249,11 +245,11 @@ export default {
             return {
                 responsive: true,
                 maintainAspectRatio: false,
-                offset: 8,
+                offset: 800,
                 radius: 160,
                 spacing: 4,
-                hoverOffset: 32,
-                hoverBorderWidth: 1,
+                hoverOffset: 3200,
+                hoverBorderWidth: 10,
                 weight: 0,
                 title: {
                     display: true,
@@ -313,9 +309,18 @@ export default {
                 const response = await this.$axios.get(url);
                 this.countStatus = response.data.data.countStatus;
                 const data = response.data.data.countDisposeMonth;
+                this.countDisposeMonth = [];
                 for (let i = 0; i < data.length; i++) {
                     this.countDisposeMonth.push(data[i].count);
                 }
+                this.$refs.barChart.renderChart(
+                    this.barChartData,
+                    this.barChartOptions
+                );
+                this.$refs.donutChart.renderChart(
+                    this.donutChartData,
+                    this.chartOptions
+                );
                 console.log(this.countDisposeMonth);
             } catch (error) {
                 console.error(error);

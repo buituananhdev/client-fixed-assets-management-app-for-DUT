@@ -27,7 +27,7 @@
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
             <div class="page-main">
-                <h1 class="page-main-title">Danh sách người dùng</h1>
+                <h1 class="page-main-title">Danh sách tài khoản</h1>
                 <div class="action-container">
                     <div class="search">
                         <input
@@ -55,7 +55,7 @@
                             class="create-btn"
                             @click="isShowPopup = 'thêm mới'"
                         >
-                            Thêm người dùng
+                            Thêm tài khoản
                         </button>
                     </div>
                 </div>
@@ -151,6 +151,7 @@ export default {
     },
     data() {
         return {
+            UserID: '',
             searchValue: '',
             listUsers: [],
             meta: [],
@@ -303,7 +304,7 @@ export default {
         },
         async deleteUser() {
             try {
-                await this.$axios.delete(`/user/${this.UserID}`);
+                await this.$axios.delete(`/users/${this.UserID}`);
                 this.notiAction = 'Xóa';
                 this.notiObject = 'người dùng';
                 this.notiType = 'thành công';
@@ -383,8 +384,9 @@ export default {
                 this.notiObject = object;
                 this.isShowPopup = true;
             } else {
+                this.notiObject = object;
                 this.isShowPopup = true;
-                this.assetID = id;
+                this.UserID = id;
                 console.log(id);
             }
             this.notiAction = action;

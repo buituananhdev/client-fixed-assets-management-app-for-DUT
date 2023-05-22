@@ -3,19 +3,19 @@
         <div class="item div-center">
             <p
                 class="div-center stt-col"
-                @click="$router.push(`/home?page=1&room_id=${itemProp.roomID}`)"
+                @click="$router.push(`/assets?page=1&room_id=${itemProp.roomID}`)"
             >
                 {{ itemIndex }}
             </p>
             <p
                 class="div-center organization-type-col"
-                @click="$router.push(`/home?page=1&room_id=${itemProp.roomID}`)"
+                @click="$router.push(`/assets?page=1&room_id=${itemProp.roomID}`)"
             >
                 {{ itemProp.roomID }}
             </p>
             <p
                 class="div-center organization-name-col"
-                @click="$router.push(`/home?page=1&room_id=${itemProp.roomID}`)"
+                @click="$router.push(`/assets?page=1&room_id=${itemProp.roomID}`)"
             >
                 {{ itemProp.roomName }}
             </p>

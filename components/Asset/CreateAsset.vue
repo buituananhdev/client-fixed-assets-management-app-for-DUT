@@ -211,7 +211,7 @@ export default {
             ],
         };
     },
-    mounted() {
+    created() {
         this.fetchRoom();
     },
     watch: {

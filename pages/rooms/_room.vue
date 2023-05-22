@@ -11,7 +11,7 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-if="isShowPopup === 'abc'"
+            v-if="isShowPopup"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
@@ -215,15 +215,29 @@ export default {
         refreshData() {
             console.log(this.searchValue);
             console.log(this.organizationID);
-            if (this.searchValue !== undefined || this.organizationID !== undefined) {
+            if (
+                this.searchValue !== undefined ||
+                this.organizationID !== undefined
+            ) {
                 this.Search();
             } else {
                 this.fetchData();
             }
         },
         async downloadFile() {
+            const { selectedOption, searchValue, organizationID } =
+                this;
+            let apiURL = `/rooms?pageNumber=1&pageSize=10&isConvert=true`;
+            if (selectedOption) {
+                apiURL += `&organization_id=${selectedOption.organizationID}`;
+            }
+            if (selectedOption === '' && organizationID) {
+                apiURL += `&organization_id=${organizationID}`;
+            }
+            if (searchValue) {
+                apiURL += `&searchQuery=${searchValue}`;
+            }
             try {
-                const apiURL = '/rooms?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
                 const response = await this.$axios({
                     method: 'get',
                     url: apiURL,
@@ -280,12 +294,17 @@ export default {
         async Search() {
             this.currentPage = this.pageParam;
             try {
-                const { currentPage, selectedOption, searchValue, organizationID } = this;
+                const {
+                    currentPage,
+                    selectedOption,
+                    searchValue,
+                    organizationID,
+                } = this;
                 let url = `/rooms?pageNumber=${currentPage}&pageSize=10`;
                 if (selectedOption) {
                     url += `&organization_id=${selectedOption.organizationID}`;
                 }
-                if(selectedOption === '' && organizationID) {
+                if (selectedOption === '' && organizationID) {
                     url += `&organization_id=${organizationID}`;
                 }
                 if (searchValue) {
@@ -302,7 +321,7 @@ export default {
                 if (selectedOption) {
                     query.organization_id = selectedOption.organizationID;
                 }
-                if(selectedOption === '') {
+                if (selectedOption === '') {
                     query.organization_id = organizationID;
                 }
                 if (searchValue) {
@@ -496,7 +515,7 @@ export default {
                 this.isShowPopup = action;
             } else if (action == 'xuất file') {
                 this.notiObject = object;
-                this.isShowPopup = true;
+                this.isShowPopup = 'xuất file';
             } else {
                 this.isShowPopup = true;
                 this.assetID = id;

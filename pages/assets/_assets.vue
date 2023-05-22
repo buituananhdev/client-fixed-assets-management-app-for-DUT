@@ -18,7 +18,7 @@
         <CreateAsset
             :type="'update'"
             :assetProp="currentAsset"
-            v-show="isShowPopup == 'thêm mới'"
+            v-show="isShowPopup === 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         >
@@ -352,7 +352,7 @@ export default {
                 if(selectedRoom === '') {
                     query.room_id = roomID;
                 }
-                this.$router.push({ path: `/home?page=${currentPage}`, query });
+                this.$router.push({ path: `/assets?page=${currentPage}`, query });
             } catch (error) {
                 console.error(error);
                 this.setNotification('Tải', 'dữ liệu', 'thất bại');
@@ -521,7 +521,7 @@ export default {
             } else {
                 this.isShowPopup = true;
                 this.assetID = id;
-                console.log(id);
+                this.notiObject = object;
             }
             this.notiAction = action;
         },

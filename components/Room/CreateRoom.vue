@@ -13,9 +13,9 @@
                     class="popup-title"
                     v-if="JSON.stringify(organizationProp) === '{}'"
                 >
-                    Thêm tổ chức
+                    Thêm phòng
                 </h1>
-                <h1 class="popup-title" v-else>Cập nhật tổ chức</h1>
+                <h1 class="popup-title" v-else>Cập nhật phòng</h1>
                 <div class="form-container">
                     <div class="device-id form-col">
                         <p class="form-label">

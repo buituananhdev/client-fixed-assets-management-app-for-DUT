@@ -11,13 +11,13 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-if="isShowPopup === 'abc'"
+            v-if="isShowPopup === 'xuất file'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
         <CreateOrganization
             :type="'update'"
-            :organizationProp="currentAsset"
+            :organizationProp="currentOrganization"
             v-if="isShowPopup === 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
@@ -68,8 +68,12 @@
                 <div class="table-assets">
                     <span class="table-assets-title div-center">
                         <p class="div-center stt-col">STT</p>
-                        <p class="div-center organization-name-col">Tên tổ chức</p>
-                        <p class="div-center organization-type-col">Loại tổ chức</p>
+                        <p class="div-center organization-name-col">
+                            Tên tổ chức
+                        </p>
+                        <p class="div-center organization-type-col">
+                            Loại tổ chức
+                        </p>
                         <p class="div-center show-action-col">Action</p>
                     </span>
                     <div class="empty-icn div-center" v-show="!isHaveContent">
@@ -151,14 +155,14 @@ import CreateOrganization from '@/components/Organization/CreateOrganization.vue
 export default {
     components: {
         OrganizationItem,
-        CreateOrganization
+        CreateOrganization,
     },
     data() {
         return {
             listOrganizations: [],
             meta: [],
             currentPage: 1,
-            assetID: {},
+            organizationID: {},
             isHaveContent: false,
             isShowPopup: '',
             showNotification: false,
@@ -168,13 +172,8 @@ export default {
             searchValue: '',
             timeoutId: null, // thêm biến timeoutId vào component
             selectedOption: '',
-            currentAsset: {},
-            options: [
-                'Tất cả',
-                'Khoa',
-                'Phòng ban',
-                'Trung tâm',
-            ],
+            currentOrganization: {},
+            options: ['Tất cả', 'Khoa', 'Phòng ban', 'Trung tâm'],
         };
     },
     computed: {
@@ -219,9 +218,15 @@ export default {
     },
     methods: {
         async downloadFile() {
+            const { selectedOption, searchValue } = this;
+            let apiURL = `/organizations?pageNumber=1&pageSize=10isConvert=true`;
+            if (selectedOption && selectedOption !== 'Tất cả') {
+                apiURL += `&organizationType=${selectedOption}`;
+            }
+            if (searchValue) {
+                apiURL += `&searchQuery=${searchValue}`;
+            }
             try {
-                const apiURL =
-                    '/organizations?pageNumber=1&pageSize=10&isConvert=true'; // đường dẫn tới API download file
                 const response = await this.$axios({
                     method: 'get',
                     url: apiURL,
@@ -277,9 +282,9 @@ export default {
         },
         async fetchDetail(id) {
             try {
-                await this.$axios.get(`/asset/${id}`).then((res) => {
-                    this.currentAsset = res['data']['data'];
-                    console.log(this.currentAsset);
+                await this.$axios.get(`/organizations/${id}`).then((res) => {
+                    this.currentOrganization = res['data']['data'];
+                    console.log(this.currentOrganization);
                 });
             } catch (error) {
                 console.log(error);
@@ -337,7 +342,7 @@ export default {
                 await this.$axios.post(`/organizations`, {
                     organizationID: '',
                     organizationName: organization.organizationName,
-                    organizationType: organization.organizationType
+                    organizationType: organization.organizationType,
                 });
                 this.fetchData();
                 this.notiAction = 'Thêm mới';
@@ -360,11 +365,14 @@ export default {
         },
         async updateOrganization(organization) {
             try {
-                await this.$axios.put(`/asset/${asset.assetID}`, {
-                    organizationID: organization.organizationID,
-                    organizationName: organization.organizationName,
-                    organizationType: organization.organizationType
-                });
+                await this.$axios.put(
+                    `/organizations/${organization.organizationID}`,
+                    {
+                        organizationID: organization.organizationID,
+                        organizationName: organization.organizationName,
+                        organizationType: organization.organizationType,
+                    }
+                );
                 this.fetchData();
                 this.notiAction = 'Cập nhật';
                 this.notiObject = 'tổ chức';
@@ -384,11 +392,13 @@ export default {
                 console.log(error);
             }
         },
-        async deleteAsset() {
+        async deleteOrganization() {
             try {
-                await this.$axios.delete(`/organization/${this.assetID}`);
+                await this.$axios.delete(
+                    `/organizations/${this.organizationID}`
+                );
                 this.notiAction = 'Xóa';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'tổ chức';
                 this.notiType = 'thành công';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -397,29 +407,7 @@ export default {
                 this.fetchData();
             } catch (error) {
                 this.notiAction = 'Xóa';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thất bại';
-                this.showNotification = true;
-                setTimeout(() => {
-                    this.showNotification = false;
-                }, 3000);
-                console.log(error);
-            }
-        },
-        async disposeAsset() {
-            try {
-                await this.$axios.post(`/asset/${this.assetID}`);
-                this.notiAction = 'Thanh lý';
-                this.notiObject = 'tài sản';
-                this.notiType = 'thành công';
-                this.showNotification = true;
-                setTimeout(() => {
-                    this.showNotification = '';
-                }, 3000);
-                this.fetchData();
-            } catch (error) {
-                this.notiAction = 'Thanh lý';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'tổ chức';
                 this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -458,10 +446,10 @@ export default {
                 this.isShowPopup = action;
             } else if (action == 'xuất file') {
                 this.notiObject = object;
-                this.isShowPopup = true;
+                this.isShowPopup = 'xuất file';
             } else {
                 this.isShowPopup = true;
-                this.assetID = id;
+                this.organizationID = id;
                 console.log(id);
             }
             this.notiAction = action;
@@ -470,14 +458,12 @@ export default {
             console.log(action);
             this.isShowPopup = false;
             if (action === 'xóa') {
-                this.deleteAsset();
-            } else if (action === 'thanh lý') {
-                this.disposeAsset();
+                this.deleteOrganization();
             } else if (action === 'thêm mới') {
                 if (!organization.organizationID) {
                     this.addOrganization(organization);
                 } else {
-                    this.updateAsset(organization);
+                    this.updateOrganization(organization);
                 }
             } else {
                 this.downloadFile();
@@ -485,7 +471,7 @@ export default {
         },
         closePopup() {
             this.isShowPopup = '';
-            this.currentAsset = {};
+            this.currentOrganization = {};
         },
         goToIndexPage() {
             const query = {};

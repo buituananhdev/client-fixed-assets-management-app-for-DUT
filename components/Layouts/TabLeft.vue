@@ -167,7 +167,7 @@
                     class="logo-img"
                     src="../../static/images/logo-dut.jpg"
                     alt=""
-                    @click="$router.push('/home?page=1')"
+                    @click="$router.push('/assets?page=1')"
                 />
             </div>
             <h1 id="app-name">
@@ -175,8 +175,8 @@
             </h1>
             <ul class="list-features">
                 <li
-                    :class="{ isActive: pageParam == '/home' }"
-                    @click="$router.push('/home?page=1')"
+                    :class="{ isActive: pageParam == '/assets' }"
+                    @click="$router.push('/assets?page=1')"
                 >
                     <img
                         class="feature-icn"
@@ -221,14 +221,14 @@
                 <li
                     :class="{ isActive: pageParam == '/users' }"
                     @click="$router.push('/users?page=1')"
-                    v-show="currentRole == 'admin'"
+                    v-show="currentRole == 'Quản trị viên'"
                 >
                     <img
                         class="feature-icn"
                         src="../../static/icons/people-fill.svg"
                         alt=""
                     />
-                    <p class="feature-name">Users</p>
+                    <p class="feature-name">Tài khoản</p>
                 </li>
                 <li
                     :class="{ isActive: pageParam == '/statistics' }"

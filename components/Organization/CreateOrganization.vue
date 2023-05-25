@@ -144,6 +144,7 @@ export default {
 <style scoped src="../../static/css/popup.css"></style>
 <style scoped>
 .popup-form {
+    width: 500px;
     padding: 32px 24px 32px 24px;
     flex-direction: column;
     justify-content: flex-start;

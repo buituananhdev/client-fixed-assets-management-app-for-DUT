@@ -11,13 +11,14 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-if="isShowPopup"
+            v-if="isShowPopup ==  true"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
         <CreateRoom
             :type="'update'"
-            :roomProp="currentAsset"
+            :roomProp="currentRoom"
+            :listOrganizations="listOrganizations"
             v-if="isShowPopup === 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
@@ -62,7 +63,7 @@
                             class="create-btn"
                             @click="isShowPopup = 'thêm mới'"
                         >
-                            Thêm tổ chức
+                            Thêm phòng
                         </button>
                     </div>
                 </div>
@@ -160,9 +161,10 @@ export default {
         return {
             listOrganizations: [],
             listRooms: [],
+            currentRoom: {},
             meta: [],
             currentPage: 1,
-            assetID: {},
+            roomID: {},
             isHaveContent: false,
             isShowPopup: '',
             showNotification: false,
@@ -225,8 +227,7 @@ export default {
             }
         },
         async downloadFile() {
-            const { selectedOption, searchValue, organizationID } =
-                this;
+            const { selectedOption, searchValue, organizationID } = this;
             let apiURL = `/rooms?pageNumber=1&pageSize=10&isConvert=true`;
             if (selectedOption) {
                 apiURL += `&organization_id=${selectedOption.organizationID}`;
@@ -354,7 +355,7 @@ export default {
                 await this.$axios.post(`/rooms`, {
                     roomID: room.roomID,
                     roomName: room.roomName,
-                    roomType: room.roomType,
+                    organizationID: room.organizationID.organizationID,
                 });
                 this.fetchData();
                 this.notiAction = 'Thêm mới';
@@ -375,23 +376,16 @@ export default {
                 console.log(error);
             }
         },
-        async updateAsset(asset) {
+        async updateRoom(room) {
             try {
-                await this.$axios.put(`/assets/${asset.assetID}`, {
-                    assetID: asset.assetID,
-                    deviceID: asset.deviceID,
-                    roomID: asset.roomID,
-                    assetName: asset.assetName,
-                    yearOfUse: 2023,
-                    technicalSpecification: asset.technicalSpecification,
-                    quantity: asset.quantity,
-                    cost: asset.cost,
-                    status: 'Hoạt động tốt',
-                    notes: asset.notes,
+                await this.$axios.put(`/rooms/${room.roomID}`, {
+                    roomID: room.roomID,
+                    roomName: room.roomName,
+                    organizationID: room.organizationID.organizationID,
                 });
                 this.fetchData();
                 this.notiAction = 'Cập nhật';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'phòng';
                 this.notiType = 'thành công';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -399,7 +393,7 @@ export default {
                 }, 3000);
             } catch (error) {
                 this.notiAction = 'Cập nhật';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'phòng';
                 this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -410,9 +404,9 @@ export default {
         },
         async deleteAsset() {
             try {
-                await this.$axios.delete(`/rooms/${this.assetID}`);
+                await this.$axios.delete(`/rooms/${this.roomID}`);
                 this.notiAction = 'Xóa';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'phòng';
                 this.notiType = 'thành công';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -421,7 +415,7 @@ export default {
                 this.fetchData();
             } catch (error) {
                 this.notiAction = 'Xóa';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'phòng';
                 this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -432,9 +426,9 @@ export default {
         },
         async disposeAsset() {
             try {
-                await this.$axios.post(`/assets/${this.assetID}`);
+                await this.$axios.post(`/rooms/${this.roomID}`);
                 this.notiAction = 'Thanh lý';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'phòng';
                 this.notiType = 'thành công';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -443,7 +437,7 @@ export default {
                 this.fetchData();
             } catch (error) {
                 this.notiAction = 'Thanh lý';
-                this.notiObject = 'tài sản';
+                this.notiObject = 'phòng';
                 this.notiType = 'thất bại';
                 this.showNotification = true;
                 setTimeout(() => {
@@ -485,6 +479,16 @@ export default {
                 console.log(error);
             }
         },
+        async fetchDetail(id) {
+            try {
+                await this.$axios.get(`/rooms/${id}`).then((res) => {
+                    this.currentRoom = res['data']['data'];
+                    console.log(this.currentRoom);
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
         closeTab() {
             document
                 .querySelector('.main-content')
@@ -518,7 +522,7 @@ export default {
                 this.isShowPopup = 'xuất file';
             } else {
                 this.isShowPopup = true;
-                this.assetID = id;
+                this.roomID = id;
                 console.log(id);
             }
             this.notiAction = action;
@@ -534,7 +538,7 @@ export default {
                 if (room.roomID) {
                     this.addRoom(room);
                 } else {
-                    this.updateAsset(room);
+                    this.updateRoom(room);
                 }
             } else {
                 this.downloadFile();
@@ -542,7 +546,7 @@ export default {
         },
         closePopup() {
             this.isShowPopup = '';
-            this.currentAsset = {};
+            this.currentRoom = {};
         },
         goToIndexPage() {
             const query = {};

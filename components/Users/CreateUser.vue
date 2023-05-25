@@ -1,5 +1,15 @@
 <template>
     <div class="popup-container div-center">
+        <Notification
+            :type="'cảnh báo'"
+            :warning="'Hãy nhập tất cả các trường bắt buộc'"
+            v-if="showNotification == 'empty'"
+        ></Notification>
+        <Notification
+            :type="'cảnh báo'"
+            :warning="'Xác nhận mật khẩu không khớp'"
+            v-if="showNotification == 'password'"
+        ></Notification>
         <div class="overlay" @click="closePopup()"></div>
         <div class="popup-form div-center">
             <div class="popup-content div-center">
@@ -11,70 +21,170 @@
                 />
                 <h1
                     class="popup-title"
-                    v-if="JSON.stringify(organizationProp) === '{}'"
+                    v-if="JSON.stringify(userProp) === '{}'"
                 >
-                    Thêm người dùng
+                    Thêm tài khoản
                 </h1>
-                <h1 class="popup-title" v-else>Cập nhật người dùng</h1>
+                <h1 class="popup-title" v-else>Cập nhật tổ chức</h1>
                 <div class="form-container">
-                    <!-- <div class="device-id form-col">
-                        <p class="form-label">
-                            Mã tổ chức <small style="color: #c7422e">*</small>
-                        </p>
-                        <input
-                            type="text"
-                            class="form-inp"
-                            v-model="currentUser.organizationID"
-                            v-validate="'required|min:1|max:30'"
-                            :class="{
-                                input: true,
-                                'is-danger': errors.has('Mã tổ chức'),
-                            }"
-                            name="Mã tổ chức"
-                        />
-                        <span v-show="errors.has('Mã tổ chức')" class="err">{{
-                            errors.first('Mã tổ chức')
-                        }}</span>
-                    </div> -->
                     <div class="device-id form-col">
                         <p class="form-label">
-                            Tên tổ chức <small style="color: #c7422e">*</small>
+                            Họ và tên <small style="color: #c7422e">*</small>
                         </p>
                         <input
                             type="text"
                             class="form-inp"
-                            v-model="currentUser.organizationName"
+                            v-model="currentUser.fullName"
                             v-validate="'required|min:1|max:30'"
                             :class="{
                                 input: true,
-                                'is-danger': errors.has('Tên tổ chức'),
+                                'is-danger': errors.has('Họ và tên'),
                             }"
-                            name="Tên tổ chức"
+                            name="Họ và tên"
                         />
-                        <span v-show="errors.has('Tên tổ chức')" class="err">{{
-                            errors.first('Tên tổ chức')
+                        <span v-show="errors.has('Họ và tên')" class="err">{{
+                            errors.first('Họ và tên')
                         }}</span>
                     </div>
                     <div class="status form-col">
                         <p class="form-label">
-                            Loại tổ chức
+                            Chức vụ
                             <small style="color: #c7422e">*</small>
                         </p>
                         <multiselect
                             class="multiselect"
                             :options="listType"
-                            v-model="currentUser"
-                            placeholder="Chọn loại tổ chức"
+                            v-model="currentUser.userRole"
+                            placeholder="Chọn chức vụ"
                             v-validate="'required'"
                             :class="{
                                 input: true,
-                                'is-danger': errors.has('Loại tổ chức'),
+                                'is-danger': errors.has('Chức vụ'),
                             }"
-                            name="Loại tổ chức"
+                            name="Chức vụ"
                         ></multiselect>
-                        <span v-show="errors.has('Loại tổ chức')" class="err">{{
-                            errors.first('Loại tổ chức')
+                        <span v-show="errors.has('Chức vụ')" class="err">{{
+                            errors.first('Chức vụ')
                         }}</span>
+                    </div>
+                    <div class="device-id form-col">
+                        <p class="form-label">
+                            Tên đăng nhập
+                            <small style="color: #c7422e">*</small>
+                        </p>
+                        <input
+                            type="text"
+                            class="form-inp"
+                            v-model="currentUser.username"
+                            v-validate="'required|min:1|max:30'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Tên đăng nhập'),
+                            }"
+                            name="Tên đăng nhập"
+                        />
+                        <span
+                            v-show="errors.has('Tên đăng nhập')"
+                            class="err"
+                            >{{ errors.first('Tên đăng nhập') }}</span
+                        >
+                    </div>
+                    <div class="device-id form-col">
+                        <p class="form-label">
+                            Mật khẩu <small style="color: #c7422e">*</small>
+                        </p>
+                        <input
+                            type="text"
+                            autocomplete="off"
+                            v-if="isShowPass"
+                            class="form-inp"
+                            v-model="currentUser.password"
+                            v-validate="'required|min:1|max:30'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Mật khẩu'),
+                            }"
+                            name="Mật khẩu"
+                        />
+                        <input
+                            type="password"
+                            autocomplete="off"
+                            v-else
+                            class="form-inp"
+                            v-model="currentUser.password"
+                            v-validate="'required|min:1|max:30'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Mật khẩu'),
+                            }"
+                            name="Mật khẩu"
+                        />
+                        <img
+                            class="eye-icn"
+                            v-if="isShowPass"
+                            src="../../static/icons/eye-slash.svg"
+                            alt=""
+                            @click="isShowPass = !isShowPass"
+                        />
+                        <img
+                            class="eye-icn"
+                            v-else
+                            src="../../static/icons/eye.svg"
+                            alt=""
+                            @click="isShowPass = !isShowPass"
+                        />
+                        <span v-show="errors.has('Mật khẩu')" class="err">{{
+                            errors.first('Mật khẩu')
+                        }}</span>
+                    </div>
+                    <div class="device-id form-col">
+                        <p class="form-label">
+                            Xác nhận mật khẩu
+                            <small style="color: #c7422e">*</small>
+                        </p>
+                        <input
+                            type="text"
+                            v-if="isShowConfirm"
+                            class="form-inp"
+                            v-model="password"
+                            v-validate="'required|min:1|max:30'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Xác nhận mật khẩu'),
+                            }"
+                            name="Xác nhận mật khẩu"
+                        />
+                        <input
+                            v-else
+                            type="password"
+                            class="form-inp"
+                            v-model="password"
+                            v-validate="'required|min:1|max:30'"
+                            :class="{
+                                input: true,
+                                'is-danger': errors.has('Xác nhận mật khẩu'),
+                            }"
+                            name="Xác nhận mật khẩu"
+                        />
+                        <img
+                            class="eye-icn"
+                            v-if="isShowConfirm"
+                            src="../../static/icons/eye-slash.svg"
+                            alt=""
+                            @click="isShowConfirm = !isShowConfirm"
+                        />
+                        <img
+                            class="eye-icn"
+                            v-else
+                            src="../../static/icons/eye.svg"
+                            alt=""
+                            @click="isShowConfirm = !isShowConfirm"
+                        />
+                        <span
+                            v-show="errors.has('Xác nhận mật khẩu')"
+                            class="err"
+                            >{{ errors.first('Xác nhận mật khẩu') }}</span
+                        >
                     </div>
                 </div>
             </div>
@@ -96,27 +206,41 @@
 
 <script>
 export default {
-    props: ['type', 'content', 'assetProp'],
+    props: ['type', 'content', 'userProp'],
     data() {
         return {
             currentUser: {},
+            isShowPass: false,
+            isShowConfirm: false,
+            password: '',
+            checkBtn: false,
+            showNotification: false,
+            listType: ['Nhân viên', 'Quản trị viên'],
         };
     },
-    mounted() {},
     watch: {
-        assetProp(newValue) {
+        userProp(newValue) {
             this.currentUser = newValue;
-            this.status = newValue.status;
-        },
-        status(newVal) {
-            this.currentUser.status = this.status;
+            this.password = '';
+            this.currentUser.password = '';
         },
     },
     methods: {
         async submitForm() {
             const result = await this.$validator.validateAll();
-            if (result) {
+            if (result && this.currentUser.password === this.password) {
                 this.$emit('submitForm', 'thêm mới', this.currentUser);
+                console.log(this.currentUser);
+            } else if (this.currentUser.password !== this.password) {
+                this.showNotification = 'password';
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
+            } else {
+                this.showNotification = 'empty';
+                setTimeout(() => {
+                    this.showNotification = '';
+                }, 3000);
             }
         },
         closePopup() {
@@ -128,7 +252,9 @@ export default {
 <style scoped src="../../static/css/popup.css"></style>
 <style scoped>
 .popup-form {
+    top: 10%;
     padding: 32px 24px 32px 24px;
+    width: 500px;
     flex-direction: column;
     justify-content: flex-start;
     gap: 32px;
@@ -177,7 +303,8 @@ export default {
 }
 
 .form-col {
-    height: 76px;
+    position: relative;
+    height: 68px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -213,5 +340,13 @@ textarea {
     display: flex;
     justify-content: flex-start;
     color: #ff4433;
+}
+
+.eye-icn {
+    width: 16px;
+    position: absolute;
+    right: 20px;
+    top: 37px;
+    cursor: pointer;
 }
 </style>

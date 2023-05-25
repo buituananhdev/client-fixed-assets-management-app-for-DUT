@@ -41,7 +41,7 @@
                 </svg>
                 Hủy thanh lý
             </div>
-            <div class="button delete" @click="$emit('delete')">
+            <div v-if="type != 'organization' && type != 'room'" class="button delete" @click="$emit('delete')">
                 <svg
                     class="delete-icn"
                     xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +55,7 @@
                 Xóa
             </div>
             <div
-                v-if="type === 'asset' || type === 'organization'"
+                v-if="type !== 'disposed'"
                 class="button update"
                 @click="$emit('update')"
             >
@@ -118,6 +118,7 @@ svg {
     padding: 6px;
 }
 .button {
+    cursor: pointer;
     width: 100%;
     display: flex;
     justify-content: flex-start;

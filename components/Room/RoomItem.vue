@@ -34,32 +34,32 @@
                         $emit(
                             'showPopup',
                             'xóa',
-                            'tổ chức',
-                            itemProp.organizationID
+                            'phòng',
+                            itemProp.roomID
                         )
                     "
                     @dispose="
                         $emit(
                             'showPopup',
                             'thanh lý',
-                            'tổ chức',
-                            itemProp.organizationID
+                            'phòng',
+                            itemProp.roomID
                         )
                     "
                     @update="
                         $emit(
                             'showPopup',
                             'thêm mới',
-                            'tổ chức',
-                            itemProp.organizationID
+                            'phòng',
+                            itemProp.roomID
                         )
                     "
                     @cancel_dispose="
                         $emit(
                             'showPopup',
                             'hủy thanh lý',
-                            'tổ chức',
-                            itemProp.organizationID
+                            'phòng',
+                            itemProp.roomID
                         )
                     "
                 ></Tooltip>

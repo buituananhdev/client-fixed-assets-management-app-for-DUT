@@ -11,18 +11,18 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-show="isShowPopup"
+            v-show="isShowPopup == true"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
-        <!-- <CreateUser
+        <CreateUser
             :type="'update'"
-            :assetProp="currentUser"
+            :userProp="currentUser"
             v-show="isShowPopup == 'thêm mới'"
             @closePopup="closePopup"
             @submitForm="submitForm"
         >
-        </CreateUser> -->
+        </CreateUser>
         <Header class="page-top"></Header>
         <TabLeft @closeTab="closeTab()" @openTab="openTab()"></TabLeft>
         <div class="main-content">
@@ -77,7 +77,7 @@
                     </div>
                     <UserItem
                         v-for="(item, index) in listUsers"
-                        :type="'room'"
+                        :type="'user'"
                         :key="index"
                         :itemProp="item"
                         :itemIndex="index + 1"
@@ -276,7 +276,7 @@ export default {
         },
         async addUser(user) {
             try {
-                await this.$axios.post(`/user`, {
+                await this.$axios.post(`/users`, {
                     userID: user.userID,
                     username: user.username,
                     password: user.password,
@@ -326,10 +326,10 @@ export default {
         },
         async updateUser(user) {
             try {
-                await this.$axios.put(`/user/${asset.assetID}`, {
+                await this.$axios.put(`/users/${user.userID}`, {
                     userID: user.userID,
                     username: user.username,
-                    password: user.password,
+                    password: user.password,    
                     fullName: user.fullName,
                     userRole: user.userRole,
                 });
@@ -349,6 +349,16 @@ export default {
                 setTimeout(() => {
                     this.showNotification = '';
                 }, 3000);
+                console.log(error);
+            }
+        },
+        async fetchDetail(id) {
+            try {
+                await this.$axios.get(`/users/${id}`).then((res) => {
+                    this.currentUser = res['data']['data'];
+                    console.log(this.currentUser);
+                });
+            } catch (error) {
                 console.log(error);
             }
         },

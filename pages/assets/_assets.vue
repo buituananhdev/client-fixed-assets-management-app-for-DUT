@@ -11,7 +11,7 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-show="isShowPopup"
+            v-show="isShowPopup == true"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
@@ -184,7 +184,6 @@ export default {
             selectedOption: '',
             currentAsset: {},
             options: [
-                'Tất cả',
                 'Hoạt động tốt',
                 'Hư hỏng, cần được sửa chữa',
                 'Đang bảo dưỡng',

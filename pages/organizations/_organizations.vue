@@ -11,7 +11,7 @@
             :type="'warning'"
             :action="notiAction"
             :object="notiObject"
-            v-if="isShowPopup === 'xuất file'"
+            v-if="isShowPopup ==  true"
             @closePopup="closePopup"
             @submitForm="submitForm"
         ></PopUp>
@@ -446,7 +446,7 @@ export default {
                 this.isShowPopup = action;
             } else if (action == 'xuất file') {
                 this.notiObject = object;
-                this.isShowPopup = 'xuất file';
+                this.isShowPopup = true;
             } else {
                 this.isShowPopup = true;
                 this.organizationID = id;

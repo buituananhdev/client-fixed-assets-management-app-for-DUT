@@ -2,7 +2,7 @@
     <div class="popup-container div-center">
         <Notification
             :type="'cảnh báo'"
-            :warning="'Hãy nhập tất cả các trường bắt buộc'"
+            :warning="'Lỗi nhập liệu'"
             v-if="showNotification"
         ></Notification>
         <div class="overlay" @click="closePopup()"></div>
@@ -20,9 +20,9 @@
                 >
                     Thêm phòng
                 </h1>
-                <h1 class="popup-title" v-else>Cập nhật tổ chức</h1>
+                <h1 class="popup-title" v-else>Cập nhật phòng</h1>
                 <div class="form-container">
-                    <div class="device-id form-col">
+                    <div class="device-id form-col" v-if="JSON.stringify(roomProp) === '{}'">
                         <p class="form-label">
                             Mã phòng <small style="color: #c7422e">*</small>
                         </p>
@@ -33,12 +33,12 @@
                             v-validate="'required|min:1|max:30'"
                             :class="{
                                 input: true,
-                                'is-danger': errors.has('Mã tổ chức'),
+                                'is-danger': errors.has('Mã phòng'),
                             }"
-                            name="Mã tổ chức"
+                            name="Mã phòng"
                         />
-                        <span v-show="errors.has('Mã tổ chức')" class="err">{{
-                            errors.first('Mã tổ chức')
+                        <span v-show="errors.has('Mã phòng')" class="err">{{
+                            errors.first('Mã phòng')
                         }}</span>
                     </div>
                     <div class="device-id form-col">
@@ -52,12 +52,12 @@
                             v-validate="'required|min:1|max:30'"
                             :class="{
                                 input: true,
-                                'is-danger': errors.has('Tên tổ chức'),
+                                'is-danger': errors.has('Tên phòng'),
                             }"
-                            name="Tên tổ chức"
+                            name="Tên phòng"
                         />
-                        <span v-show="errors.has('Tên tổ chức')" class="err">{{
-                            errors.first('Tên tổ chức')
+                        <span v-show="errors.has('Tên phòng')" class="err">{{
+                            errors.first('Tên hòng')
                         }}</span>
                     </div>
                     <div class="status form-col">
@@ -124,6 +124,7 @@ export default {
             const result = await this.$validator.validateAll();
             if (result) {
                 this.$emit('submitForm', 'thêm mới', this.currentRoom);
+                this.currentRoom = {};
             } else {
                 this.showNotification = true;
                 setTimeout(() => {

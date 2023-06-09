@@ -154,6 +154,12 @@ input:focus {
                         v-show="!isShowPass"
                         v-model="password"
                         autocomplete="on"
+                        v-validate="'required|min:1|max:30|password'"
+                        :class="{
+                            input: true,
+                            'is-danger': errors.has('Mật khẩu'),
+                        }"
+                        name="Mật khẩu"
                     />
                     <input
                         type="text"
@@ -161,6 +167,12 @@ input:focus {
                         v-show="isShowPass"
                         v-model="password"
                         autocomplete="on"
+                        v-validate="'required|min:1|max:30|password'"
+                        :class="{
+                            input: true,
+                            'is-danger': errors.has('Mật khẩu'),
+                        }"
+                        name="Mật khẩu"
                     />
                     <img
                         class="eye-icn"
@@ -180,6 +192,9 @@ input:focus {
                 <div class="err">
                     {{ errContent }}
                 </div>
+                <span v-show="errors.has('Mật khẩu')" class="err">{{
+                    errors.first('Mật khẩu')
+                }}</span>
                 <button class="submit-btn" type="submit">Sign in</button>
             </form>
         </div>
@@ -225,7 +240,10 @@ export default {
                             'currentUser',
                             res['data']['fullName']
                         );
-                        localStorage.setItem('currentUsername', res['data']['username']);
+                        localStorage.setItem(
+                            'currentUsername',
+                            res['data']['username']
+                        );
                         this.$router.push('/assets?page=1');
                     });
             } catch (error) {

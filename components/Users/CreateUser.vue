@@ -2,7 +2,7 @@
     <div class="popup-container div-center">
         <Notification
             :type="'cảnh báo'"
-            :warning="'Hãy nhập tất cả các trường bắt buộc'"
+            :warning="'Lỗi nhập liệu'"
             v-if="showNotification == 'empty'"
         ></Notification>
         <Notification
@@ -25,7 +25,7 @@
                 >
                     Thêm tài khoản
                 </h1>
-                <h1 class="popup-title" v-else>Cập nhật tổ chức</h1>
+                <h1 class="popup-title" v-else>Cập nhật tài khoản</h1>
                 <div class="form-container">
                     <div class="device-id form-col">
                         <p class="form-label">
@@ -99,7 +99,7 @@
                             v-if="isShowPass"
                             class="form-inp"
                             v-model="currentUser.password"
-                            v-validate="'required|min:1|max:30'"
+                            v-validate="'required|min:1|max:30|password'"
                             :class="{
                                 input: true,
                                 'is-danger': errors.has('Mật khẩu'),
@@ -112,7 +112,7 @@
                             v-else
                             class="form-inp"
                             v-model="currentUser.password"
-                            v-validate="'required|min:1|max:30'"
+                            v-validate="'required|min:1|max:30|password'"
                             :class="{
                                 input: true,
                                 'is-danger': errors.has('Mật khẩu'),
@@ -147,7 +147,7 @@
                             v-if="isShowConfirm"
                             class="form-inp"
                             v-model="password"
-                            v-validate="'required|min:1|max:30'"
+                            v-validate="'required|min:1|max:32|password'"
                             :class="{
                                 input: true,
                                 'is-danger': errors.has('Xác nhận mật khẩu'),
@@ -159,7 +159,7 @@
                             type="password"
                             class="form-inp"
                             v-model="password"
-                            v-validate="'required|min:1|max:30'"
+                            v-validate="'required|min:1|max:32|password'"
                             :class="{
                                 input: true,
                                 'is-danger': errors.has('Xác nhận mật khẩu'),
@@ -254,7 +254,7 @@ export default {
 .popup-form {
     top: 10%;
     padding: 32px 24px 32px 24px;
-    width: 500px;
+    width: 550px;
     flex-direction: column;
     justify-content: flex-start;
     gap: 32px;

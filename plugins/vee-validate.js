@@ -5,10 +5,19 @@ Vue.use(VeeValidate, {
     inject: true,
 });
 
-//Custom validator messages i18n
+Validator.extend('password', {
+    validate: (value) => {
+        const strongRegex = /^(?=.*[a-zA-Z]).{8,32}$/;
+        return strongRegex.test(value);
+    },
+});
+
 Validator.localize({
     en: {
         messages: {
+            password:
+                'Mật khẩu phải phải nằm trong khoảng 8 - 32 ký tự và chứa ít nhất 1 chữ cái',
+            password_match: 'Xác nhận mật khẩu không khớp',
             required: (field) => `${field} không được để trống.`,
             min: (field, params) =>
                 `${field} tối thiểu phải là ${params[0]} ký tự.`,
@@ -18,16 +27,3 @@ Validator.localize({
         },
     },
 });
-
-// // Custom validator for max condition
-// Validator.extend('maxCustom', {
-//     getMessage: (field, { length }) =>
-//         `${field} tối đa chỉ được ${length} ký tự.`,
-//     validate: (value, { length }) => {
-//         if (typeof value === 'number') {
-//             return value <= length;
-//         } else {
-//             return value.length <= length;
-//         }
-//     },
-// });

@@ -3,37 +3,37 @@
         <div class="item div-center">
             <p
                 class="div-center stt-col"
-                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+                @click="pushToDetails"
             >
                 {{ itemIndex }}
             </p>
             <p
                 class="div-center device-id-col"
-                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+                @click="pushToDetails"
             >
                 {{ itemProp.deviceID }}
             </p>
             <p
                 class="div-center name-col"
-                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+                @click="pushToDetails"
             >
                 {{ itemProp.assetName }}
             </p>
             <p
                 class="div-center year-used-col"
-                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+                @click="pushToDetails"
             >
                 {{ itemProp.yearOfUse }}
             </p>
             <p
                 class="div-center quantity-col"
-                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+                @click="pushToDetails"
             >
                 {{ itemProp.quantity }}
             </p>
             <p
                 class="div-center cost-col"
-                @click="$router.push(`/details_asset?id=${itemProp.assetID}`)"
+                @click="pushToDetails"
             >
                 {{ moneyFormart }}
             </p>
@@ -103,6 +103,11 @@ export default {
                 .querySelector('.tooltip' + this.itemIndex)
                 .classList.remove('display-block');
         },
+        pushToDetails() {
+            if(this.type === 'asset') {
+                this.$router.push(`/details_asset?id=${this.itemProp.assetID}`);
+            }
+        }
     },
 };
 </script>

@@ -2,7 +2,7 @@
     <div class="popup-container div-center">
         <Notification
             :type="'cảnh báo'"
-            :warning="'Hãy nhập tất cả các trường bắt buộc'"
+            :warning="'Lỗi nhập liệu'"
             v-if="showNotification"
         ></Notification>
         <div class="overlay" @click="closePopup()"></div>
@@ -144,7 +144,7 @@ export default {
 <style scoped src="../../static/css/popup.css"></style>
 <style scoped>
 .popup-form {
-    width: 500px;
+    width: 550px;
     padding: 32px 24px 32px 24px;
     flex-direction: column;
     justify-content: flex-start;

@@ -219,7 +219,7 @@ export default {
     methods: {
         async downloadFile() {
             const { selectedOption, searchValue } = this;
-            let apiURL = `/organizations?pageNumber=1&pageSize=10isConvert=true`;
+            let apiURL = `/organizations?pageNumber=1&pageSize=10&isConvert=true`;
             if (selectedOption && selectedOption !== 'Tất cả') {
                 apiURL += `&organizationType=${selectedOption}`;
             }
@@ -239,7 +239,7 @@ export default {
                 // Tạo một thẻ a để kích hoạt tải xuống tệp
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'SoTheoDoiTSCD.xlsx');
+                link.setAttribute('download', 'SoTheoDoiToChuc.xlsx');
                 document.body.appendChild(link);
                 link.click();
                 // Xóa đối tượng thẻ a để tránh hiển thị thừa trên trang

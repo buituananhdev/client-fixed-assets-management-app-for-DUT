@@ -99,6 +99,7 @@
                         :itemIndex="index + 1"
                         @showPopup="showPopup"
                         style="width: 100%"
+                        v-if="item.id === 0"
                     ></AssetItem>
                 </div>
                 <div class="pagination">

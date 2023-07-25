@@ -57,7 +57,7 @@
                             name="Tên phòng"
                         />
                         <span v-show="errors.has('Tên phòng')" class="err">{{
-                            errors.first('Tên hòng')
+                            errors.first('Tên phòng')
                         }}</span>
                     </div>
                     <div class="status form-col">
